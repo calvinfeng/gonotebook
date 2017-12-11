@@ -1,17 +1,19 @@
 # Go Academy
 Welcome to Go Academy, the official rip-off of App Academy, created by your beloved a/A alum.
 
+## Table of Contents
+1. Prerequisites
+1. Go Project Setup
+  * Video #1 - Hello World in Go
+2. Tic Tac Toe in Go
+3. TBA
+4. TBA
+
 ## Prerequisite(s)
 Before you start watching any of the videos listed below. It's important to get yourself familiar with Go's syntax first
 with Go tour.
 
 Go to https://tour.golang.org/ and complete the **Basics** and **Methods and Interfaces** sections of the tutorial.
-
-## Lesson Plan
-1. Go Project Setup
-2. Tic Tac Toe in Go
-3. TBA
-4. TBA
 
 ## Getting Started with Go
 ### Installation
@@ -74,3 +76,12 @@ For example:
                                 - main.go
                                 - bye_world.go
 ```
+
+### Hello World in Go
+By now you should have your Go installed, your workspace created, and your `$GOPATH` is pointing to the workspace. Now let's create our first program in Go!
+
+[Hello World in Go](https://youtu.be/5-FFapKA9sM)
+
+In case you don't really know what a compiled language is or how language is being compiled from source code to machine code. Here is a fun introduction to the concept:
+
+[How Do Computers Read Code ](https://www.youtube.com/watch?v=QXjU9qTsYCc)
