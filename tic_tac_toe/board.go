@@ -14,15 +14,8 @@ type Board struct {
 	Grid [3][3]string
 }
 
-func (b *Board) Copy() *Board {
-	boardCopy := NewBoard()
-	for i := range b.Grid {
-		for j := range b.Grid[i] {
-			boardCopy.Grid[i][j] = b.Grid[i][j]
-		}
-	}
-
-	return boardCopy
+func (b Board) Copy() *Board {
+	return &b
 }
 
 func (b *Board) PlaceMark(i, j int, mark string) {
