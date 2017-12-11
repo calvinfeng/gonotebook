@@ -4,7 +4,7 @@ Welcome to Go Academy, the official rip-off of App Academy, created by your belo
 ## Table of Contents
 1. Prerequisites
 2. Go Project Setup
-  * Video 01 - Hello World in Go
+  - Video 01 - Hello World in Go
 3. Tic Tac Toe in Go
 4. TBA
 5. TBA
