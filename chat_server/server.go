@@ -1,8 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/websocket"
-	"http"
+	"net/http"
 )
 
 type Payload struct {
@@ -32,7 +33,7 @@ func (s *Server) handleBroadcast() {
 
 func (s *Server) getHandleConnections() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		conn, err := s.upgrader.Upgrade(w, r, nil)
+		conn, err := s.Upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			fmt.Println("Failed to upgrade GET to a websocket connection.")
 		}
@@ -43,13 +44,13 @@ func (s *Server) getHandleConnections() http.HandlerFunc {
 		for {
 			var p Payload
 
-			if err := ws.ReadJSON(&p); err != nil {
+			if err := conn.ReadJSON(&p); err != nil {
 				fmt.Println("Encountered websocket error")
 				delete(s.Conns, conn)
 				return
 			} else {
 				fmt.Println("Incoming message:", p.Message)
-				broadcast <- p
+				s.Broadcast <- p
 			}
 		}
 	}
