@@ -3,17 +3,24 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"github.com/gorilla/websocket"
 )
 
 func main() {
 	fs := http.FileServer(http.Dir("../../static"))
-	http.Handle("/", fs)
-	http.HandleFunc("/ws", handleConnections)
 
-	go handleMessages()
+	s := &Server{
+		ConnMap: make(map[*websocket.Conn]bool),
+		Broadcast: make(chan Payload),
+		Upgrader: &websocket.Upgrader{},
+	}
+
+	http.Handle("/", fs)
+	http.HandleFunc("/ws", s.getHandleConnections())
+
 	fmt.Println("Starting server on port 8000")
 	err := http.ListenAndServe(":8000", nil)
 	if err != nil {
-		fmt.Fatal("ListenAndServe: ", err)
+		fmt.Println("ListenAndServe: ", err)
 	}
 }

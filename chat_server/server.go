@@ -13,19 +13,19 @@ type Payload struct {
 }
 
 type Server struct {
-	Conns     map[*websocket.Conn]bool
-	Broadcast chan Message
+	ConnMap     map[*websocket.Conn]bool
+	Broadcast chan Payload
 	Upgrader  *websocket.Upgrader
 }
 
 func (s *Server) handleBroadcast() {
 	for payload := range s.Broadcast {
-		for conn := range s.Conns {
+		for conn := range s.ConnMap {
 			err := conn.WriteJSON(payload)
 			if err != nil {
 				fmt.Println("Failed to write JSON to websocket connection.")
 				conn.Close()
-				delete(s.Conns, conn)
+				delete(s.ConnMap, conn)
 			}
 		}
 	}
@@ -40,13 +40,13 @@ func (s *Server) getHandleConnections() http.HandlerFunc {
 
 		defer conn.Close()
 
-		s.Conns[conn] = true
+		s.ConnMap[conn] = true
 		for {
 			var p Payload
 
 			if err := conn.ReadJSON(&p); err != nil {
 				fmt.Println("Encountered websocket error")
-				delete(s.Conns, conn)
+				delete(s.ConnMap, conn)
 				return
 			} else {
 				fmt.Println("Incoming message:", p.Message)
