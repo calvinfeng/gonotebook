@@ -123,3 +123,17 @@ func (b *Board) diagonals() [2][3]string {
 
 	return diagonals
 }
+
+// Bonus phase: Minimax algorithm
+func (b *Board) GetAvailablePos() [][2]int {
+	availPos := [][2]int{}
+	for i := range b.Grid {
+		for j := range b.Grid[i] {
+			if b.Grid[i][j] == "_" {
+				availPos = append(availPos, [2]int{i, j})
+			}
+		}
+	}
+
+	return availPos
+}
