@@ -13,7 +13,7 @@ type Payload struct {
 }
 
 type Server struct {
-	ConnMap     map[*websocket.Conn]bool
+	ConnMap   map[*websocket.Conn]bool
 	Broadcast chan Payload
 	Upgrader  *websocket.Upgrader
 }

@@ -144,9 +144,9 @@ func main() {
 ```
 
 ### What about non-main packages? 
-Yes you can write your own package. However, you cannot run go install on a non-main package. I mean you can run the command,
-but it has no effect. Go will not compile your package into executable. So how do you use your own package? You must import
-it into your `main` program. 
+Yes you can write your own package. However, you cannot run `go install` on a non-main package. Strictly speaking you can
+still run the `go install` command in your terminal but it has no effect. Go will not compile your package into executable. 
+So how do you use your own package? You must import it into your `main` program. 
 
 For example:
 ```go
@@ -210,7 +210,7 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 ```
 
 Essentially, `HandlerFunc` is a type of `Handler`, just like Fuji apple is a type of apple. You can define your own apple,
-I mean your own handler type. 
+or in this case, your own http handler.
 
 For example
 ```go

@@ -2,17 +2,17 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"github.com/gorilla/websocket"
+	"net/http"
 )
 
 func main() {
-	fs := http.FileServer(http.Dir("../../static"))
+	fs := http.FileServer(http.Dir("public"))
 
 	s := &Server{
-		ConnMap: make(map[*websocket.Conn]bool),
+		ConnMap:   make(map[*websocket.Conn]bool),
 		Broadcast: make(chan Payload),
-		Upgrader: &websocket.Upgrader{},
+		Upgrader:  &websocket.Upgrader{},
 	}
 
 	http.Handle("/", fs)
