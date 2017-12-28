@@ -8,4 +8,20 @@ body {
 #react-application {
   height: 100%;
   width: 100%;
+  margin: 1rem; 
+  form {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin: 0.3rem;
+      input {
+        margin-left: 0.3rem;
+      }
+    }
+
+    input {
+      max-width: 200px;
+    }
+  }
 }

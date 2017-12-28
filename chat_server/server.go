@@ -45,7 +45,11 @@ func (s *Server) getHandleConnections() http.HandlerFunc {
 			var p Payload
 
 			if err := conn.ReadJSON(&p); err != nil {
-				fmt.Println("Encountered websocket error")
+				if websocket.IsUnexpectedCloseError(err) {
+					fmt.Println("Client connection has closed")
+				} else {
+					fmt.Println("Encountered websocket error")
+				}
 				delete(s.ConnMap, conn)
 				return
 			} else {

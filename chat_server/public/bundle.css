@@ -6,6 +6,16 @@ body {
 
 #react-application {
   height: 100%;
-  width: 100%; }
+  width: 100%;
+  margin: 1rem; }
+  #react-application form {
+    display: flex;
+    flex-direction: column; }
+    #react-application form label {
+      margin: 0.3rem; }
+      #react-application form label input {
+        margin-left: 0.3rem; }
+    #react-application form input {
+      max-width: 200px; }
 
 /*# sourceMappingURL=bundle.css.map*/

@@ -128,6 +128,7 @@ func HelloWorld() {
 
 HelloWorld()
 ```
+
 This will not compile and throw an error. You must call your functions inside the `main` function. 
 ```go
 package main
@@ -148,7 +149,7 @@ Yes you can write your own package. However, you cannot run `go install` on a no
 still run the `go install` command in your terminal but it has no effect. Go will not compile your package into executable. 
 So how do you use your own package? You must import it into your `main` program. 
 
-For example:
+For example, create a directory in `go-academy` and call it `foo` and inside the folder make a file called `foo.go`:
 ```go
 // => foo.go
 package foo
@@ -158,17 +159,24 @@ func IsFoo() bool {
 }
 ```
 
+That's basically it. You now have a `foo` package. Now let's import it into your `hello_world` program.
+
 ```go
-// => main.go
+// => hello_world/main.go
 package main
 
 import (
 	"fmt"
 	"go-academy/foo"
-) 
+)
 
 func main() {
-	fmt.Printf("Is Foo a Foo? %v", foo.IsFoo())
+	fmt.Println("Hello World, this is Go!")
+
+	SayHello()
+	SayBye()
+
+	fmt.Printf("Is Foo a Foo? %v \n", foo.IsFoo())
 }
 ```
 

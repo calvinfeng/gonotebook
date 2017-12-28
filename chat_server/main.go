@@ -15,6 +15,8 @@ func main() {
 		Upgrader:  &websocket.Upgrader{},
 	}
 
+	go s.handleBroadcast()
+
 	http.Handle("/", fs)
 	http.HandleFunc("/ws", s.getHandleConnections())
 
