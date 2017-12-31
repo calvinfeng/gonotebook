@@ -18,17 +18,15 @@ Welcome to Go Academy, the official rip-off of App Academy, created by your belo
 5. WebSocket server in Go
     * Dependency Management
     * Video 04 - Chat server
-6. Concurrency
-    * Video 05 - MapReduce 
-7. Postgres in Go
-    * Video 06 - 99Cats in Go
+6. Postgres in Go
+    * Video 05 - User Authentication
 
 ## Prerequisite(s)
-Before you start watching any of the videos listed below, it's important to get yourself familiar with Go's syntax by 
+Before you start watching any of the videos listed below, it's important to get yourself familiar with Go's syntax by
 going through Go tour.
 
-Go to https://tour.golang.org/ and complete the **Basics** and **Methods and Interfaces** sections of the tutorial. I 
-don't expect you to have memorized all the syntax right away. As you start building projects with Go, you will become 
+Go to https://tour.golang.org/ and complete the **Basics** and **Methods and Interfaces** sections of the tutorial. I
+don't expect you to have memorized all the syntax right away. As you start building projects with Go, you will become
 more comfortable with the syntax.
 
 ## Getting Started with Go
@@ -96,13 +94,13 @@ For example:
 ```
 
 ### Video 01: Hello World in Go
-By now you should have your Go installed, your workspace created, and your `$GOPATH` is pointing to the workspace. 
+By now you should have your Go installed, your workspace created, and your `$GOPATH` is pointing to the workspace.
 Let's create our first program in Go!
 
 [Hello World in Go](https://youtu.be/5-FFapKA9sM)
 
 ### Compiled Language
-In case you don't really know what a compiled language is or how language is being compiled from source code to machine 
+In case you don't really know what a compiled language is or how language is being compiled from source code to machine
 code. Here is a fun introduction to the concept:
 
 [How Do Computers Read Code ](https://www.youtube.com/watch?v=QXjU9qTsYCc)
@@ -113,7 +111,7 @@ In my previous video I did not explain `package main` and `func main()` thorough
 a `main` package, which is the package that is responsible for execution of a program. On the other hand, we have a main
 function inside `main`. The `main` package cannot be built without the existence of a `main func`. Unlike dynamic typed,
 scripting languages (e.g. Ruby, Python, JavaScript and etc...), Go does not allow you to execute any function outside of
-`main`. 
+`main`.
 
 For example:
 ```go
@@ -129,7 +127,7 @@ func HelloWorld() {
 HelloWorld()
 ```
 
-This will not compile and throw an error. You must call your functions inside the `main` function. 
+This will not compile and throw an error. You must call your functions inside the `main` function.
 ```go
 package main
 
@@ -144,10 +142,10 @@ func main() {
 }
 ```
 
-### What about non-main packages? 
+### What about non-main packages?
 Yes you can write your own package. However, you cannot run `go install` on a non-main package. Strictly speaking you can
-still run the `go install` command in your terminal but it has no effect. Go will not compile your package into executable. 
-So how do you use your own package? You must import it into your `main` program. 
+still run the `go install` command in your terminal but it has no effect. Go will not compile your package into executable.
+So how do you use your own package? You must import it into your `main` program.
 
 For example, create a directory in `go-academy` and call it `foo` and inside the folder make a file called `foo.go`:
 ```go
@@ -188,10 +186,10 @@ Let's create a project that requires us to write multiple files in the `main` pa
 ### Bonus
 Create a computer player that implements the `Player` interface and make it undefeatable with *Minimax* algorithm.
 
-## HTTP Server
+## HTTP Server in Go
 ### Project Requirement
 We are going to use Go's built-in package `net/http` to create a calculator server. The server should have 4 API endpoints,
-each endpoint serves a different mathematical operation. For example, 
+each endpoint serves a different mathematical operation. For example,
 
 * `api/add` does addition
 * `api/sub` does subtraction
@@ -201,12 +199,12 @@ each endpoint serves a different mathematical operation. For example,
 Each endpoint takes in 2 query parameters, left operand and right operand, denoted by `lop` and `rop`.
 
 ### Handlers
-When you google around about Go http handlers, you will notice that there is something called `http.Handler` and `http.HandlerFunc`. 
-It is natural to ask why do we have two types of handler and they both work?! 
+When you google around about Go http handlers, you will notice that there is something called `http.Handler` and `http.HandlerFunc`.
+It is natural to ask why do we have two types of handler and they both work?!
 
-`http.Handler` is an interface. Any data type that implements the method `ServeHTTP` will qualify as a HTTP handler. So, 
+`http.Handler` is an interface. Any data type that implements the method `ServeHTTP` will qualify as a HTTP handler. So,
 if you somehow can attach a method to a function, then that function is indeed an authentic HTTP handler. In Go, you can
-attach methods to any data type, even a string or an integer. 
+attach methods to any data type, even a string or an integer.
 
 ```go
 type HandlerFunc func(ResponseWriter, *Request)
@@ -234,3 +232,11 @@ func (str HandlerString) ServeHTTP(w ResponseWriter, r *Request) {
 ### Video 03: Calculator Server
 ### Bonus
 Add more endpoints for practice!
+
+## WebSocket Server in Go
+
+## Postgres in Go
+
+## Additional Resource
+If you want to learn more about session storage, security, encryption, and many other topics relating to web applications.
+Take a look at this eBook. https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/.
