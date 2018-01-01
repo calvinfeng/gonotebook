@@ -181,7 +181,9 @@ func main() {
 ### Video 02: Tic Tac Toe in Go
 Let's create a project that requires us to write multiple files in the `main` package!
 
-[Tic Tac Toe in Go](https://youtu.be/5-FFapKA9sM)
+[Tic Tac Toe in Go Part 1](https://youtu.be/644HhokVkbI)
+[Tic Tac Toe in Go Part 2](https://youtu.be/eL6ruTgOQG0)
+[Tic Tac Toe in Go Part 3](https://youtu.be/rdSgqye50Qw)
 
 ### Bonus
 Create a computer player that implements the `Player` interface and make it undefeatable with *Minimax* algorithm.
@@ -197,6 +199,13 @@ each endpoint serves a different mathematical operation. For example,
 * `api/div` does division
 
 Each endpoint takes in 2 query parameters, left operand and right operand, denoted by `lop` and `rop`.
+
+### Video 03: Calculator Server
+[Calculator Server in Go Part 1](https://youtu.be/QWQjqcDYALU)
+[Calculator Server in Go Part 2](https://youtu.be/8S6YPgo1Tns)
+
+### Bonus
+Add more endpoints for practice!
 
 ### Handlers
 When you google around about Go http handlers, you will notice that there is something called `http.Handler` and `http.HandlerFunc`.
@@ -229,14 +238,10 @@ func (str HandlerString) ServeHTTP(w ResponseWriter, r *Request) {
 }
 ```
 
-### Video 03: Calculator Server
-### Bonus
-Add more endpoints for practice!
-
 ## WebSocket Server in Go
 
 ## Postgres in Go
 
 ## Additional Resource
-If you want to learn more about session storage, security, encryption, and many other topics relating to web applications.
-Take a look at this eBook. https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/.
+If you want to learn more about session storage, security, encryption, and many other topics relating to web applications,
+take a look at this eBook: https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/.

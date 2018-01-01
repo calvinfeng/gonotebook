@@ -12,35 +12,35 @@ type Payload struct {
 	Message  string `json:"message"`
 }
 
-type Server struct {
+type Broker struct {
 	ConnMap   map[*websocket.Conn]bool
 	Broadcast chan Payload
 	Upgrader  *websocket.Upgrader
 }
 
-func (s *Server) handleBroadcast() {
-	for payload := range s.Broadcast {
-		for conn := range s.ConnMap {
+func (b *Broker) handleBroadcast() {
+	for payload := range b.Broadcast {
+		for conn := range b.ConnMap {
 			err := conn.WriteJSON(payload)
 			if err != nil {
 				fmt.Println("Failed to write JSON to websocket connection.")
 				conn.Close()
-				delete(s.ConnMap, conn)
+				delete(b.ConnMap, conn)
 			}
 		}
 	}
 }
 
-func (s *Server) getHandleConnections() http.HandlerFunc {
+func (b *Broker) getHandleConnections() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		conn, err := s.Upgrader.Upgrade(w, r, nil)
+		conn, err := b.Upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			fmt.Println("Failed to upgrade GET to a websocket connection.")
 		}
 
 		defer conn.Close()
 
-		s.ConnMap[conn] = true
+		b.ConnMap[conn] = true
 		for {
 			var p Payload
 
@@ -50,11 +50,11 @@ func (s *Server) getHandleConnections() http.HandlerFunc {
 				} else {
 					fmt.Println("Encountered websocket error")
 				}
-				delete(s.ConnMap, conn)
+				delete(b.ConnMap, conn)
 				return
 			} else {
 				fmt.Println("Incoming message:", p.Message)
-				s.Broadcast <- p
+				b.Broadcast <- p
 			}
 		}
 	}

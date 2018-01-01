@@ -9,16 +9,16 @@ import (
 func main() {
 	fs := http.FileServer(http.Dir("public"))
 
-	s := &Server{
+	b := &Broker{
 		ConnMap:   make(map[*websocket.Conn]bool),
 		Broadcast: make(chan Payload),
 		Upgrader:  &websocket.Upgrader{},
 	}
 
-	go s.handleBroadcast()
+	go b.handleBroadcast()
 
 	http.Handle("/", fs)
-	http.HandleFunc("/ws", s.getHandleConnections())
+	http.HandleFunc("/ws", b.getHandleConnections())
 
 	fmt.Println("Starting server on port 8000")
 	err := http.ListenAndServe(":8000", nil)
