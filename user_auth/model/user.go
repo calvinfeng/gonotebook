@@ -11,3 +11,9 @@ type User struct {
 	PasswordDigest []byte    `gorm:"type:bytea;unique_index"`
 	Messages       []Message `gorm:"ForeignKey:UserID"` // has-many
 }
+
+func (u *User) ResetSessionToken() {
+	if randStr, err := GenerateRandomString(20); err == nil {
+		u.SessionToken = randStr
+	}
+}

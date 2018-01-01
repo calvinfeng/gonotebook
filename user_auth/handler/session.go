@@ -3,9 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"github.com/jinzhu/gorm"
-	"go-academy/user_auth/model"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"time"
 )
 
 type SessionJSONResponse struct {
@@ -18,6 +17,7 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
+// NOTE: Notice that I am not resetting the token during session creation, I will leave it to you as an exercise.
 func NewSessionCreateHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
@@ -28,17 +28,18 @@ func NewSessionCreateHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		var user model.User
-		if err := db.Where("email = ?", loginReq.Email).First(&user).Error; err != nil {
-			RenderError(w, "Wrong email", http.StatusUnauthorized)
+		user, err := FindUserByCredential(db, loginReq.Email, loginReq.Password)
+		if err != nil {
+			RenderError(w, "Wrong email/password combination", http.StatusUnauthorized)
 			return
 		}
 
-		if err := bcrypt.CompareHashAndPassword(user.PasswordDigest, []byte(loginReq.Password)); err != nil {
-			RenderError(w, "Incorrect password", http.StatusUnauthorized)
-			return
-		}
+		// Token is set to expire in 2 days
+		expiration := time.Now().Add(2 * 24 * time.Hour)
+		cookie := http.Cookie{Name: "session_token", Value: user.SessionToken, Expires: expiration}
+		http.SetCookie(w, &cookie)
 
+		// Return the token anyways, just so we know for sure we got a legit token. Don't do this in production though...
 		res := SessionJSONResponse{
 			Email:        user.Email,
 			SessionToken: user.SessionToken,
@@ -49,6 +50,21 @@ func NewSessionCreateHandler(db *gorm.DB) http.HandlerFunc {
 		} else {
 			w.WriteHeader(http.StatusOK)
 			w.Write(bytes)
+		}
+	}
+}
+
+func NewSessionDestroyHandler(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Find current user using token from cookies
+		cookie, _ := r.Cookie("session_token")
+		if currentUser, err := FindUserByToken(db, cookie.Value); err == nil {
+			currentUser.ResetSessionToken()
+			db.Save(currentUser)
+
+			// Set the cookie to nil value once session is destroyed
+			cookie := http.Cookie{Name: "session_token", Value: ""}
+			http.SetCookie(w, &cookie)
 		}
 	}
 }
