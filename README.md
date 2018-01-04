@@ -316,8 +316,9 @@ visualizing concurrency in Go.
 
 [Concurrency in Go]()
 
-Source: https://divan.github.io/posts/go_concurrency_visualize/
-Recommended Talk by Rob Pike, creator of Golang  https://talks.golang.org/2012/concurrency.slide#1
+Source: [Go Currency Visualized](https://divan.github.io/posts/go_concurrency_visualize/)
+
+Recommended Talk by Rob Pike, creator of Golang: [Go Concurrency Patterns](https://talks.golang.org/2012/concurrency.slide#1)
 
 ## User Authentication
 ### Project Requirements
