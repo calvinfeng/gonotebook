@@ -7,14 +7,32 @@ import (
 	"time"
 )
 
-type SessionJSONResponse struct {
-	Email        string `json:"email"`
-	SessionToken string `json:"session_token"`
-}
-
 type LoginRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+func NewTokenAuthenticateHandler(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Find current user using token from cookies
+		cookie, _ := r.Cookie("session_token")
+		if currentUser, err := FindUserByToken(db, cookie.Value); err == nil {
+			res := UserJSONResponse{
+				Name:         currentUser.Name,
+				Email:        currentUser.Email,
+				SessionToken: currentUser.SessionToken,
+			}
+
+			if bytes, err := json.Marshal(res); err != nil {
+				RenderError(w, err.Error(), http.StatusInternalServerError)
+			} else {
+				w.WriteHeader(http.StatusOK)
+				w.Write(bytes)
+			}
+		} else {
+			RenderError(w, err.Error(), http.StatusUnauthorized)
+		}
+	}
 }
 
 // NOTE: Notice that I am not resetting the token during session creation, I will leave it to you as an exercise.
@@ -30,7 +48,7 @@ func NewSessionCreateHandler(db *gorm.DB) http.HandlerFunc {
 
 		user, err := FindUserByCredential(db, loginReq.Email, loginReq.Password)
 		if err != nil {
-			RenderError(w, "Wrong email/password combination", http.StatusUnauthorized)
+			RenderError(w, "Incorrect email/password combination", http.StatusUnauthorized)
 			return
 		}
 
@@ -40,7 +58,8 @@ func NewSessionCreateHandler(db *gorm.DB) http.HandlerFunc {
 		http.SetCookie(w, &cookie)
 
 		// Return the token anyways, just so we know for sure we got a legit token. Don't do this in production though...
-		res := SessionJSONResponse{
+		res := UserJSONResponse{
+			Name:         user.Name,
 			Email:        user.Email,
 			SessionToken: user.SessionToken,
 		}

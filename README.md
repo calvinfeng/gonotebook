@@ -11,14 +11,18 @@ Welcome to Go Academy, the official rip-off of App Academy, created by your belo
     * What is `main`?
     * Video 02: Tic Tac Toe in Go
     * Bonus - Minimax algorithm
-4. HTTP server in Go
+4. HTTP Server in Go
     * Project Requirement
     * Handlers
     * Video 03 - Calculator Server
-5. WebSocket server in Go
+5. WebSocket Server in Go
+    * Project Requirement
     * Dependency Management
+    * Frontend
+    * Node Modules
     * Video 04 - Chat server
-6. Postgres in Go
+6. User Authentication
+    * Project Requirement
     * Video 05 - User Authentication
 
 ## Prerequisite(s)
@@ -246,7 +250,7 @@ func (str HandlerString) ServeHTTP(w ResponseWriter, r *Request) {
 We are going to learn about how to perform dependency management in Go and how to use Gorilla library to implement a 
 websocket connection in Go. We are also going to learn about how to integrate React with Go. 
 
-### Install `dep`
+### Dependency Management - `dep`
 Dep is an awesome dependency management tool for Go, it's equivalent to `npm` for JavaScript. You can learn more about 
 Dep on https://github.com/golang/dep. 
 
@@ -283,6 +287,7 @@ this.websocket.onclose = this.handleSocketClose;
 ```
 
 Client-side socket connection typically accepts 4 callbacks:
+
     1. Callback is invoked when socket is opened.
     2. Callback is invoked when socket receives a message.
     3. Callback is invoked when socket encounters an error.
@@ -295,7 +300,7 @@ I am not a big fan of jQuery anymore.
 
 For the complete list of dependency, please look at the `package.json`.
     
-### Videos
+### Video 04: WebSocket Server
 [WebSocket Server in Go Part 1]()
 
 [WebSocket Server in Go Part 2]()

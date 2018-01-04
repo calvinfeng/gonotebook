@@ -29,8 +29,11 @@ func LoadRoutes(db *gorm.DB) http.Handler {
 
 	// Name-spacing the API
 	api := muxRouter.PathPrefix("/api").Subrouter()
-	api.Handle("/login", handler.NewSessionCreateHandler(db))
-	api.Handle("/logout", handler.NewSessionDestroyHandler(db))
+	api.Handle("/authenticate", handler.NewTokenAuthenticateHandler(db)).Methods("GET")
+	api.Handle("/login", handler.NewSessionCreateHandler(db)).Methods("POST")
+	api.Handle("/logout", handler.NewSessionDestroyHandler(db)).Methods("DELETE")
+	api.Handle("/users", handler.NewUserListHandler(db)).Methods("GET")
+	api.Handle("/users/register", handler.NewUserCreateHandler(db)).Methods("POST")
 
 	// Serve public folder to clients
 	muxRouter.PathPrefix("/").Handler(http.FileServer(http.Dir("public")))
