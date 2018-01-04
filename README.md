@@ -20,10 +20,11 @@ Welcome to Go Academy, the official rip-off of App Academy, created by your belo
     * Dependency Management
     * Frontend
     * Node Modules
-    * Video 04 - Chat server
+    * Video 04a - Chat server
+    * Video 05b Concurrency
 6. User Authentication
     * Project Requirement
-    * Video 05 - User Authentication
+    * Video 05 - User Authentication, coming soon
 
 ## Prerequisite(s)
 Before you start watching any of the videos listed below, it's important to get yourself familiar with Go's syntax by
@@ -300,10 +301,23 @@ I am not a big fan of jQuery anymore.
 
 For the complete list of dependency, please look at the `package.json`.
     
-### Video 04: WebSocket Server
-[WebSocket Server in Go Part 1]()
+### Video 04a: WebSocket Server
+[WebSocket Server in Go Part 1](https://youtu.be/x-FeLB35jXs)
 
-[WebSocket Server in Go Part 2]()
+[WebSocket Server in Go Part 2](https://youtu.be/fn8nBckuUE8)
+
+### Video 04b: Concurrency
+I am assuming that you have only completed the first two sections of the Go tour, *Basics* and *Methods & Interfaces*. 
+In the previous video, I introduced the usage of channel and go routines but I suddenly realized that perhaps these concepts
+are still foreign to you. 
+
+Now it is time for you to complete the 3rd section, *Concurrency*. In the next video I will go in-depth to talk about 
+visualizing concurrency in Go. 
+
+[Concurrency in Go]()
+
+Source: https://divan.github.io/posts/go_concurrency_visualize/
+Recommended Talk by Rob Pike, creator of Golang  https://talks.golang.org/2012/concurrency.slide#1
 
 ## User Authentication
 ### Project Requirements
