@@ -30,9 +30,9 @@ func NewUserListHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		res := []UserJSONResponse{}
+		res := []*UserJSONResponse{}
 		for _, user := range users {
-			res = append(res, UserJSONResponse{
+			res = append(res, &UserJSONResponse{
 				Name:         user.Name,
 				Email:        user.Email,
 				SessionToken: user.SessionToken,
@@ -69,7 +69,7 @@ func NewUserCreateHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		newUser := model.User{
+		newUser := &model.User{
 			Name:           regReq.Name,
 			Email:          regReq.Email,
 			PasswordDigest: hashBytes,
@@ -87,7 +87,7 @@ func NewUserCreateHandler(db *gorm.DB) http.HandlerFunc {
 		cookie := http.Cookie{Name: "session_token", Value: newUser.SessionToken, Expires: expiration}
 		http.SetCookie(w, &cookie)
 
-		res := UserJSONResponse{
+		res := &UserJSONResponse{
 			Name:         newUser.Name,
 			Email:        newUser.Email,
 			SessionToken: newUser.SessionToken,
@@ -95,7 +95,6 @@ func NewUserCreateHandler(db *gorm.DB) http.HandlerFunc {
 
 		if bytes, err := json.Marshal(res); err != nil {
 			RenderError(w, err.Error(), http.StatusInternalServerError)
-			return
 		} else {
 			w.WriteHeader(http.StatusOK)
 			w.Write(bytes)

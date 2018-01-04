@@ -58,7 +58,7 @@ func NewSessionCreateHandler(db *gorm.DB) http.HandlerFunc {
 		http.SetCookie(w, &cookie)
 
 		// Return the token anyways, just so we know for sure we got a legit token. Don't do this in production though...
-		res := UserJSONResponse{
+		res := &UserJSONResponse{
 			Name:         user.Name,
 			Email:        user.Email,
 			SessionToken: user.SessionToken,
@@ -73,6 +73,12 @@ func NewSessionCreateHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+type LogoutResponse struct {
+	Name        string `json:"name"`
+	Email       string `json:"email"`
+	IsLoggedOut bool   `json:"is_logged_out"`
+}
+
 func NewSessionDestroyHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Find current user using token from cookies
@@ -84,6 +90,21 @@ func NewSessionDestroyHandler(db *gorm.DB) http.HandlerFunc {
 			// Set the cookie to nil value once session is destroyed
 			cookie := http.Cookie{Name: "session_token", Value: ""}
 			http.SetCookie(w, &cookie)
+
+			res := &LogoutResponse{
+				Name:        currentUser.Name,
+				Email:       currentUser.Email,
+				IsLoggedOut: true,
+			}
+
+			if bytes, err := json.Marshal(res); err != nil {
+				RenderError(w, err.Error(), http.StatusInternalServerError)
+			} else {
+				w.WriteHeader(http.StatusOK)
+				w.Write(bytes)
+			}
+		} else {
+			RenderError(w, "User is not found", http.StatusBadRequest)
 		}
 	}
 }

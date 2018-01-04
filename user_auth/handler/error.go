@@ -10,7 +10,7 @@ type ErrorResponse struct {
 }
 
 func RenderError(w http.ResponseWriter, errMsg string, code int) {
-	res := ErrorResponse{errMsg}
+	res := &ErrorResponse{errMsg}
 	bytes, _ := json.Marshal(res)
 	w.WriteHeader(code)
 	w.Write(bytes)
