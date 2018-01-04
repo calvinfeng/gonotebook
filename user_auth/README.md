@@ -16,7 +16,8 @@ brew upgrade dep
 I love Homebrew on Mac. It has everything!
 
 ## Databse
-I am going to use PostgreSQL for this project, so let's create one. The superuser on my computer is `cfeng` so I will use that to create a database named `goyak_development`
+I am going to use PostgreSQL for this project, so let's create one. The superuser on my computer is `cfeng` so I will use 
+that to create a database named `go_user_auth`
 
 If you don't have a role or wish to create a separate role for this project, then just do the following
 ```
@@ -34,7 +35,6 @@ postgres=# create database go_user_auth with owner=cfeng;
 Then just exit with `\q`
 
 Actually just in case you don't remember the password to your `ROLE`, do the following
-
 ```
 postgres=# alter user <your_username> with password <whatever you like>
 ```
