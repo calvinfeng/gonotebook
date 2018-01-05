@@ -21,7 +21,7 @@ class Application extends React.Component {
   };
 
   componentDidMount() {
-    axios.get('api/authenticate').then((res) => {
+    axios.get('api/users/authenticate').then((res) => {
       this.setState({ currentUser: res.data });
     }).catch((err) => {
       console.log('No current user');

@@ -36,7 +36,7 @@ class Welcome extends React.Component {
 
   handleLoginSubmit = (e) => {
     e.preventDefault();
-    axios.post('/api/login', {
+    axios.post('/api/users/login', {
       email: this.state.email,
       password: this.state.password
     }).then((res) => {

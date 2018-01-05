@@ -302,6 +302,9 @@ I am not a big fan of jQuery anymore.
 For the complete list of dependency, please look at the `package.json`.
     
 ### Video 04a: WebSocket Server
+Please excuse me that I repetitively said *so* in my speech; it's a result of having to think about what to type and what
+to say simultaneously. I will make sure that in my next video I will suppress my impulse to say *so*.
+
 [WebSocket Server in Go Part 1](https://youtu.be/x-FeLB35jXs)
 
 [WebSocket Server in Go Part 2](https://youtu.be/fn8nBckuUE8)

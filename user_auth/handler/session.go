@@ -87,10 +87,6 @@ func NewSessionDestroyHandler(db *gorm.DB) http.HandlerFunc {
 			currentUser.ResetSessionToken()
 			db.Save(currentUser)
 
-			// Set the cookie to nil value once session is destroyed
-			cookie := http.Cookie{Name: "session_token", Value: ""}
-			http.SetCookie(w, &cookie)
-
 			res := &LogoutResponse{
 				Name:        currentUser.Name,
 				Email:       currentUser.Email,

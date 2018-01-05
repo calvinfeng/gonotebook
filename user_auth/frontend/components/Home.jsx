@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 class Home extends React.Component {
   handleLogout = () => {
-    axios.delete('api/logout').then((res) => {
+    axios.delete('api/users/logout').then((res) => {
       console.log(`User ${res.data.name} has logged out.`);
       this.props.handleClearCurrentUser();
     }).catch((err) => {
