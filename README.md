@@ -25,6 +25,9 @@ Welcome to Go Academy, the official rip-off of App Academy, created by your belo
 6. User Authentication
     * Project Requirement
     * Video 05 - User Authentication, coming soon
+7. Neural Network (Maybe)
+    * Project Requirement
+    * Video 06 - Neural Network, (still deciding?)
 
 ## Prerequisite(s)
 Before you start watching any of the videos listed below, it's important to get yourself familiar with Go's syntax by
@@ -356,3 +359,6 @@ postgres=# alter user cfeng with password "cfeng";
 ## Additional Resource
 If you want to learn more about session storage, security, encryption, and many other topics relating to web applications,
 take a look at this eBook: https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/.
+
+## Neural Network
+Still under development
