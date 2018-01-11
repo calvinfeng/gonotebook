@@ -36,6 +36,9 @@ func (a *Affine) ForwardProp(x *mat.Dense) (*mat.Dense, error) {
 	return result, nil
 }
 
+// BackwardProp takes an upstream gradient, a.k.a. gradient of output and perform gradient calculation on layer's input,
+// weight and bias matrices. The expected input to this function should be of shape, (N, H) which is the same shape as
+// the output from ForwardProp.
 func (a *Affine) BackwardProp(gradOut *mat.Dense) (*mat.Dense, *mat.Dense, *mat.Dense, error) {
 	if a.Input == nil {
 		return nil, nil, nil, mat.Error{}
@@ -67,6 +70,8 @@ func (a *Affine) BackwardProp(gradOut *mat.Dense) (*mat.Dense, *mat.Dense, *mat.
 	return gradX, gradW, gradB, nil
 }
 
+// SumAlongColumn accepts a matrix and perform summing along each column of the matrix. If the input is of shape (N, D),
+// the return value will be a slice of length D.
 func SumAlongColumn(m *mat.Dense) []float64 {
 	Row, Col := m.Dims()
 	result := []float64{}

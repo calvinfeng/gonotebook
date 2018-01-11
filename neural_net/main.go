@@ -5,23 +5,19 @@ import (
 	"go-academy/neural_net/layer"
 	"gonum.org/v1/gonum/mat"
 	"math/rand"
+	"time"
 )
 
-func RandomMat(row, col int) *mat.Dense {
-	randFloats := []float64{}
-	for i := 0; i < row*col; i++ {
-		randFloats = append(randFloats, rand.Float64())
-	}
-
-	return mat.NewDense(row, col, randFloats)
-}
-
 func main() {
+	// If seed is not set, we will expect to get the result random numbers in runtime every time we run the program. This
+	// particular seed will give the program pseudo-randomness.
+	rand.Seed(time.Now().UTC().Unix())
+
 	W1 := mat.NewDense(3, 3, []float64{1, 0, 0, 0, 1, 0, 0, 0, 1})
 	B1 := mat.NewDense(3, 3, []float64{1, 0, 0, 1, 0, 0, 1, 0, 0})
 	X := mat.NewDense(3, 3, []float64{1, 2, 3, 4, 5, 6, 7, 8, 9})
 	// GradOut := mat.NewDense(3, 3, []float64{1, 1, 1, 1, 1, 1, 1, 1, 1})
-	GradOut := RandomMat(3, 3)
+	GradOut := RandNormMat(3, 3, 1e-2, 0)
 
 	ForwardPropX := func(input *mat.Dense) (*mat.Dense, error) {
 		aff := layer.Affine{
@@ -49,18 +45,17 @@ func main() {
 
 		return aff.ForwardProp(X)
 	}
-	fmt.Println("############################################Numerical Gradient####################################")
 
-	if numGradX, err := layer.EvalNumericalGradient(ForwardPropX, X, GradOut, 1e-5); err == nil {
+	if numGradX, err := layer.EvalNumericalGrad(ForwardPropX, X, GradOut, 1e-5); err == nil {
 		fmt.Println(numGradX)
 	}
 
-	if numGradW, err := layer.EvalNumericalGradient(ForwardPropW, W1, GradOut, 1e-5); err == nil {
+	if numGradW, err := layer.EvalNumericalGrad(ForwardPropW, W1, GradOut, 1e-5); err == nil {
 		fmt.Println(numGradW)
 	}
 
-	if numGradW, err := layer.EvalNumericalGradient(ForwardPropB, B1, GradOut, 1e-5); err == nil {
-		fmt.Println(numGradW)
+	if numGradB, err := layer.EvalNumericalGradForBias(ForwardPropB, B1, GradOut, 1e-5); err == nil {
+		fmt.Println(numGradB)
 	}
 
 	layer1 := layer.Affine{
@@ -68,15 +63,17 @@ func main() {
 		Bias:   B1,
 	}
 
-	if result, err := layer1.ForwardProp(X); err == nil {
-		fmt.Println("#######################################Forward Prop###########################################")
-		fmt.Println(result)
+	if _, forwardPropErr := layer1.ForwardProp(X); forwardPropErr == nil {
+		if gradX, gradW, gradB, backPropErr := layer1.BackwardProp(GradOut); backPropErr == nil {
+			fmt.Println(gradX)
+			fmt.Println(gradW)
+			fmt.Println(gradB)
+		}
 	}
 
-	if gradX, gradW, gradB, err := layer1.BackwardProp(GradOut); err == nil {
-		fmt.Println("#########################################Back Prop############################################")
-		fmt.Println(gradX)
-		fmt.Println(gradW)
-		fmt.Println(gradB)
+	layer2 := layer.Sigmoid{}
+
+	if out, forwardPropErr := layer2.ForwardProp(X); forwardPropErr == nil {
+		fmt.Println(out)
 	}
 }
