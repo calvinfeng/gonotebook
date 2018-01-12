@@ -198,6 +198,12 @@ Let's create a project that requires us to write multiple files in the `main` pa
 ### Bonus
 Create a computer player that implements the `Player` interface and make it undefeatable with *Minimax* algorithm.
 
+Here are some other recommendations for projects you can work on
+
+* Connect 4
+* Minesweeper
+* Sudoku
+
 ## HTTP Server in Go
 ### Project Requirement
 We are going to use Go's built-in package `net/http` to create a calculator server. The server should have 4 API endpoints,
@@ -252,12 +258,12 @@ func (str HandlerString) ServeHTTP(w ResponseWriter, r *Request) {
 ## WebSocket Server in Go
 ### Prerequisite
 Now it's time for you to finish Part 3 of [Go Tour](https://tour.golang.org/concurrency/1). The last four sections are
-not required for the upcoming project. You only need to finish sections from *Goroutines* to *Default Selection.*
+not required for the websocket project. You only need to finish sections from *Goroutines* to *Default Selection.*
+Later we will re-visit `sync.mutex` when we dive deeper into concurrency.
 
 ### Video 04a: Concurrency
 
-
-[Concurrency in Go]()
+[Concurrency in Go](https://youtu.be/uq9EocsraUQ)
 
 ### Project Requirement
 We are going to learn about how to perform dependency management in Go and how to use Gorilla library to implement a
