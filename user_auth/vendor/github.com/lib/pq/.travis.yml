@@ -1,11 +1,11 @@
 language: go
 
 go:
-  - 1.5.x
-  - 1.6.x
-  - 1.7.x
-  - 1.8.x
-  - 1.9.x
+  - 1.5.X
+  - 1.6.X
+  - 1.7.X
+  - 1.8.X
+  - 1.9.X
   - master
 
 sudo: true
@@ -35,7 +35,7 @@ before_install:
   - ./.travis.sh client_configure
   - ./.travis.sh megacheck_install
   - ./.travis.sh golint_install
-  - go get golang.org/x/tools/cmd/goimports
+  - go get golang.org/X/tools/cmd/goimports
 
 before_script:
   - createdb pqgotest

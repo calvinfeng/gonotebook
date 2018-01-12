@@ -23,7 +23,7 @@
 *>
 *> \verbatim
 *>
-*>    DCOPY copies a vector, x, to a vector, y.
+*>    DCOPY copies a vector, X, to a vector, y.
 *>    uses unrolled loops for increments equal to one.
 *> \endverbatim
 *

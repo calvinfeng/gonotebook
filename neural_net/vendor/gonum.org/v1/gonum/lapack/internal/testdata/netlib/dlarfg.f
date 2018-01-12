@@ -38,9 +38,9 @@
 *> that
 *>
 *>       H * ( alpha ) = ( beta ),   H**T * H = I.
-*>           (   x   )   (   0  )
+*>           (   X   )   (   0  )
 *>
-*> where alpha and beta are scalars, and x is an (n-1)-element real
+*> where alpha and beta are scalars, and X is an (n-1)-element real
 *> vector. H is represented in the form
 *>
 *>       H = I - tau * ( 1 ) * ( 1 v**T ) ,
@@ -49,7 +49,7 @@
 *> where tau is a real scalar and v is a real (n-1)-element
 *> vector.
 *>
-*> If the elements of x are all zero, then tau = 0 and H is taken to be
+*> If the elements of X are all zero, then tau = 0 and H is taken to be
 *> the unit matrix.
 *>
 *> Otherwise  1 <= tau <= 2.
@@ -75,7 +75,7 @@
 *> \verbatim
 *>          X is DOUBLE PRECISION array, dimension
 *>                         (1+(N-2)*abs(INCX))
-*>          On entry, the vector x.
+*>          On entry, the vector X.
 *>          On exit, it is overwritten with the vector v.
 *> \endverbatim
 *>

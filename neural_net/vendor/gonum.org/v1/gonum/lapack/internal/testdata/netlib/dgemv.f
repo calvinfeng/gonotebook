@@ -27,9 +27,9 @@
 *>
 *> DGEMV  performs one of the matrix-vector operations
 *>
-*>    y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,
+*>    y := alpha*A*X + beta*y,   or   y := alpha*A**T*X + beta*y,
 *>
-*> where alpha and beta are scalars, x and y are vectors and A is an
+*> where alpha and beta are scalars, X and y are vectors and A is an
 *> m by n matrix.
 *> \endverbatim
 *
@@ -42,11 +42,11 @@
 *>           On entry, TRANS specifies the operation to be performed as
 *>           follows:
 *>
-*>              TRANS = 'N' or 'n'   y := alpha*A*x + beta*y.
+*>              TRANS = 'N' or 'n'   y := alpha*A*X + beta*y.
 *>
-*>              TRANS = 'T' or 't'   y := alpha*A**T*x + beta*y.
+*>              TRANS = 'T' or 't'   y := alpha*A**T*X + beta*y.
 *>
-*>              TRANS = 'C' or 'c'   y := alpha*A**T*x + beta*y.
+*>              TRANS = 'C' or 'c'   y := alpha*A**T*X + beta*y.
 *> \endverbatim
 *>
 *> \param[in] M
@@ -91,7 +91,7 @@
 *>           and at least
 *>           ( 1 + ( m - 1 )*abs( INCX ) ) otherwise.
 *>           Before entry, the incremented array X must contain the
-*>           vector x.
+*>           vector X.
 *> \endverbatim
 *>
 *> \param[in] INCX
@@ -218,7 +218,7 @@
       IF ((M.EQ.0) .OR. (N.EQ.0) .OR.
      +    ((ALPHA.EQ.ZERO).AND. (BETA.EQ.ONE))) RETURN
 *
-*     Set  LENX  and  LENY, the lengths of the vectors x and y, and set
+*     Set  LENX  and  LENY, the lengths of the vectors X and y, and set
 *     up the start points in  X  and  Y.
 *
       IF (LSAME(TRANS,'N')) THEN
@@ -273,7 +273,7 @@
       IF (ALPHA.EQ.ZERO) RETURN
       IF (LSAME(TRANS,'N')) THEN
 *
-*        Form  y := alpha*A*x + y.
+*        Form  y := alpha*A*X + y.
 *
           JX = KX
           IF (INCY.EQ.1) THEN
@@ -297,7 +297,7 @@
           END IF
       ELSE
 *
-*        Form  y := alpha*A**T*x + y.
+*        Form  y := alpha*A**T*X + y.
 *
           JY = KY
           IF (INCX.EQ.1) THEN

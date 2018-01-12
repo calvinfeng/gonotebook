@@ -36,17 +36,17 @@
 *>
 *> DLASSQ  returns the values  scl  and  smsq  such that
 *>
-*>    ( scl**2 )*smsq = x( 1 )**2 +...+ x( n )**2 + ( scale**2 )*sumsq,
+*>    ( scl**2 )*smsq = X( 1 )**2 +...+ X( n )**2 + ( scale**2 )*sumsq,
 *>
-*> where  x( i ) = X( 1 + ( i - 1 )*INCX ). The value of  sumsq  is
+*> where  X( i ) = X( 1 + ( i - 1 )*INCX ). The value of  sumsq  is
 *> assumed to be non-negative and  scl  returns the value
 *>
-*>    scl = max( scale, abs( x( i ) ) ).
+*>    scl = max( scale, abs( X( i ) ) ).
 *>
 *> scale and sumsq must be supplied in SCALE and SUMSQ and
 *> scl and smsq are overwritten on SCALE and SUMSQ respectively.
 *>
-*> The routine makes only one pass through the vector x.
+*> The routine makes only one pass through the vector X.
 *> \endverbatim
 *
 *  Arguments:
@@ -62,7 +62,7 @@
 *> \verbatim
 *>          X is DOUBLE PRECISION array, dimension (N)
 *>          The vector for which a scaled sum of squares is computed.
-*>             x( i )  = X( 1 + ( i - 1 )*INCX ), 1 <= i <= n.
+*>             X( i )  = X( 1 + ( i - 1 )*INCX ), 1 <= i <= n.
 *> \endverbatim
 *>
 *> \param[in] INCX

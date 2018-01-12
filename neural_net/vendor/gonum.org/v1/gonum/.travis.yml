@@ -4,9 +4,9 @@ language: go
 
 # Versions of go that are explicitly supported by gonum plus go tip.
 go:
- - 1.7.x
- - 1.8.x
- - 1.9.x
+ - 1.7.X
+ - 1.8.X
+ - 1.9.X
  - master
 
 matrix:
@@ -16,9 +16,9 @@ matrix:
 
 before_install:
  # Required for format check.
- - go get golang.org/x/tools/cmd/goimports
+ - go get golang.org/X/tools/cmd/goimports
  # Required for coverage.
- - go get golang.org/x/tools/cmd/cover
+ - go get golang.org/X/tools/cmd/cover
  - go get github.com/mattn/goveralls
  # Required for dot parser checks.
  - ./.travis/install-gocc.sh cfc6e12

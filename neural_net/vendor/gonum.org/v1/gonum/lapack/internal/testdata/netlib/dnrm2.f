@@ -26,7 +26,7 @@
 *> DNRM2 returns the euclidean norm of a vector via the function
 *> name, so that
 *>
-*>    DNRM2 := sqrt( x'*x )
+*>    DNRM2 := sqrt( X'*X )
 *> \endverbatim
 *
 *  Authors:

@@ -26,9 +26,9 @@
 *>
 *> DTRMV  performs one of the matrix-vector operations
 *>
-*>    x := A*x,   or   x := A**T*x,
+*>    X := A*X,   or   X := A**T*X,
 *>
-*> where x is an n element vector and  A is an n by n unit, or non-unit,
+*> where X is an n element vector and  A is an n by n unit, or non-unit,
 *> upper or lower triangular matrix.
 *> \endverbatim
 *
@@ -52,11 +52,11 @@
 *>           On entry, TRANS specifies the operation to be performed as
 *>           follows:
 *>
-*>              TRANS = 'N' or 'n'   x := A*x.
+*>              TRANS = 'N' or 'n'   X := A*X.
 *>
-*>              TRANS = 'T' or 't'   x := A**T*x.
+*>              TRANS = 'T' or 't'   X := A**T*X.
 *>
-*>              TRANS = 'C' or 'c'   x := A**T*x.
+*>              TRANS = 'C' or 'c'   X := A**T*X.
 *> \endverbatim
 *>
 *> \param[in] DIAG
@@ -106,8 +106,8 @@
 *>          X is DOUBLE PRECISION array of dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCX ) ).
 *>           Before entry, the incremented array X must contain the n
-*>           element vector x. On exit, X is overwritten with the
-*>           tranformed vector x.
+*>           element vector X. On exit, X is overwritten with the
+*>           tranformed vector X.
 *> \endverbatim
 *>
 *> \param[in] INCX
@@ -224,7 +224,7 @@
 *
       IF (LSAME(TRANS,'N')) THEN
 *
-*        Form  x := A*x.
+*        Form  X := A*X.
 *
           IF (LSAME(UPLO,'U')) THEN
               IF (INCX.EQ.1) THEN
@@ -282,7 +282,7 @@
           END IF
       ELSE
 *
-*        Form  x := A**T*x.
+*        Form  X := A**T*X.
 *
           IF (LSAME(UPLO,'U')) THEN
               IF (INCX.EQ.1) THEN

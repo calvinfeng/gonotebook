@@ -17,7 +17,7 @@
 #   source = "github.com/myfork/project2"
 #
 # [[override]]
-#  name = "github.com/x/y"
+#  name = "github.com/X/y"
 #  version = "2.4.0"
 
 

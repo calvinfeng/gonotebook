@@ -7,7 +7,7 @@ type NetworkLayer interface {
 	ForwardProp(*mat.Dense) (*mat.Dense, error)
 
 	// Update performs gradient descent update on weight and return input gradient upon update success
-	Update(*mat.Dense) (*mat.Dense, error)
+	Update(float64, *mat.Dense) (*mat.Dense, error)
 }
 
 type AffineSigmoid struct {
@@ -15,14 +15,49 @@ type AffineSigmoid struct {
 	SigLayer *Sigmoid
 }
 
-//func NewAffineSigmoid() *AffineSigmoid {
-//
-//}
-//
-//func (as *AffineSigmoid) ForwardProp() {
-//
-//}
-//
-//func (as *AffineSigmoid) Update() {
-//
-//}
+// NewAffineSigmoid accepts three parameters, n (batch size), inDim (input dimension), and outDim (output dimension)
+func NewAffineSigmoid(weightScale float64, n, inDim, outDim int) *AffineSigmoid {
+	weightMat := RandNormMat(inDim, outDim, 1, 0)
+	weightMat.Scale(weightScale, weightMat)
+
+	return &AffineSigmoid{
+		AffLayer: &Affine{
+			Weight: weightMat,
+			Bias:   mat.NewDense(n, outDim, nil),
+		},
+		SigLayer: &Sigmoid{},
+	}
+}
+
+func (as *AffineSigmoid) ForwardProp(X *mat.Dense) (*mat.Dense, error) {
+	if Score, affErr := as.AffLayer.ForwardProp(X); affErr == nil {
+		if Act, sigErr := as.SigLayer.ForwardProp(Score); sigErr == nil {
+			return Act, nil
+		} else {
+			return nil, sigErr
+		}
+	} else {
+		return nil, affErr
+	}
+}
+
+// GradAct - Gradient of Activations
+func (as *AffineSigmoid) Update(learnRate float64, GradAct *mat.Dense) (*mat.Dense, error) {
+	if GradScore, sigErr := as.SigLayer.BackwardProp(GradAct); sigErr == nil {
+		if GradX, GradW, GradB, affErr := as.AffLayer.BackwardProp(GradScore); affErr == nil {
+			// Perform update on weights
+			GradW.Scale(learnRate, GradW)
+			as.AffLayer.Weight.Sub(as.AffLayer.Weight, GradW)
+
+			// Perform update on biases
+			GradB.Scale(learnRate, GradB)
+			as.AffLayer.Bias.Sub(as.AffLayer.Bias, GradB)
+
+			return GradX, nil
+		} else {
+			return nil, affErr
+		}
+	} else {
+		return nil, sigErr
+	}
+}

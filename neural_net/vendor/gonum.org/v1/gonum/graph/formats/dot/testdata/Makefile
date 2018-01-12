@@ -15,9 +15,9 @@ DOT=$(wildcard *.dot)
 #
 # ref: https://github.com/graphism/dot/issues/2
 #
-#    pixel colors differ at x=550, y=1885
+#    pixel colors differ at X=550, y=1885
 DOT:=$(filter-out b51.dot, $(DOT))
-#    pixel colors differ at x=5395, y=1920
+#    pixel colors differ at X=5395, y=1920
 DOT:=$(filter-out b106.dot, $(DOT))
 
 # Skip segfaulting files.

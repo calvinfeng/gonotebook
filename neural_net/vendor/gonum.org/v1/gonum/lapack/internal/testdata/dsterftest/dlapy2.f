@@ -30,7 +30,7 @@
 *>
 *> \verbatim
 *>
-*> DLAPY2 returns sqrt(x**2+y**2), taking care not to cause unnecessary
+*> DLAPY2 returns sqrt(X**2+y**2), taking care not to cause unnecessary
 *> overflow.
 *> \endverbatim
 *
@@ -45,7 +45,7 @@
 *> \param[in] Y
 *> \verbatim
 *>          Y is DOUBLE PRECISION
-*>          X and Y specify the values x and y.
+*>          X and Y specify the values X and y.
 *> \endverbatim
 *
 *  Authors:

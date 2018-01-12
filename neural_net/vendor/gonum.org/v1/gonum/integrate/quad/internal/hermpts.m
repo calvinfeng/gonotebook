@@ -26,14 +26,14 @@
 % SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-function [x, w, v] = hermpts(n, varargin)
+function [X, w, v] = hermpts(n, varargin)
 %HERMPTS   Hermite points and Gauss-Hermite Quadrature Weights.
 %   HERMPTS(N) returns N Hermite points X in (-inf, inf). By default these are
 %   roots of the 'physicist'-type Hermite polynomials, which are orthogonal with
-%   respect to the weight exp(-x.^2).
+%   respect to the weight exp(-X.^2).
 %
 %   HERMPTS(N, 'PROB') normalises instead by the probablist's definition (with
-%   weight exp(-x.^2/2)), which gives rise to monomials.
+%   weight exp(-X.^2/2)), which gives rise to monomials.
 %
 %   [X, W] = HERMPTS(N) returns also a row vector W of weights for Gauss-Hermite
 %   quadrature. [X,W,V] = HERMPTS(N) returns in addition a column vector V of
@@ -77,7 +77,7 @@ end
 
 % Return empty vector if n = 0.
 if ( n == 0 )
-    [x, w, v] = deal([]); 
+    [X, w, v] = deal([]);
     return
 end
 
@@ -109,7 +109,7 @@ end
 %  N>=200: Use ASY
 if ( n == 1 )
     % n = 1 case is trivial
-    x = 0; 
+    X = 0;
     w = sqrt(pi); 
     v = 1;           
     
@@ -119,7 +119,7 @@ elseif ( (n < 21 && strcmpi(method,'default')) || strcmpi(method,'GW') )
     beta = sqrt(.5*(1:n-1));              % 3-term recurrence coeffs
     T = diag(beta, 1) + diag(beta, -1);   % Jacobi matrix
     [V, D] = eig(T);                      % Eigenvalue decomposition
-    [x, indx] = sort(diag(D));            % Hermite points
+    [X, indx] = sort(diag(D));            % Hermite points
     w = sqrt(pi)*V(1, indx).^2;           % weights
     v = abs(V(1, indx)).';                % Barycentric weights
     v = v./max(v);                        % Normalize
@@ -127,16 +127,16 @@ elseif ( (n < 21 && strcmpi(method,'default')) || strcmpi(method,'GW') )
     
     % Enforce symmetry:
     ii = 1:floor(n/2);  
-    x = x(ii);  
+    X = X(ii);
     w = w(ii);
     vmid = v(floor(n/2)+1); 
     v = v(ii);
     if ( mod(n, 2) )
-        x = [x ; 0 ; -x(end:-1:1)];   
+        X = [X ; 0 ; -X(end:-1:1)];
         w = [w, sqrt(pi) - sum(2*w), w(end:-1:1)];
         v = [v ; vmid ; v(end:-1:1)];
     else
-        x = [x ; -x(end:-1:1)];
+        X = [X ; -X(end:-1:1)];
         w = [w, w(end:-1:1)];
         v = [v ; -v(end:-1:1)];
     end
@@ -144,9 +144,9 @@ elseif ( (n < 21 && strcmpi(method,'default')) || strcmpi(method,'GW') )
 elseif ( strcmpi(method,'GLR') )
     % Fast, see [2]
     
-    [x, ders] = alg0_Herm(n);             % Nodes and H_n'(x)
-    w = (2*exp(-x.^2)./ders.^2)';         % Quadrature weights
-    v = exp(-x.^2/2)./ders;               % Barycentric weights
+    [X, ders] = alg0_Herm(n);             % Nodes and H_n'(X)
+    w = (2*exp(-X.^2)./ders.^2)';         % Quadrature weights
+    v = exp(-X.^2/2)./ders;               % Barycentric weights
     v = v./max(abs(v));                   % Normalize
     if ( ~mod(n, 2) )
         ii = (n/2+1):n; 
@@ -155,11 +155,11 @@ elseif ( strcmpi(method,'GLR') )
     
 elseif ( (n < 200 && strcmpi(method,'default')) || strcmpi(method,'REC') )
     
-    [x, w, v] = hermpts_rec( n ); 
+    [X, w, v] = hermpts_rec( n );
     
 else
     
-    [x, w, v] = hermpts_asy( n ); 
+    [X, w, v] = hermpts_asy( n );
     
 end
 
@@ -167,7 +167,7 @@ end
 w = (sqrt(pi)/sum(w))*w;                  
 
 if ( strcmpi(type, 'prob') )
-    x = x*sqrt(2);
+    X = X*sqrt(2);
     w = w*sqrt(2);
 end
 
@@ -231,17 +231,17 @@ up = zeros(1, m + 1);
 for j = (N + 1):(n - 1)
     
     % previous root
-    x = roots(j); 
+    X = roots(j);
     
     % initial approx
-    h = rk2_Herm(pi/2,-pi/2,x,n) - x;
+    h = rk2_Herm(pi/2,-pi/2,X,n) - X;
 
     % scaling
     M = 1/h;
     
     % recurrence relation for Hermite polynomials
-    c1 = -(2*n+1-x^2)/M^2; 
-    c2 = 2*x./M^3; 
+    c1 = -(2*n+1-X^2)/M^2;
+    c2 = 2*X./M^3;
     c3 = 1./M^4;
     u(1) = 0; 
     u(2) = ders(j)/M; 
@@ -278,7 +278,7 @@ for j = (N + 1):(n - 1)
     end
     
     % update
-    roots(j+1) = x + h;
+    roots(j+1) = X + h;
     ders(j+1) = up*hh;
 end
 
@@ -344,14 +344,14 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Runge-Kutta for Hermite Equation
-function x = rk2_Herm(t, tn, x, n) 
+function X = rk2_Herm(t, tn, X, n)
 m = 10; 
 h = (tn-t)/m;
 for j = 1:m
-    k1 = -h/(sqrt(2*n+1-x^2) - .5*x*sin(2*t)/(2*n+1-x^2));
+    k1 = -h/(sqrt(2*n+1-X^2) - .5*X*sin(2*t)/(2*n+1-X^2));
     t = t + h;
-    k2 = -h/(sqrt(2*n+1-(x+k1)^2) - .5*x*sin(2*t)/(2*n+1-(x+k1)^2));
-    x = x + .5*(k1 + k2);
+    k2 = -h/(sqrt(2*n+1-(X+k1)^2) - .5*X*sin(2*t)/(2*n+1-(X+k1)^2));
+    X = X + .5*(k1 + k2);
 end
 end
 
@@ -359,32 +359,32 @@ end
 %% %%%%%%%%%%%%%%%%%%%%%%% Routines for ASY algorithm %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [x, w, v] = hermpts_asy(n)
+function [X, w, v] = hermpts_asy(n)
 % HERMPTS_ASY, fast algorithm for computing Gauss-Hermite nodes and weights 
 % using Newton's method with polynomial evaluation via asymptotic expansions.  
 % 
-%  x = Gauss-Hermite nodes, w = quad weights, v = bary weights.
+%  X = Gauss-Hermite nodes, w = quad weights, v = bary weights.
 % 
 %  See [3]. 
 
-[x, w, v] = hermpts_asy0( n );   
+[X, w, v] = hermpts_asy0( n );
 
 if mod(n,2) == 1                              % fold out
-    x = [-x(end:-1:1);x(2:end)];
+    X = [-X(end:-1:1);X(2:end)];
     w = [w(end:-1:1) w(2:end)]; w = (sqrt(pi)/sum(w))*w;
     v = [v(end:-1:1);v(2:end)]; v = v./max(abs(v));
 else
-    x = [-x(end:-1:1);x];
+    X = [-X(end:-1:1);X];
     w = [w(end:-1:1) w]; w = (sqrt(pi)/sum(w))*w;
     v = [v(end:-1:1);-v]; v = v./max(abs(v));
 end
 
 % debug
 %tic, exact = hermpts(n); toc
-%semilogy(abs(exact-x))
+%semilogy(abs(exact-X))
 end
 
-function [x, w, v] = hermpts_asy0(n)
+function [X, w, v] = hermpts_asy0(n)
 % Compute Hermite nodes and weights using asymptotic formula
 
 x0 = HermiteInitialGuesses(n);   % get initial guesses
@@ -397,13 +397,13 @@ for k = 1:20
     if norm(dt,inf) < sqrt(eps)/10, break; end
 end
 t0 = cos(theta0);
-x = sqrt(2*n+1)*t0;                          % back to x-variable
+X = sqrt(2*n+1)*t0;                          % back to X-variable
 
-ders = x.*val + sqrt(2)*dval;
+ders = X.*val + sqrt(2)*dval;
 %ders = dval;
-w = (exp(-x.^2)./ders.^2)';            % quadrature weights
+w = (exp(-X.^2)./ders.^2)';            % quadrature weights
 
-v = exp(-x.^2/2)./ders;               % Barycentric weights
+v = exp(-X.^2/2)./ders;               % Barycentric weights
 end
 
 function [val, dval] = hermpoly_asy_airy(n, theta)
@@ -493,7 +493,7 @@ function x_init = HermiteInitialGuesses(n)
 % rappresentazione asintotica, Ann. Mat. Pura Appl. 26 (1947), pp. 283-300.
 
 % Gatteschi formula involving airy roots [1].
-% These initial guess are good near x = sqrt(n+1/2);
+% These initial guess are good near X = sqrt(n+1/2);
 if mod(n,2) == 1
     m = (n-1)/2; bess = (1:m)'*pi; a = .5;
 else
@@ -524,7 +524,7 @@ x_init = sqrt(nu + 2^(2/3)*airyrts*nu^(1/3) +...
 x_init_airy = real(x_init(end:-1:1));
 
 % Tricomi initial guesses. Equation (2.1) in [1]. Originally in [2].
-% These initial guesses are good near x = 0 . Note: zeros of besselj(+/-.5,x)
+% These initial guesses are good near X = 0 . Note: zeros of besselj(+/-.5,X)
 % are integer and half-integer multiples of pi.
 % x_init_bess =  bess/sqrt(nu).*sqrt((1+ (bess.^2+2*(a^2-1))/3/nu^2) );
 Tnk0 = pi/2*ones(m,1);
@@ -564,7 +564,7 @@ end
 %% %%%%%%%%%%%%%%%%%%%%%%% Routines for REC algorithm %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [x, w, v] = hermpts_rec(n)
+function [X, w, v] = hermpts_rec(n)
 % Compute Hermite nodes and weights using recurrence relation.
 
 x0 = HermiteInitialGuesses(n);
@@ -577,16 +577,16 @@ for kk = 1:10
     x0 = x0 - dx;
     if norm(dx, inf)<sqrt(eps), break; end
 end
-x = x0/sqrt(2);
-w = (exp(-x.^2)./dval.^2)';            % quadrature weights
-v = exp(-x.^2/2)./dval;               % Barycentric weights
+X = x0/sqrt(2);
+w = (exp(-X.^2)./dval.^2)';            % quadrature weights
+v = exp(-X.^2/2)./dval;               % Barycentric weights
 
 if mod(n,2) == 1                              % fold out
-    x = [-x(end:-1:1);x(2:end)];
+    X = [-X(end:-1:1);X(2:end)];
     w = [w(end:-1:1) w(2:end)]; w = (sqrt(pi)/sum(w))*w;
     v = [v(end:-1:1);v(2:end)]; v = v./max(abs(v));
 else
-    x = [-x(end:-1:1);x];
+    X = [-X(end:-1:1);X];
     w = [w(end:-1:1) w]; w = (sqrt(pi)/sum(w))*w;
     v = [v(end:-1:1);-v]; v = v./max(abs(v));
 end

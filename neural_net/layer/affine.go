@@ -13,9 +13,9 @@ type Affine struct {
 }
 
 // Expected input is of shape (N, D) where N is the number of batch example
-func (a *Affine) ForwardProp(x *mat.Dense) (*mat.Dense, error) {
+func (a *Affine) ForwardProp(X *mat.Dense) (*mat.Dense, error) {
 	// First check dimension
-	xRow, xCol := x.Dims()
+	xRow, xCol := X.Dims()
 	wRow, wCol := a.Weight.Dims()
 	bRow, bCol := a.Bias.Dims()
 
@@ -25,13 +25,13 @@ func (a *Affine) ForwardProp(x *mat.Dense) (*mat.Dense, error) {
 
 	// Cache the input, cause we need it to compute back propagation
 	a.Input = mat.NewDense(xRow, xCol, nil)
-	a.Input.Copy(x)
+	a.Input.Copy(X)
 
 	// Initialize a nil matrix
 	result := mat.NewDense(xRow, wCol, nil)
 
 	// Perform operations
-	result.Mul(x, a.Weight)
+	result.Mul(X, a.Weight)
 	result.Add(result, a.Bias)
 
 	return result, nil
@@ -40,12 +40,12 @@ func (a *Affine) ForwardProp(x *mat.Dense) (*mat.Dense, error) {
 // BackwardProp takes an upstream gradient, a.k.a. gradient of output and perform gradient calculation on layer's input,
 // weight and bias matrices. The expected input to this function should be of shape, (N, H) which is the same shape as
 // the output from ForwardProp.
-func (a *Affine) BackwardProp(gradOut *mat.Dense) (*mat.Dense, *mat.Dense, *mat.Dense, error) {
+func (a *Affine) BackwardProp(GradOut *mat.Dense) (*mat.Dense, *mat.Dense, *mat.Dense, error) {
 	if a.Input == nil {
 		return nil, nil, nil, errors.New("input is not set")
 	}
 
-	gradOutRow, gradOutCol := gradOut.Dims()
+	gradOutRow, gradOutCol := GradOut.Dims()
 	xRow, xCol := a.Input.Dims()
 	wRow, wCol := a.Weight.Dims()
 
@@ -54,13 +54,13 @@ func (a *Affine) BackwardProp(gradOut *mat.Dense) (*mat.Dense, *mat.Dense, *mat.
 	}
 
 	gradW := mat.NewDense(xCol, gradOutCol, nil)
-	gradW.Mul(a.Input.T(), gradOut)
+	gradW.Mul(a.Input.T(), GradOut)
 
 	gradX := mat.NewDense(gradOutRow, wRow, nil)
-	gradX.Mul(gradOut, a.Weight.T())
+	gradX.Mul(GradOut, a.Weight.T())
 
 	// Sum along column on upstream gradient
-	sumSlice := SumAlongColumn(gradOut)
+	sumSlice := SumAlongColumn(GradOut)
 	biasData := []float64{}
 	for i := 0; i < gradOutRow; i += 1 {
 		biasData = append(biasData, sumSlice...)
