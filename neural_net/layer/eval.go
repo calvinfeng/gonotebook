@@ -99,12 +99,3 @@ func EvalNumericalGradForBias(f ForwardProp, input *mat.Dense, upstreamGrad *mat
 
 	return numGradient, nil
 }
-
-func OnesMat(row, col int) *mat.Dense {
-	ones := []float64{}
-	for i := 0; i < row*col; i++ {
-		ones = append(ones, 1)
-	}
-
-	return mat.NewDense(row, col, ones)
-}

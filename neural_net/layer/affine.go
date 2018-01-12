@@ -1,6 +1,7 @@
 package layer
 
 import (
+	"errors"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -41,7 +42,7 @@ func (a *Affine) ForwardProp(x *mat.Dense) (*mat.Dense, error) {
 // the output from ForwardProp.
 func (a *Affine) BackwardProp(gradOut *mat.Dense) (*mat.Dense, *mat.Dense, *mat.Dense, error) {
 	if a.Input == nil {
-		return nil, nil, nil, mat.Error{}
+		return nil, nil, nil, errors.New("input is not set")
 	}
 
 	gradOutRow, gradOutCol := gradOut.Dims()
