@@ -14,7 +14,7 @@ func TestAffine(t *testing.T) {
 	W := RandNormMat(3, 3, 1, 0)
 
 	// B is a bias matrix
-	B := RandNormMat(3, 3, 1e-2, 0)
+	B := RandNormMat(1, 3, 1e-2, 0)
 
 	// grad is the upstream gradient, it is dL/d_output
 	grad := OnesMat(3, 3)
@@ -30,7 +30,7 @@ func TestAffine(t *testing.T) {
 		} else {
 			expected := mat.NewDense(3, 3, nil)
 			expected.Mul(X, W)
-			expected.Add(expected, B)
+			expected.Add(expected, MatBroadcast(B, 3))
 
 			row, col := output.Dims()
 			assert.Equal(t, 3, row, "Row count should equal to 3")
@@ -120,14 +120,16 @@ func TestAffine(t *testing.T) {
 				t.Error("Failed to evaluate numerical gradient on B", numErr)
 			}
 
-			relError = mat.NewDense(3, 3, nil)
+			relError = mat.NewDense(1, 3, nil)
 			relError.Sub(gradB, numGradB)
 
 			row, col = relError.Dims()
-			for i := 0; i < row; i += 1 {
-				for j := 0; j < col; j += 1 {
-					assert.Equal(t, float64(int(relError.At(i, j)*1e8)/1e8), 0.0, "Error should be zero")
-				}
+			if row != 1 {
+				t.Error("Bias row dimension is not one")
+			}
+
+			for j := 0; j < col; j += 1 {
+				assert.Equal(t, float64(int(relError.At(0, j)*1e8)/1e8), 0.0, "Error should be zero")
 			}
 		}
 	})

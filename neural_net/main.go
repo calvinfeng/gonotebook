@@ -13,7 +13,7 @@ func PrintMat(M *mat.Dense) {
 	line := ""
 	for i := 0; i < row; i += 1 {
 		for j := 0; j < col; j += 1 {
-			line += fmt.Sprintf(" %v ", M.At(i, j))
+			line += fmt.Sprintf(" %.3f ", M.At(i, j))
 		}
 		line += "\n"
 	}
@@ -26,20 +26,22 @@ func main() {
 	// particular seed will give the program pseudo-randomness.
 	rand.Seed(time.Now().UTC().Unix())
 
-	batchSize, inputDim, hiddenDim, outputDim, numLayers, weightScale := 10, 4, 10, 3, 5, 1e-2
+	batchSize, inputDim, hiddenDim, outputDim, numLayers, weightScale := 10, 4, 10, 3, 2, 1e-2
 
-	X := layer.RandNormMat(batchSize, inputDim, 1, 0)
-	Y := layer.RandNormMat(batchSize, outputDim, 1, 0)
+	X := layer.RandMat(batchSize, inputDim)
+	Y := layer.RandMat(batchSize, outputDim)
 
-	network := NewNeuralNetwork(batchSize, inputDim, hiddenDim, outputDim)
+	network := NewNeuralNetwork(inputDim, hiddenDim, outputDim)
 	network.InitLayers(weightScale, numLayers)
 
 	if err := network.Loss(X, Y); err != nil {
 		fmt.Println(err)
 	}
 
+	network.PrintWeights()
+
 	for i := 0; i < 10000; i += 1 {
-		if err := network.TrainStep(X, Y, 1e-2); err != nil {
+		if err := network.TrainStep(X, Y, 1e-1); err != nil {
 			fmt.Println(err)
 			break
 		}
@@ -48,4 +50,6 @@ func main() {
 	if err := network.Loss(X, Y); err != nil {
 		fmt.Println(err)
 	}
+
+	network.PrintWeights()
 }

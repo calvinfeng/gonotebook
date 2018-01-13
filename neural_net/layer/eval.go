@@ -50,51 +50,42 @@ func EvalNumericalGrad(f ForwardProp, input *mat.Dense, upstreamGrad *mat.Dense,
 	return numGradient, nil
 }
 
-func EvalNumericalGradForBias(f ForwardProp, input *mat.Dense, upstreamGrad *mat.Dense, h float64) (*mat.Dense, error) {
-	inRow, inCol := input.Dims()
+func EvalNumericalGradForBias(f ForwardProp, bias *mat.Dense, upstreamGrad *mat.Dense, h float64) (*mat.Dense, error) {
+	N, H := bias.Dims()
 	outRow, outCol := upstreamGrad.Dims()
 
-	if inRow != outRow || inCol != outCol {
+	if N != 1 || H != outCol {
 		return nil, mat.ErrShape
 	}
 
-	numGradient := mat.NewDense(inRow, inCol, nil)
-	for j := 0; j < inCol; j += 1 {
-		// Sum all the numerical slope values along j column, i.e. iterating from top to bottom i = 0, 1, ..., inRow - 1
-		slopeSum := 0.0
-		for i := 0; i < inRow; i += 1 {
-			var fxph, fxmh *mat.Dense // f(x + h) and f(x - h)
+	numGradient := mat.NewDense(N, H, nil)
+	for j := 0; j < H; j += 1 {
+		var fxph, fxmh *mat.Dense
 
-			oldVal := input.At(i, j)
+		oldVal := bias.At(0, j)
 
-			input.Set(i, j, oldVal+h)
-			if output, err := f(input); err == nil {
-				fxph = output
-			} else {
-				return nil, err
-			}
-
-			input.Set(i, j, oldVal-h)
-			if output, err := f(input); err == nil {
-				fxmh = output
-			} else {
-				return nil, err
-			}
-
-			// Reset the input back to its original value
-			input.Set(i, j, oldVal)
-
-			diff := mat.NewDense(outRow, outCol, nil)
-			diff.Sub(fxph, fxmh)
-			diff.MulElem(diff, upstreamGrad)
-
-			slopeSum += mat.Sum(diff) / (2.0 * h)
+		bias.Set(0, j, oldVal+h)
+		if output, err := f(bias); err == nil {
+			fxph = output
+		} else {
+			return nil, err
 		}
 
-		// Set all value in the column of the numerical gradient to this slope sum
-		for i := 0; i < inRow; i += 1 {
-			numGradient.Set(i, j, slopeSum)
+		bias.Set(0, j, oldVal-h)
+		if output, err := f(bias); err == nil {
+			fxmh = output
+		} else {
+			return nil, err
 		}
+
+		// Reset bias back to its original value
+		bias.Set(0, j, oldVal)
+
+		diff := mat.NewDense(outRow, outCol, nil)
+		diff.Sub(fxph, fxmh)
+		diff.MulElem(diff, upstreamGrad)
+
+		numGradient.Set(0, j, mat.Sum(diff)/(2.0*h))
 	}
 
 	return numGradient, nil

@@ -7,20 +7,18 @@ import (
 )
 
 type NeuralNetwork struct {
-	Layers     []layer.NetworkLayer
-	BatchSize  int
-	FeatureDim int
-	HiddenDim  int
-	OutputDim  int
+	Layers    []layer.NetworkLayer
+	InputDim  int
+	HiddenDim int
+	OutputDim int
 }
 
-func NewNeuralNetwork(batchSize, featureDim, hiddenDim, outputDim int) *NeuralNetwork {
+func NewNeuralNetwork(inputDim, hiddenDim, outputDim int) *NeuralNetwork {
 	return &NeuralNetwork{
-		Layers:     []layer.NetworkLayer{},
-		BatchSize:  batchSize,
-		FeatureDim: featureDim,
-		HiddenDim:  hiddenDim,
-		OutputDim:  outputDim,
+		Layers:    []layer.NetworkLayer{},
+		InputDim:  inputDim,
+		HiddenDim: hiddenDim,
+		OutputDim: outputDim,
 	}
 }
 
@@ -30,14 +28,20 @@ func (nn *NeuralNetwork) InitLayers(weightScale float64, numLayers int) {
 
 		switch i {
 		case 1:
-			nl = layer.NewAffineSigmoid(weightScale, nn.BatchSize, nn.FeatureDim, nn.HiddenDim)
+			nl = layer.NewAffineSigmoid(weightScale, nn.InputDim, nn.HiddenDim)
 		case numLayers:
-			nl = layer.NewAffineSigmoid(weightScale, nn.BatchSize, nn.HiddenDim, nn.OutputDim)
+			nl = layer.NewAffineSigmoid(weightScale, nn.HiddenDim, nn.OutputDim)
 		default:
-			nl = layer.NewAffineSigmoid(weightScale, nn.BatchSize, nn.HiddenDim, nn.HiddenDim)
+			nl = layer.NewAffineSigmoid(weightScale, nn.HiddenDim, nn.HiddenDim)
 		}
 
 		nn.Layers = append(nn.Layers, nl)
+	}
+}
+
+func (nn *NeuralNetwork) PrintWeights() {
+	for i := 0; i < len(nn.Layers); i += 1 {
+		PrintMat(nn.Layers[i].Weight())
 	}
 }
 

@@ -8,31 +8,30 @@ import (
 type Affine struct {
 	Input  *mat.Dense // Dense matrix of shape (N, D) where D is the feature dimension
 	Weight *mat.Dense // Dense matrix of shape (D, H) where H is the hidden dimension
-	Bias   *mat.Dense // Dense matrix of shape (N, H)
+	Bias   *mat.Dense // Dense matrix of shape (1, H)
 	Output *mat.Dense // Dense matrix of shape (N, H)
 }
 
 // Expected input is of shape (N, D) where N is the number of batch example
 func (a *Affine) ForwardProp(X *mat.Dense) (*mat.Dense, error) {
-	// First check dimension
-	xRow, xCol := X.Dims()
-	wRow, wCol := a.Weight.Dims()
-	bRow, bCol := a.Bias.Dims()
+	// First check dimension, expected output is N by H
+	N, xCol := X.Dims()
+	wRow, H := a.Weight.Dims()
 
-	if xCol != wRow || xRow != bRow || wCol != bCol {
+	if xCol != wRow {
 		return nil, mat.ErrShape
 	}
 
 	// Cache the input, cause we need it to compute back propagation
-	a.Input = mat.NewDense(xRow, xCol, nil)
+	a.Input = mat.NewDense(N, xCol, nil)
 	a.Input.Copy(X)
 
 	// Initialize a nil matrix
-	result := mat.NewDense(xRow, wCol, nil)
+	result := mat.NewDense(N, H, nil)
 
 	// Perform operations
 	result.Mul(X, a.Weight)
-	result.Add(result, a.Bias)
+	result.Add(result, MatBroadcast(a.Bias, N))
 
 	return result, nil
 }
@@ -45,44 +44,22 @@ func (a *Affine) BackwardProp(GradOut *mat.Dense) (*mat.Dense, *mat.Dense, *mat.
 		return nil, nil, nil, errors.New("input is not set")
 	}
 
-	gradOutRow, gradOutCol := GradOut.Dims()
+	N, H := GradOut.Dims()
 	xRow, xCol := a.Input.Dims()
 	wRow, wCol := a.Weight.Dims()
 
-	if gradOutRow != xRow || gradOutCol != wCol {
+	if N != xRow || H != wCol {
 		return nil, nil, nil, mat.ErrShape
 	}
 
-	gradW := mat.NewDense(xCol, gradOutCol, nil)
+	gradW := mat.NewDense(xCol, H, nil)
 	gradW.Mul(a.Input.T(), GradOut)
 
-	gradX := mat.NewDense(gradOutRow, wRow, nil)
+	gradX := mat.NewDense(N, wRow, nil)
 	gradX.Mul(GradOut, a.Weight.T())
 
 	// Sum along column on upstream gradient
-	sumSlice := SumAlongColumn(GradOut)
-	biasData := []float64{}
-	for i := 0; i < gradOutRow; i += 1 {
-		biasData = append(biasData, sumSlice...)
-	}
-
-	gradB := mat.NewDense(gradOutRow, gradOutCol, biasData)
+	gradB := mat.NewDense(1, H, SumAlongColumn(GradOut))
 
 	return gradX, gradW, gradB, nil
-}
-
-// SumAlongColumn accepts a matrix and perform summing along each column of the matrix. If the input is of shape (N, D),
-// the return value will be a slice of length D.
-func SumAlongColumn(m *mat.Dense) []float64 {
-	Row, Col := m.Dims()
-	result := []float64{}
-	for j := 0; j < Col; j += 1 {
-		colSum := 0.0
-		for i := 0; i < Row; i += 1 {
-			colSum += m.At(i, j)
-		}
-		result = append(result, colSum)
-	}
-
-	return result
 }
