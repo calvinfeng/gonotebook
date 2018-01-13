@@ -26,39 +26,26 @@ func main() {
 	// particular seed will give the program pseudo-randomness.
 	rand.Seed(time.Now().UTC().Unix())
 
-	batchSize, inputDim, hiddenDim, outputDim := 10, 4, 5, 3
-	numLayers := 5
-	layers := make(map[int]layer.NetworkLayer)
-	weightScale := 1.0
-
-	for i := 1; i <= numLayers; i += 1 {
-		switch i {
-		case 1:
-			layers[i] = layer.NewAffineSigmoid(weightScale, batchSize, inputDim, hiddenDim)
-		case numLayers:
-			layers[i] = layer.NewAffineSigmoid(weightScale, batchSize, hiddenDim, outputDim)
-		default:
-			layers[i] = layer.NewAffineSigmoid(weightScale, batchSize, hiddenDim, hiddenDim)
-		}
-	}
+	batchSize, inputDim, hiddenDim, outputDim, numLayers, weightScale := 10, 4, 10, 3, 5, 1e-2
 
 	X := layer.RandNormMat(batchSize, inputDim, 1, 0)
-	var LayerOut *mat.Dense
-	var propErr error
-	for i := 1; i <= numLayers; i += 1 {
-		if i == 1 {
-			LayerOut, propErr = layers[i].ForwardProp(X)
-			if propErr != nil {
-				break
-			}
-		} else {
-			LayerOut, propErr = layers[i].ForwardProp(LayerOut)
-			if propErr != nil {
-				break
-			}
+	Y := layer.RandNormMat(batchSize, outputDim, 1, 0)
+
+	network := NewNeuralNetwork(batchSize, inputDim, hiddenDim, outputDim)
+	network.InitLayers(weightScale, numLayers)
+
+	if err := network.Loss(X, Y); err != nil {
+		fmt.Println(err)
+	}
+
+	for i := 0; i < 10000; i += 1 {
+		if err := network.TrainStep(X, Y, 1e-2); err != nil {
+			fmt.Println(err)
+			break
 		}
 	}
 
-	fmt.Println("Completed forward propagation")
-	PrintMat(LayerOut)
+	if err := network.Loss(X, Y); err != nil {
+		fmt.Println(err)
+	}
 }
