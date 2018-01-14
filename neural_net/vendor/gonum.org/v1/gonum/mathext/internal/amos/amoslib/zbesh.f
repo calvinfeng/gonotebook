@@ -45,8 +45,8 @@ C           NZ     - NUMBER OF COMPONENTS SET TO ZERO DUE TO UNDERFLOW,
 C                    NZ= 0   , NORMAL RETURN
 C                    NZ.GT.0 , FIRST NZ COMPONENTS OF CY SET TO ZERO DUE
 C                              TO UNDERFLOW, CY(J)=CMPLX(0.0D0,0.0D0)
-C                              J=1,...,NZ WHEN Y.GT.0.0 AND M=1 OR
-C                              Y.LT.0.0 AND M=2. FOR THE COMPLMENTARY
+C                              J=1,...,NZ WHEN Ytr.GT.0.0 AND M=1 OR
+C                              Ytr.LT.0.0 AND M=2. FOR THE COMPLMENTARY
 C                              HALF PLANES, NZ STATES ONLY THE NUMBER
 C                              OF UNDERFLOWS.
 C           IERR   - ERROR FLAG

@@ -45,13 +45,13 @@
 
 [[projects]]
   branch = "master"
-  name = "golang.org/X/crypto"
+  name = "golang.org/Xtr/crypto"
   packages = ["ssh/terminal"]
   revision = "95a4943f35d008beabde8c11e5075a1b714e6419"
 
 [[projects]]
   branch = "master"
-  name = "golang.org/X/sys"
+  name = "golang.org/Xtr/sys"
   packages = ["unix","windows"]
   revision = "83801418e1b59fb1880e363299581ee543af32ca"
 

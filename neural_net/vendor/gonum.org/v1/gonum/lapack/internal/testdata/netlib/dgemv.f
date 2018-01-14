@@ -8,7 +8,7 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE DGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+*       SUBROUTINE DGEMV(TRANS,M,N,ALPHA,A,LDA,Xtr,INCX,BETA,Ytr,INCY)
 * 
 *       .. Scalar Arguments ..
 *       DOUBLE PRECISION ALPHA,BETA
@@ -16,7 +16,7 @@
 *       CHARACTER TRANS
 *       ..
 *       .. Array Arguments ..
-*       DOUBLE PRECISION A(LDA,*),X(*),Y(*)
+*       DOUBLE PRECISION A(LDA,*),Xtr(*),Ytr(*)
 *       ..
 *  
 *
@@ -27,9 +27,9 @@
 *>
 *> DGEMV  performs one of the matrix-vector operations
 *>
-*>    y := alpha*A*X + beta*y,   or   y := alpha*A**T*X + beta*y,
+*>    y := alpha*A*Xtr + beta*y,   or   y := alpha*A**T*Xtr + beta*y,
 *>
-*> where alpha and beta are scalars, X and y are vectors and A is an
+*> where alpha and beta are scalars, Xtr and y are vectors and A is an
 *> m by n matrix.
 *> \endverbatim
 *
@@ -42,11 +42,11 @@
 *>           On entry, TRANS specifies the operation to be performed as
 *>           follows:
 *>
-*>              TRANS = 'N' or 'n'   y := alpha*A*X + beta*y.
+*>              TRANS = 'N' or 'n'   y := alpha*A*Xtr + beta*y.
 *>
-*>              TRANS = 'T' or 't'   y := alpha*A**T*X + beta*y.
+*>              TRANS = 'T' or 't'   y := alpha*A**T*Xtr + beta*y.
 *>
-*>              TRANS = 'C' or 'c'   y := alpha*A**T*X + beta*y.
+*>              TRANS = 'C' or 'c'   y := alpha*A**T*Xtr + beta*y.
 *> \endverbatim
 *>
 *> \param[in] M
@@ -84,38 +84,38 @@
 *>           max( 1, m ).
 *> \endverbatim
 *>
-*> \param[in] X
+*> \param[in] Xtr
 *> \verbatim
-*>          X is DOUBLE PRECISION array of DIMENSION at least
+*>          Xtr is DOUBLE PRECISION array of DIMENSION at least
 *>           ( 1 + ( n - 1 )*abs( INCX ) ) when TRANS = 'N' or 'n'
 *>           and at least
 *>           ( 1 + ( m - 1 )*abs( INCX ) ) otherwise.
-*>           Before entry, the incremented array X must contain the
-*>           vector X.
+*>           Before entry, the incremented array Xtr must contain the
+*>           vector Xtr.
 *> \endverbatim
 *>
 *> \param[in] INCX
 *> \verbatim
 *>          INCX is INTEGER
 *>           On entry, INCX specifies the increment for the elements of
-*>           X. INCX must not be zero.
+*>           Xtr. INCX must not be zero.
 *> \endverbatim
 *>
 *> \param[in] BETA
 *> \verbatim
 *>          BETA is DOUBLE PRECISION.
 *>           On entry, BETA specifies the scalar beta. When BETA is
-*>           supplied as zero then Y need not be set on input.
+*>           supplied as zero then Ytr need not be set on input.
 *> \endverbatim
 *>
-*> \param[in,out] Y
+*> \param[in,out] Ytr
 *> \verbatim
-*>          Y is DOUBLE PRECISION array of DIMENSION at least
+*>          Ytr is DOUBLE PRECISION array of DIMENSION at least
 *>           ( 1 + ( m - 1 )*abs( INCY ) ) when TRANS = 'N' or 'n'
 *>           and at least
 *>           ( 1 + ( n - 1 )*abs( INCY ) ) otherwise.
-*>           Before entry with BETA non-zero, the incremented array Y
-*>           must contain the vector y. On exit, Y is overwritten by the
+*>           Before entry with BETA non-zero, the incremented array Ytr
+*>           must contain the vector y. On exit, Ytr is overwritten by the
 *>           updated vector y.
 *> \endverbatim
 *>
@@ -123,7 +123,7 @@
 *> \verbatim
 *>          INCY is INTEGER
 *>           On entry, INCY specifies the increment for the elements of
-*>           Y. INCY must not be zero.
+*>           Ytr. INCY must not be zero.
 *> \endverbatim
 *
 *  Authors:
@@ -154,7 +154,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE DGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+      SUBROUTINE DGEMV(TRANS,M,N,ALPHA,A,LDA,Xtr,INCX,BETA,Ytr,INCY)
 *
 *  -- Reference BLAS level2 routine (version 3.6.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -167,7 +167,7 @@
       CHARACTER TRANS
 *     ..
 *     .. Array Arguments ..
-      DOUBLE PRECISION A(LDA,*),X(*),Y(*)
+      DOUBLE PRECISION A(LDA,*),Xtr(*),Ytr(*)
 *     ..
 *
 *  =====================================================================
@@ -218,8 +218,8 @@
       IF ((M.EQ.0) .OR. (N.EQ.0) .OR.
      +    ((ALPHA.EQ.ZERO).AND. (BETA.EQ.ONE))) RETURN
 *
-*     Set  LENX  and  LENY, the lengths of the vectors X and y, and set
-*     up the start points in  X  and  Y.
+*     Set  LENX  and  LENY, the lengths of the vectors Xtr and y, and set
+*     up the start points in  Xtr  and  Ytr.
 *
       IF (LSAME(TRANS,'N')) THEN
           LENX = N
@@ -248,23 +248,23 @@
           IF (INCY.EQ.1) THEN
               IF (BETA.EQ.ZERO) THEN
                   DO 10 I = 1,LENY
-                      Y(I) = ZERO
+                      Ytr(I) = ZERO
    10             CONTINUE
               ELSE
                   DO 20 I = 1,LENY
-                      Y(I) = BETA*Y(I)
+                      Ytr(I) = BETA*Ytr(I)
    20             CONTINUE
               END IF
           ELSE
               IY = KY
               IF (BETA.EQ.ZERO) THEN
                   DO 30 I = 1,LENY
-                      Y(IY) = ZERO
+                      Ytr(IY) = ZERO
                       IY = IY + INCY
    30             CONTINUE
               ELSE
                   DO 40 I = 1,LENY
-                      Y(IY) = BETA*Y(IY)
+                      Ytr(IY) = BETA*Ytr(IY)
                       IY = IY + INCY
    40             CONTINUE
               END IF
@@ -273,23 +273,23 @@
       IF (ALPHA.EQ.ZERO) RETURN
       IF (LSAME(TRANS,'N')) THEN
 *
-*        Form  y := alpha*A*X + y.
+*        Form  y := alpha*A*Xtr + y.
 *
           JX = KX
           IF (INCY.EQ.1) THEN
               DO 60 J = 1,N
-                  TEMP = ALPHA*X(JX)
+                  TEMP = ALPHA*Xtr(JX)
                   DO 50 I = 1,M
-                      Y(I) = Y(I) + TEMP*A(I,J)
+                      Ytr(I) = Ytr(I) + TEMP*A(I,J)
    50             CONTINUE
                   JX = JX + INCX
    60         CONTINUE
           ELSE
               DO 80 J = 1,N
-                  TEMP = ALPHA*X(JX)
+                  TEMP = ALPHA*Xtr(JX)
                   IY = KY
                   DO 70 I = 1,M
-                      Y(IY) = Y(IY) + TEMP*A(I,J)
+                      Ytr(IY) = Ytr(IY) + TEMP*A(I,J)
                       IY = IY + INCY
    70             CONTINUE
                   JX = JX + INCX
@@ -297,16 +297,16 @@
           END IF
       ELSE
 *
-*        Form  y := alpha*A**T*X + y.
+*        Form  y := alpha*A**T*Xtr + y.
 *
           JY = KY
           IF (INCX.EQ.1) THEN
               DO 100 J = 1,N
                   TEMP = ZERO
                   DO 90 I = 1,M
-                      TEMP = TEMP + A(I,J)*X(I)
+                      TEMP = TEMP + A(I,J)*Xtr(I)
    90             CONTINUE
-                  Y(JY) = Y(JY) + ALPHA*TEMP
+                  Ytr(JY) = Ytr(JY) + ALPHA*TEMP
                   JY = JY + INCY
   100         CONTINUE
           ELSE
@@ -314,10 +314,10 @@
                   TEMP = ZERO
                   IX = KX
                   DO 110 I = 1,M
-                      TEMP = TEMP + A(I,J)*X(IX)
+                      TEMP = TEMP + A(I,J)*Xtr(IX)
                       IX = IX + INCX
   110             CONTINUE
-                  Y(JY) = Y(JY) + ALPHA*TEMP
+                  Ytr(JY) = Ytr(JY) + ALPHA*TEMP
                   JY = JY + INCY
   120         CONTINUE
           END IF

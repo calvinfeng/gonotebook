@@ -18,10 +18,10 @@
 *  Definition:
 *  ===========
 *
-*       DOUBLE PRECISION FUNCTION DLAPY2( X, Y )
+*       DOUBLE PRECISION FUNCTION DLAPY2( Xtr, Ytr )
 * 
 *       .. Scalar Arguments ..
-*       DOUBLE PRECISION   X, Y
+*       DOUBLE PRECISION   Xtr, Ytr
 *       ..
 *  
 *
@@ -30,22 +30,22 @@
 *>
 *> \verbatim
 *>
-*> DLAPY2 returns sqrt(X**2+y**2), taking care not to cause unnecessary
+*> DLAPY2 returns sqrt(Xtr**2+y**2), taking care not to cause unnecessary
 *> overflow.
 *> \endverbatim
 *
 *  Arguments:
 *  ==========
 *
-*> \param[in] X
+*> \param[in] Xtr
 *> \verbatim
-*>          X is DOUBLE PRECISION
+*>          Xtr is DOUBLE PRECISION
 *> \endverbatim
 *>
-*> \param[in] Y
+*> \param[in] Ytr
 *> \verbatim
-*>          Y is DOUBLE PRECISION
-*>          X and Y specify the values X and y.
+*>          Ytr is DOUBLE PRECISION
+*>          Xtr and Ytr specify the values Xtr and y.
 *> \endverbatim
 *
 *  Authors:
@@ -61,7 +61,7 @@
 *> \ingroup auxOTHERauxiliary
 *
 *  =====================================================================
-      DOUBLE PRECISION FUNCTION DLAPY2( X, Y )
+      DOUBLE PRECISION FUNCTION DLAPY2( Xtr, Ytr )
 *
 *  -- LAPACK auxiliary routine (version 3.4.2) --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
@@ -69,7 +69,7 @@
 *     September 2012
 *
 *     .. Scalar Arguments ..
-      DOUBLE PRECISION   X, Y
+      DOUBLE PRECISION   Xtr, Ytr
 *     ..
 *
 *  =====================================================================
@@ -88,8 +88,8 @@
 *     ..
 *     .. Executable Statements ..
 *
-      XABS = ABS( X )
-      YABS = ABS( Y )
+      XABS = ABS( Xtr )
+      YABS = ABS( Ytr )
       W = MAX( XABS, YABS )
       Z = MIN( XABS, YABS )
       IF( Z.EQ.ZERO ) THEN

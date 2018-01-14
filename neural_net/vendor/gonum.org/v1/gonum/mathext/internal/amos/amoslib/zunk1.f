@@ -12,7 +12,7 @@ C
 C***ROUTINES CALLED  ZKSCL,ZS1S2,ZUCHK,ZUNIK,D1MACH,ZABS
 C***END PROLOGUE  ZUNK1
 C     COMPLEX CFN,CK,CONE,CRSC,CS,CSCL,CSGN,CSPN,CSR,CSS,CWRK,CY,CZERO,
-C    *C1,C2,PHI,PHID,RZ,SUM,SUMD,S1,S2,Y,Z,ZETA1,ZETA1D,ZETA2,ZETA2D,ZR
+C    *C1,C2,PHI,PHID,RZ,SUM,SUMD,S1,S2,Ytr,Z,ZETA1,ZETA1D,ZETA2,ZETA2D,ZR
       DOUBLE PRECISION ALIM, ANG, APHI, ASC, ASCLE, BRY, CKI, CKR,
      * CONER, CRSC, CSCL, CSGNI, CSPNI, CSPNR, CSR, CSRR, CSSR,
      * CWRKI, CWRKR, CYI, CYR, C1I, C1R, C2I, C2M, C2R, ELIM, FMR, FN,
@@ -337,7 +337,7 @@ C-----------------------------------------------------------------------
         S2R = S2R*CSRR(IFLAG)
         S2I = S2I*CSRR(IFLAG)
 C-----------------------------------------------------------------------
-C     ADD I AND K FUNCTIONS, K SEQUENCE IN Y(I), I=1,N
+C     ADD I AND K FUNCTIONS, K SEQUENCE IN Ytr(I), I=1,N
 C-----------------------------------------------------------------------
         S1R = YR(KK)
         S1I = YI(KK)

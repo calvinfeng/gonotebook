@@ -8,14 +8,14 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE DTRMV(UPLO,TRANS,DIAG,N,A,LDA,X,INCX)
+*       SUBROUTINE DTRMV(UPLO,TRANS,DIAG,N,A,LDA,Xtr,INCX)
 * 
 *       .. Scalar Arguments ..
 *       INTEGER INCX,LDA,N
 *       CHARACTER DIAG,TRANS,UPLO
 *       ..
 *       .. Array Arguments ..
-*       DOUBLE PRECISION A(LDA,*),X(*)
+*       DOUBLE PRECISION A(LDA,*),Xtr(*)
 *       ..
 *  
 *
@@ -26,9 +26,9 @@
 *>
 *> DTRMV  performs one of the matrix-vector operations
 *>
-*>    X := A*X,   or   X := A**T*X,
+*>    Xtr := A*Xtr,   or   Xtr := A**T*Xtr,
 *>
-*> where X is an n element vector and  A is an n by n unit, or non-unit,
+*> where Xtr is an n element vector and  A is an n by n unit, or non-unit,
 *> upper or lower triangular matrix.
 *> \endverbatim
 *
@@ -52,11 +52,11 @@
 *>           On entry, TRANS specifies the operation to be performed as
 *>           follows:
 *>
-*>              TRANS = 'N' or 'n'   X := A*X.
+*>              TRANS = 'N' or 'n'   Xtr := A*Xtr.
 *>
-*>              TRANS = 'T' or 't'   X := A**T*X.
+*>              TRANS = 'T' or 't'   Xtr := A**T*Xtr.
 *>
-*>              TRANS = 'C' or 'c'   X := A**T*X.
+*>              TRANS = 'C' or 'c'   Xtr := A**T*Xtr.
 *> \endverbatim
 *>
 *> \param[in] DIAG
@@ -101,20 +101,20 @@
 *>           max( 1, n ).
 *> \endverbatim
 *>
-*> \param[in,out] X
+*> \param[in,out] Xtr
 *> \verbatim
-*>          X is DOUBLE PRECISION array of dimension at least
+*>          Xtr is DOUBLE PRECISION array of dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCX ) ).
-*>           Before entry, the incremented array X must contain the n
-*>           element vector X. On exit, X is overwritten with the
-*>           tranformed vector X.
+*>           Before entry, the incremented array Xtr must contain the n
+*>           element vector Xtr. On exit, Xtr is overwritten with the
+*>           tranformed vector Xtr.
 *> \endverbatim
 *>
 *> \param[in] INCX
 *> \verbatim
 *>          INCX is INTEGER
 *>           On entry, INCX specifies the increment for the elements of
-*>           X. INCX must not be zero.
+*>           Xtr. INCX must not be zero.
 *> \endverbatim
 *
 *  Authors:
@@ -145,7 +145,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE DTRMV(UPLO,TRANS,DIAG,N,A,LDA,X,INCX)
+      SUBROUTINE DTRMV(UPLO,TRANS,DIAG,N,A,LDA,Xtr,INCX)
 *
 *  -- Reference BLAS level2 routine (version 3.4.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -157,7 +157,7 @@
       CHARACTER DIAG,TRANS,UPLO
 *     ..
 *     .. Array Arguments ..
-      DOUBLE PRECISION A(LDA,*),X(*)
+      DOUBLE PRECISION A(LDA,*),Xtr(*)
 *     ..
 *
 *  =====================================================================
@@ -210,7 +210,7 @@
 *
       NOUNIT = LSAME(DIAG,'N')
 *
-*     Set up the start point in X if the increment is not unity. This
+*     Set up the start point in Xtr if the increment is not unity. This
 *     will be  ( N - 1 )*INCX  too small for descending loops.
 *
       IF (INCX.LE.0) THEN
@@ -224,30 +224,30 @@
 *
       IF (LSAME(TRANS,'N')) THEN
 *
-*        Form  X := A*X.
+*        Form  Xtr := A*Xtr.
 *
           IF (LSAME(UPLO,'U')) THEN
               IF (INCX.EQ.1) THEN
                   DO 20 J = 1,N
-                      IF (X(J).NE.ZERO) THEN
-                          TEMP = X(J)
+                      IF (Xtr(J).NE.ZERO) THEN
+                          TEMP = Xtr(J)
                           DO 10 I = 1,J - 1
-                              X(I) = X(I) + TEMP*A(I,J)
+                              Xtr(I) = Xtr(I) + TEMP*A(I,J)
    10                     CONTINUE
-                          IF (NOUNIT) X(J) = X(J)*A(J,J)
+                          IF (NOUNIT) Xtr(J) = Xtr(J)*A(J,J)
                       END IF
    20             CONTINUE
               ELSE
                   JX = KX
                   DO 40 J = 1,N
-                      IF (X(JX).NE.ZERO) THEN
-                          TEMP = X(JX)
+                      IF (Xtr(JX).NE.ZERO) THEN
+                          TEMP = Xtr(JX)
                           IX = KX
                           DO 30 I = 1,J - 1
-                              X(IX) = X(IX) + TEMP*A(I,J)
+                              Xtr(IX) = Xtr(IX) + TEMP*A(I,J)
                               IX = IX + INCX
    30                     CONTINUE
-                          IF (NOUNIT) X(JX) = X(JX)*A(J,J)
+                          IF (NOUNIT) Xtr(JX) = Xtr(JX)*A(J,J)
                       END IF
                       JX = JX + INCX
    40             CONTINUE
@@ -255,26 +255,26 @@
           ELSE
               IF (INCX.EQ.1) THEN
                   DO 60 J = N,1,-1
-                      IF (X(J).NE.ZERO) THEN
-                          TEMP = X(J)
+                      IF (Xtr(J).NE.ZERO) THEN
+                          TEMP = Xtr(J)
                           DO 50 I = N,J + 1,-1
-                              X(I) = X(I) + TEMP*A(I,J)
+                              Xtr(I) = Xtr(I) + TEMP*A(I,J)
    50                     CONTINUE
-                          IF (NOUNIT) X(J) = X(J)*A(J,J)
+                          IF (NOUNIT) Xtr(J) = Xtr(J)*A(J,J)
                       END IF
    60             CONTINUE
               ELSE
                   KX = KX + (N-1)*INCX
                   JX = KX
                   DO 80 J = N,1,-1
-                      IF (X(JX).NE.ZERO) THEN
-                          TEMP = X(JX)
+                      IF (Xtr(JX).NE.ZERO) THEN
+                          TEMP = Xtr(JX)
                           IX = KX
                           DO 70 I = N,J + 1,-1
-                              X(IX) = X(IX) + TEMP*A(I,J)
+                              Xtr(IX) = Xtr(IX) + TEMP*A(I,J)
                               IX = IX - INCX
    70                     CONTINUE
-                          IF (NOUNIT) X(JX) = X(JX)*A(J,J)
+                          IF (NOUNIT) Xtr(JX) = Xtr(JX)*A(J,J)
                       END IF
                       JX = JX - INCX
    80             CONTINUE
@@ -282,53 +282,53 @@
           END IF
       ELSE
 *
-*        Form  X := A**T*X.
+*        Form  Xtr := A**T*Xtr.
 *
           IF (LSAME(UPLO,'U')) THEN
               IF (INCX.EQ.1) THEN
                   DO 100 J = N,1,-1
-                      TEMP = X(J)
+                      TEMP = Xtr(J)
                       IF (NOUNIT) TEMP = TEMP*A(J,J)
                       DO 90 I = J - 1,1,-1
-                          TEMP = TEMP + A(I,J)*X(I)
+                          TEMP = TEMP + A(I,J)*Xtr(I)
    90                 CONTINUE
-                      X(J) = TEMP
+                      Xtr(J) = TEMP
   100             CONTINUE
               ELSE
                   JX = KX + (N-1)*INCX
                   DO 120 J = N,1,-1
-                      TEMP = X(JX)
+                      TEMP = Xtr(JX)
                       IX = JX
                       IF (NOUNIT) TEMP = TEMP*A(J,J)
                       DO 110 I = J - 1,1,-1
                           IX = IX - INCX
-                          TEMP = TEMP + A(I,J)*X(IX)
+                          TEMP = TEMP + A(I,J)*Xtr(IX)
   110                 CONTINUE
-                      X(JX) = TEMP
+                      Xtr(JX) = TEMP
                       JX = JX - INCX
   120             CONTINUE
               END IF
           ELSE
               IF (INCX.EQ.1) THEN
                   DO 140 J = 1,N
-                      TEMP = X(J)
+                      TEMP = Xtr(J)
                       IF (NOUNIT) TEMP = TEMP*A(J,J)
                       DO 130 I = J + 1,N
-                          TEMP = TEMP + A(I,J)*X(I)
+                          TEMP = TEMP + A(I,J)*Xtr(I)
   130                 CONTINUE
-                      X(J) = TEMP
+                      Xtr(J) = TEMP
   140             CONTINUE
               ELSE
                   JX = KX
                   DO 160 J = 1,N
-                      TEMP = X(JX)
+                      TEMP = Xtr(JX)
                       IX = JX
                       IF (NOUNIT) TEMP = TEMP*A(J,J)
                       DO 150 I = J + 1,N
                           IX = IX + INCX
-                          TEMP = TEMP + A(I,J)*X(IX)
+                          TEMP = TEMP + A(I,J)*Xtr(IX)
   150                 CONTINUE
-                      X(JX) = TEMP
+                      Xtr(JX) = TEMP
                       JX = JX + INCX
   160             CONTINUE
               END IF

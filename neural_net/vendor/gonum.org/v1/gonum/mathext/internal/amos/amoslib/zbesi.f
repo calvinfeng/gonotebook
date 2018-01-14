@@ -16,7 +16,7 @@ C         ORDERS FNU+J-1, J=1,...,N AND COMPLEX Z IN THE CUT PLANE
 C         -PI.LT.ARG(Z).LE.PI. ON KODE=2, ZBESI RETURNS THE SCALED
 C         FUNCTIONS
 C
-C         CY(J)=EXP(-ABS(X))*I(FNU+J-1,Z)   J = 1,...,N , X=REAL(Z)
+C         CY(J)=EXP(-ABS(Xtr))*I(FNU+J-1,Z)   J = 1,...,N , Xtr=REAL(Z)
 C
 C         WITH THE EXPONENTIAL GROWTH REMOVED IN BOTH THE LEFT AND
 C         RIGHT HALF PLANES FOR Z TO INFINITY. DEFINITIONS AND NOTATION
@@ -30,15 +30,15 @@ C           KODE   - A PARAMETER TO INDICATE THE SCALING OPTION
 C                    KODE= 1  RETURNS
 C                             CY(J)=I(FNU+J-1,Z), J=1,...,N
 C                        = 2  RETURNS
-C                             CY(J)=I(FNU+J-1,Z)*EXP(-ABS(X)), J=1,...,N
+C                             CY(J)=I(FNU+J-1,Z)*EXP(-ABS(Xtr)), J=1,...,N
 C           N      - NUMBER OF MEMBERS OF THE SEQUENCE, N.GE.1
 C
 C         OUTPUT     CYR,CYI ARE DOUBLE PRECISION
 C           CYR,CYI- DOUBLE PRECISION VECTORS WHOSE FIRST N COMPONENTS
 C                    CONTAIN REAL AND IMAGINARY PARTS FOR THE SEQUENCE
 C                    CY(J)=I(FNU+J-1,Z)  OR
-C                    CY(J)=I(FNU+J-1,Z)*EXP(-ABS(X))  J=1,...,N
-C                    DEPENDING ON KODE, X=REAL(Z)
+C                    CY(J)=I(FNU+J-1,Z)*EXP(-ABS(Xtr))  J=1,...,N
+C                    DEPENDING ON KODE, Xtr=REAL(Z)
 C           NZ     - NUMBER OF COMPONENTS SET TO ZERO DUE TO UNDERFLOW,
 C                    NZ= 0   , NORMAL RETURN
 C                    NZ.GT.0 , LAST NZ COMPONENTS OF CY SET TO ZERO

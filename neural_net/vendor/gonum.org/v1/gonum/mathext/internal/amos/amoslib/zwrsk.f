@@ -8,7 +8,7 @@ C     NORMALIZING THE I FUNCTION RATIOS FROM ZRATI BY THE WRONSKIAN
 C
 C***ROUTINES CALLED  D1MACH,ZBKNU,ZRATI,ZABS
 C***END PROLOGUE  ZWRSK
-C     COMPLEX CINU,CSCL,CT,CW,C1,C2,RCT,ST,Y,ZR
+C     COMPLEX CINU,CSCL,CT,CW,C1,C2,RCT,ST,Ytr,ZR
       DOUBLE PRECISION ACT, ACW, ALIM, ASCLE, CINUI, CINUR, CSCLR, CTI,
      * CTR, CWI, CWR, C1I, C1R, C2I, C2R, ELIM, FNU, PTI, PTR, RACT,
      * STI, STR, TOL, YI, YR, ZRI, ZRR, ZABS, D1MACH
@@ -16,7 +16,7 @@ C     COMPLEX CINU,CSCL,CT,CW,C1,C2,RCT,ST,Y,ZR
       DIMENSION YR(N), YI(N), CWR(2), CWI(2)
 C-----------------------------------------------------------------------
 C     I(FNU+I-1,Z) BY BACKWARD RECURRENCE FOR RATIOS
-C     Y(I)=I(FNU+I,Z)/I(FNU+I-1,Z) FROM CRATI NORMALIZED BY THE
+C     Ytr(I)=I(FNU+I,Z)/I(FNU+I-1,Z) FROM CRATI NORMALIZED BY THE
 C     WRONSKIAN WITH K(FNU,Z) AND K(FNU+1,Z) FROM CBKNU.
 C-----------------------------------------------------------------------
       NZ = 0
@@ -25,7 +25,7 @@ C-----------------------------------------------------------------------
       CALL ZRATI(ZRR, ZRI, FNU, N, YR, YI, TOL)
 C-----------------------------------------------------------------------
 C     RECUR FORWARD ON I(FNU+1,Z) = R(FNU,Z)*I(FNU,Z),
-C     R(FNU+J-1,Z)=Y(J),  J=1,...,N
+C     R(FNU+J-1,Z)=Ytr(J),  J=1,...,N
 C-----------------------------------------------------------------------
       CINUR = 1.0D0
       CINUI = 0.0D0

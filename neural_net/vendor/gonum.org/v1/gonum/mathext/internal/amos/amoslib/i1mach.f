@@ -35,9 +35,9 @@ C
 C  Integers.
 C    assume integers are represented in the S-digit, base-A form
 C
-C               sign ( X(S-1)*A**(S-1) + ... + X(1)*A + X(0) )
+C               sign ( Xtr(S-1)*A**(S-1) + ... + Xtr(1)*A + Xtr(0) )
 C
-C               where 0 .LE. X(I) .LT. A for I=0,...,S-1.
+C               where 0 .LE. Xtr(I) .LT. A for I=0,...,S-1.
 C    I1MACH( 7) = A, the base.
 C    I1MACH( 8) = S, the number of base-A digits.
 C    I1MACH( 9) = A**S - 1, the largest magnitude.
@@ -45,10 +45,10 @@ C
 C  Floating-Point Numbers.
 C    Assume floating-point numbers are represented in the T-digit,
 C    base-B form
-C               sign (B**E)*( (X(1)/B) + ... + (X(T)/B**T) )
+C               sign (B**E)*( (Xtr(1)/B) + ... + (Xtr(T)/B**T) )
 C
-C               where 0 .LE. X(I) .LT. B for I=1,...,T,
-C               0 .LT. X(1), and EMIN .LE. E .LE. EMAX.
+C               where 0 .LE. Xtr(I) .LT. B for I=1,...,T,
+C               0 .LT. Xtr(1), and EMIN .LE. E .LE. EMAX.
 C    I1MACH(10) = B, the base.
 C
 C  Single-Precision

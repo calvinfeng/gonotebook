@@ -98,7 +98,7 @@ Pull requests should include tests for any new code before merging.
 It is ok to start a pull request on partially implemented code to get feedback, and see if your approach to a problem is sound.
 You don't need to have tests, or even have code that compiles to open a pull request, although both will be needed before merge.
 When tests use magic numbers, please include a comment explaining the source of the number.
-Benchmarks are optional for new features, but if you are submitting a pull request justified by performance improvement, you will need benchmarks to measure the impact of your change, and the pull request should include a report from [benchcmp](https://godoc.org/golang.org/X/tools/cmd/benchcmp) or, preferably, [benchstat](https://github.com/rsc/benchstat).
+Benchmarks are optional for new features, but if you are submitting a pull request justified by performance improvement, you will need benchmarks to measure the impact of your change, and the pull request should include a report from [benchcmp](https://godoc.org/golang.org/Xtr/tools/cmd/benchcmp) or, preferably, [benchstat](https://github.com/rsc/benchstat).
 
 ### Code Review
 

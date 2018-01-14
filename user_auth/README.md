@@ -6,7 +6,7 @@ First of all, get `dep` for dependency management
 go get -u github.com/golang/dep/cmd/dep
 ```
 
-If you are using Mac OS X then it's even easier
+If you are using Mac OS Xtr then it's even easier
 
 ```
 brew install dep 

@@ -32,9 +32,9 @@ C
 C   Assume double precision numbers are represented in the T-digit,
 C   base-B form
 C
-C              sign (B**E)*( (X(1)/B) + ... + (X(T)/B**T) )
+C              sign (B**E)*( (Xtr(1)/B) + ... + (Xtr(T)/B**T) )
 C
-C   where 0 .LE. X(I) .LT. B for I=1,...,T, 0 .LT. X(1), and
+C   where 0 .LE. Xtr(I) .LT. B for I=1,...,T, 0 .LT. Xtr(1), and
 C   EMIN .LE. E .LE. EMAX.
 C
 C   The values of B, T, EMIN and EMAX are provided in I1MACH as

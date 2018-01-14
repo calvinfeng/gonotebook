@@ -29,9 +29,9 @@
 *>
 *>    C := alpha*op( A )*op( B ) + beta*C,
 *>
-*> where  op( X ) is one of
+*> where  op( Xtr ) is one of
 *>
-*>    op( X ) = X   or   op( X ) = X**T,
+*>    op( Xtr ) = Xtr   or   op( Xtr ) = Xtr**T,
 *>
 *> alpha and beta are scalars, and A, B and C are matrices, with op( A )
 *> an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.

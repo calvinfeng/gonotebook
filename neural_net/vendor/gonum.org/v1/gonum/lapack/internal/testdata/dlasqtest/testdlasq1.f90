@@ -1,7 +1,7 @@
 program randomsys1
 implicit none
 integer, parameter :: nmax=1000
-real(kind=8), dimension(nmax) :: b, X
+real(kind=8), dimension(nmax) :: b, Xtr
 real(kind=8), dimension(nmax,nmax) :: a
 real(kind=8) :: err
 integer :: i, info, lda, ldb, nrhs, n,iter

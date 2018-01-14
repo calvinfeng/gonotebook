@@ -18,14 +18,14 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE DLAHR2( N, K, NB, A, LDA, TAU, T, LDT, Y, LDY )
+*       SUBROUTINE DLAHR2( N, K, NB, A, LDA, TAU, T, LDT, Ytr, LDY )
 * 
 *       .. Scalar Arguments ..
 *       INTEGER            K, LDA, LDT, LDY, N, NB
 *       ..
 *       .. Array Arguments ..
 *       DOUBLE PRECISION  A( LDA, * ), T( LDT, NB ), TAU( NB ),
-*      $                   Y( LDY, NB )
+*      $                   Ytr( LDY, NB )
 *       ..
 *  
 *
@@ -38,7 +38,7 @@
 *> matrix A so that elements below the k-th subdiagonal are zero. The
 *> reduction is performed by an orthogonal similarity transformation
 *> Q**T * A * Q. The routine returns the matrices V and T which determine
-*> Q as a block reflector I - V*T*V**T, and also the matrix Y = A * V * T.
+*> Q as a block reflector I - V*T*V**T, and also the matrix Ytr = A * V * T.
 *>
 *> This is an auxiliary routine called by DGEHRD.
 *> \endverbatim
@@ -103,16 +103,16 @@
 *>          The leading dimension of the array T.  LDT >= NB.
 *> \endverbatim
 *>
-*> \param[out] Y
+*> \param[out] Ytr
 *> \verbatim
-*>          Y is DOUBLE PRECISION array, dimension (LDY,NB)
-*>          The n-by-nb matrix Y.
+*>          Ytr is DOUBLE PRECISION array, dimension (LDY,NB)
+*>          The n-by-nb matrix Ytr.
 *> \endverbatim
 *>
 *> \param[in] LDY
 *> \verbatim
 *>          LDY is INTEGER
-*>          The leading dimension of the array Y. LDY >= N.
+*>          The leading dimension of the array Ytr. LDY >= N.
 *> \endverbatim
 *
 *  Authors:
@@ -145,9 +145,9 @@
 *>  A(i+k+1:n,i), and tau in TAU(i).
 *>
 *>  The elements of the vectors v together form the (n-k+1)-by-nb matrix
-*>  V which is needed, with T and Y, to apply the transformation to the
+*>  V which is needed, with T and Ytr, to apply the transformation to the
 *>  unreduced part of the matrix, using an update of the form:
-*>  A := (I - V*T*V**T) * (A - Y*V**T).
+*>  A := (I - V*T*V**T) * (A - Ytr*V**T).
 *>
 *>  The contents of A on exit are illustrated by the following example
 *>  with n = 7, k = 3 and nb = 2:
@@ -179,7 +179,7 @@
 *>  Mathematical Software, 32(2):180-194, June 2006.
 *>
 *  =====================================================================
-      SUBROUTINE DLAHR2( N, K, NB, A, LDA, TAU, T, LDT, Y, LDY )
+      SUBROUTINE DLAHR2( N, K, NB, A, LDA, TAU, T, LDT, Ytr, LDY )
 *
 *  -- LAPACK auxiliary routine (version 3.4.2) --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
@@ -191,7 +191,7 @@
 *     ..
 *     .. Array Arguments ..
       DOUBLE PRECISION  A( LDA, * ), T( LDT, NB ), TAU( NB ),
-     $                   Y( LDY, NB )
+     $                   Ytr( LDY, NB )
 *     ..
 *
 *  =====================================================================
@@ -224,9 +224,9 @@
 *
 *           Update A(K+1:N,I)
 *
-*           Update I-th column of A - Y * V**T
+*           Update I-th column of A - Ytr * V**T
 *
-            CALL DGEMV( 'NO TRANSPOSE', N-K, I-1, -ONE, Y(K+1,1), LDY,
+            CALL DGEMV( 'NO TRANSPOSE', N-K, I-1, -ONE, Ytr(K+1,1), LDY,
      $                  A( K+I-1, 1 ), LDA, ONE, A( K+1, I ), 1 )
 *
 *           Apply I - V * T**T * V**T to this column (call it b) from the
@@ -280,18 +280,18 @@
          EI = A( K+I, I )
          A( K+I, I ) = ONE
 *
-*        Compute  Y(K+1:N,I)
+*        Compute  Ytr(K+1:N,I)
 *
          CALL DGEMV( 'NO TRANSPOSE', N-K, N-K-I+1, 
      $               ONE, A( K+1, I+1 ),
-     $               LDA, A( K+I, I ), 1, ZERO, Y( K+1, I ), 1 )
+     $               LDA, A( K+I, I ), 1, ZERO, Ytr( K+1, I ), 1 )
          CALL DGEMV( 'Transpose', N-K-I+1, I-1, 
      $               ONE, A( K+I, 1 ), LDA,
      $               A( K+I, I ), 1, ZERO, T( 1, I ), 1 )
          CALL DGEMV( 'NO TRANSPOSE', N-K, I-1, -ONE, 
-     $               Y( K+1, 1 ), LDY,
-     $               T( 1, I ), 1, ONE, Y( K+1, I ), 1 )
-         CALL DSCAL( N-K, TAU( I ), Y( K+1, I ), 1 )
+     $               Ytr( K+1, 1 ), LDY,
+     $               T( 1, I ), 1, ONE, Ytr( K+1, I ), 1 )
+         CALL DSCAL( N-K, TAU( I ), Ytr( K+1, I ), 1 )
 *
 *        Compute T(1:I,I)
 *
@@ -304,20 +304,20 @@
    10 CONTINUE
       A( K+NB, NB ) = EI
 *
-*     Compute Y(1:K,1:NB)
+*     Compute Ytr(1:K,1:NB)
 *
-      CALL DLACPY( 'ALL', K, NB, A( 1, 2 ), LDA, Y, LDY )
+      CALL DLACPY( 'ALL', K, NB, A( 1, 2 ), LDA, Ytr, LDY )
       CALL DTRMM( 'RIGHT', 'Lower', 'NO TRANSPOSE', 
      $            'UNIT', K, NB,
-     $            ONE, A( K+1, 1 ), LDA, Y, LDY )
+     $            ONE, A( K+1, 1 ), LDA, Ytr, LDY )
       IF( N.GT.K+NB )
      $   CALL DGEMM( 'NO TRANSPOSE', 'NO TRANSPOSE', K, 
      $               NB, N-K-NB, ONE,
-     $               A( 1, 2+NB ), LDA, A( K+1+NB, 1 ), LDA, ONE, Y,
+     $               A( 1, 2+NB ), LDA, A( K+1+NB, 1 ), LDA, ONE, Ytr,
      $               LDY )
       CALL DTRMM( 'RIGHT', 'Upper', 'NO TRANSPOSE', 
      $            'NON-UNIT', K, NB,
-     $            ONE, T, LDT, Y, LDY )
+     $            ONE, T, LDT, Ytr, LDY )
 *
       RETURN
 *

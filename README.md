@@ -39,7 +39,7 @@ more comfortable with the syntax.
 
 ## Getting Started with Go
 ### Installation
-Go to https://golang.org/dl/ and download `go1.9.2.darwin-amd64.pkg` for your Mac OS X. It should include an installer and
+Go to https://golang.org/dl/ and download `go1.9.2.darwin-amd64.pkg` for your Mac OS Xtr. It should include an installer and
 provide instruction on how to install Go step by step. When you are done, make sure you run `go` in your terminal. If
 Go has been successfully installed on your machine, you should expect to see the following being printed to your screen.
 
@@ -324,7 +324,7 @@ For the complete list of dependency, please look at the `package.json`.
 Please excuse me that I repetitively said *so* in my speech; it's a result of having to think about what to type and what
 to say simultaneously. I will make sure that in my next video I will suppress my impulse to say *so*.
 
-[WebSocket Server in Go Part 1](https://youtu.be/X-FeLB35jXs)
+[WebSocket Server in Go Part 1](https://youtu.be/Xtr-FeLB35jXs)
 
 [WebSocket Server in Go Part 2](https://youtu.be/fn8nBckuUE8)
 

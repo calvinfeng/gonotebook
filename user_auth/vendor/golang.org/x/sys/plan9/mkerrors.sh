@@ -47,11 +47,11 @@ ccflags="$@"
 
 	# The gcc command line prints all the #defines
 	# it encounters while processing the input
-	echo "${!indirect} $includes" | $CC -X c - -E -dM $ccflags |
+	echo "${!indirect} $includes" | $CC -Xtr c - -E -dM $ccflags |
 	awk '
 		$1 != "#define" || $2 ~ /\(/ || $3 == "" {next}
 
-		$2 ~ /^E([ABCD]X|[BIS]P|[SD]I|S|FL)$/ {next}  # 386 registers
+		$2 ~ /^E([ABCD]Xtr|[BIS]P|[SD]I|S|FL)$/ {next}  # 386 registers
 		$2 ~ /^(SIGEV_|SIGSTKSZ|SIGRT(MIN|MAX))/ {next}
 		$2 ~ /^(SCM_SRCRT)$/ {next}
 		$2 ~ /^(MAP_FAILED)$/ {next}
@@ -117,24 +117,24 @@ ccflags="$@"
 
 # Pull out the error names for later.
 errors=$(
-	echo '#include <errno.h>' | $CC -X c - -E -dM $ccflags |
+	echo '#include <errno.h>' | $CC -Xtr c - -E -dM $ccflags |
 	awk '$1=="#define" && $2 ~ /^E[A-Z0-9_]+$/ { print $2 }' |
 	sort
 )
 
 # Pull out the signal names for later.
 signals=$(
-	echo '#include <signal.h>' | $CC -X c - -E -dM $ccflags |
+	echo '#include <signal.h>' | $CC -Xtr c - -E -dM $ccflags |
 	awk '$1=="#define" && $2 ~ /^SIG[A-Z0-9]+$/ { print $2 }' |
 	egrep -v '(SIGSTKSIZE|SIGSTKSZ|SIGRT)' |
 	sort
 )
 
 # Again, writing regexps to a file.
-echo '#include <errno.h>' | $CC -X c - -E -dM $ccflags |
+echo '#include <errno.h>' | $CC -Xtr c - -E -dM $ccflags |
 	awk '$1=="#define" && $2 ~ /^E[A-Z0-9_]+$/ { print "^\t" $2 "[ \t]*=" }' |
 	sort >_error.grep
-echo '#include <signal.h>' | $CC -X c - -E -dM $ccflags |
+echo '#include <signal.h>' | $CC -Xtr c - -E -dM $ccflags |
 	awk '$1=="#define" && $2 ~ /^SIG[A-Z0-9]+$/ { print "^\t" $2 "[ \t]*=" }' |
 	egrep -v '(SIGSTKSIZE|SIGSTKSZ|SIGRT)' |
 	sort >_signal.grep
@@ -166,7 +166,7 @@ echo ')'
 #include <string.h>
 #include <signal.h>
 
-#define nelem(X) (sizeof(X)/sizeof((X)[0]))
+#define nelem(Xtr) (sizeof(Xtr)/sizeof((Xtr)[0]))
 
 enum { A = 'A', Z = 'Z', a = 'a', z = 'z' }; // avoid need for single quotes below
 

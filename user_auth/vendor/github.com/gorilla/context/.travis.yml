@@ -10,7 +10,7 @@ matrix:
     - go: tip
 
 install:
-  - go get golang.org/X/tools/cmd/vet
+  - go get golang.org/Xtr/tools/cmd/vet
 
 script:
   - go get -t -v ./...

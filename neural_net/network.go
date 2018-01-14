@@ -46,25 +46,24 @@ func (nn *NeuralNetwork) PrintWeights() {
 }
 
 func (nn *NeuralNetwork) TrainStep(X, Y *mat.Dense, learningRate float64) error {
-	var forwardPropErr error
-	Act := X
-	for i := 0; i < len(nn.Layers); i += 1 {
-		if Act, forwardPropErr = nn.Layers[i].ForwardProp(Act); forwardPropErr != nil {
-			return forwardPropErr
-		}
+	Score, loss, err := nn.Loss(X, Y)
+	if err != nil {
+		return err
 	}
 
 	yRow, yCol := Y.Dims()
-	outRow, outCol := Act.Dims()
+	outRow, outCol := Score.Dims()
 
 	if yRow != outRow || yCol != outCol {
 		return mat.ErrShape
 	}
 
+	fmt.Printf("Loss during training step: %.5f\n", loss)
+
 	UpstreamGrad := mat.NewDense(yRow, yCol, nil)
-	UpstreamGrad.Sub(Act, Y)
+	UpstreamGrad.Sub(Score, Y)
 	UpstreamGrad.Scale(2.0, UpstreamGrad)
-	for i := len(nn.Layers) - 1; i >= 0; i = -1 {
+	for i := len(nn.Layers) - 1; i >= 0; i -= 1 {
 		if bpResult, bpErr := nn.Layers[i].Update(learningRate, UpstreamGrad); bpErr != nil {
 			return bpErr
 		} else {
@@ -75,25 +74,26 @@ func (nn *NeuralNetwork) TrainStep(X, Y *mat.Dense, learningRate float64) error 
 	return nil
 }
 
-func (nn *NeuralNetwork) Loss(X, Y *mat.Dense) error {
+func (nn *NeuralNetwork) Loss(X, Y *mat.Dense) (*mat.Dense, float64, error) {
 	var forwardPropErr error
 	Act := X
 	for i := 0; i < len(nn.Layers); i += 1 {
 		if Act, forwardPropErr = nn.Layers[i].ForwardProp(Act); forwardPropErr != nil {
-			return forwardPropErr
+			return nil, 0, forwardPropErr
 		}
 	}
+	Score := Act
 
 	inRow, inCol := Y.Dims()
 	outRow, outCol := Act.Dims()
 
 	if inRow != outRow || inCol != outCol {
-		return mat.ErrShape
+		return nil, 0, mat.ErrShape
 	}
 
 	loss := 0.0
 	Diff := mat.NewDense(outRow, outCol, nil)
-	Diff.Sub(Y, Act)
+	Diff.Sub(Y, Score)
 
 	for i := 0; i < outRow; i += 1 {
 		for j := 0; j < outCol; j += 1 {
@@ -101,6 +101,5 @@ func (nn *NeuralNetwork) Loss(X, Y *mat.Dense) error {
 		}
 	}
 
-	fmt.Println(loss)
-	return nil
+	return Score, loss, nil
 }

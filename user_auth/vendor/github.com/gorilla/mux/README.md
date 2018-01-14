@@ -109,7 +109,7 @@ r.Schemes("https")
 ...or header values:
 
 ```go
-r.Headers("X-Requested-With", "XMLHttpRequest")
+r.Headers("Xtr-Requested-With", "XMLHttpRequest")
 ```
 
 ...or query values:

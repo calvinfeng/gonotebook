@@ -8,13 +8,13 @@
 *  Definition:
 *  ===========
 *
-*       DOUBLE PRECISION FUNCTION DNRM2(N,X,INCX)
+*       DOUBLE PRECISION FUNCTION DNRM2(N,Xtr,INCX)
 * 
 *       .. Scalar Arguments ..
 *       INTEGER INCX,N
 *       ..
 *       .. Array Arguments ..
-*       DOUBLE PRECISION X(*)
+*       DOUBLE PRECISION Xtr(*)
 *       ..
 *  
 *
@@ -26,7 +26,7 @@
 *> DNRM2 returns the euclidean norm of a vector via the function
 *> name, so that
 *>
-*>    DNRM2 := sqrt( X'*X )
+*>    DNRM2 := sqrt( Xtr'*Xtr )
 *> \endverbatim
 *
 *  Authors:
@@ -52,7 +52,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      DOUBLE PRECISION FUNCTION DNRM2(N,X,INCX)
+      DOUBLE PRECISION FUNCTION DNRM2(N,Xtr,INCX)
 *
 *  -- Reference BLAS level1 routine (version 3.4.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -63,7 +63,7 @@
       INTEGER INCX,N
 *     ..
 *     .. Array Arguments ..
-      DOUBLE PRECISION X(*)
+      DOUBLE PRECISION Xtr(*)
 *     ..
 *
 *  =====================================================================
@@ -82,17 +82,17 @@
       IF (N.LT.1 .OR. INCX.LT.1) THEN
           NORM = ZERO
       ELSE IF (N.EQ.1) THEN
-          NORM = ABS(X(1))
+          NORM = ABS(Xtr(1))
       ELSE
           SCALE = ZERO
           SSQ = ONE
 *        The following loop is equivalent to this call to the LAPACK
 *        auxiliary routine:
-*        CALL DLASSQ( N, X, INCX, SCALE, SSQ )
+*        CALL DLASSQ( N, Xtr, INCX, SCALE, SSQ )
 *
           DO 10 IX = 1,1 + (N-1)*INCX,INCX
-              IF (X(IX).NE.ZERO) THEN
-                  ABSXI = ABS(X(IX))
+              IF (Xtr(IX).NE.ZERO) THEN
+                  ABSXI = ABS(Xtr(IX))
                   IF (SCALE.LT.ABSXI) THEN
                       SSQ = ONE + SSQ* (SCALE/ABSXI)**2
                       SCALE = ABSXI

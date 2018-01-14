@@ -18,14 +18,14 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE DLARFG( N, ALPHA, X, INCX, TAU )
+*       SUBROUTINE DLARFG( N, ALPHA, Xtr, INCX, TAU )
 * 
 *       .. Scalar Arguments ..
 *       INTEGER            INCX, N
 *       DOUBLE PRECISION   ALPHA, TAU
 *       ..
 *       .. Array Arguments ..
-*       DOUBLE PRECISION   X( * )
+*       DOUBLE PRECISION   Xtr( * )
 *       ..
 *  
 *
@@ -38,9 +38,9 @@
 *> that
 *>
 *>       H * ( alpha ) = ( beta ),   H**T * H = I.
-*>           (   X   )   (   0  )
+*>           (   Xtr   )   (   0  )
 *>
-*> where alpha and beta are scalars, and X is an (n-1)-element real
+*> where alpha and beta are scalars, and Xtr is an (n-1)-element real
 *> vector. H is represented in the form
 *>
 *>       H = I - tau * ( 1 ) * ( 1 v**T ) ,
@@ -49,7 +49,7 @@
 *> where tau is a real scalar and v is a real (n-1)-element
 *> vector.
 *>
-*> If the elements of X are all zero, then tau = 0 and H is taken to be
+*> If the elements of Xtr are all zero, then tau = 0 and H is taken to be
 *> the unit matrix.
 *>
 *> Otherwise  1 <= tau <= 2.
@@ -71,18 +71,18 @@
 *>          On exit, it is overwritten with the value beta.
 *> \endverbatim
 *>
-*> \param[in,out] X
+*> \param[in,out] Xtr
 *> \verbatim
-*>          X is DOUBLE PRECISION array, dimension
+*>          Xtr is DOUBLE PRECISION array, dimension
 *>                         (1+(N-2)*abs(INCX))
-*>          On entry, the vector X.
+*>          On entry, the vector Xtr.
 *>          On exit, it is overwritten with the vector v.
 *> \endverbatim
 *>
 *> \param[in] INCX
 *> \verbatim
 *>          INCX is INTEGER
-*>          The increment between elements of X. INCX > 0.
+*>          The increment between elements of Xtr. INCX > 0.
 *> \endverbatim
 *>
 *> \param[out] TAU
@@ -104,7 +104,7 @@
 *> \ingroup doubleOTHERauxiliary
 *
 *  =====================================================================
-      SUBROUTINE DLARFG( N, ALPHA, X, INCX, TAU )
+      SUBROUTINE DLARFG( N, ALPHA, Xtr, INCX, TAU )
 *
 *  -- LAPACK auxiliary routine (version 3.4.2) --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
@@ -116,7 +116,7 @@
       DOUBLE PRECISION   ALPHA, TAU
 *     ..
 *     .. Array Arguments ..
-      DOUBLE PRECISION   X( * )
+      DOUBLE PRECISION   Xtr( * )
 *     ..
 *
 *  =====================================================================
@@ -146,7 +146,7 @@
          RETURN
       END IF
 *
-      XNORM = DNRM2( N-1, X, INCX )
+      XNORM = DNRM2( N-1, Xtr, INCX )
 *
       IF( XNORM.EQ.ZERO ) THEN
 *
@@ -162,12 +162,12 @@
          KNT = 0
          IF( ABS( BETA ).LT.SAFMIN ) THEN
 *
-*           XNORM, BETA may be inaccurate; scale X and recompute them
+*           XNORM, BETA may be inaccurate; scale Xtr and recompute them
 *
             RSAFMN = ONE / SAFMIN
    10       CONTINUE
             KNT = KNT + 1
-            CALL DSCAL( N-1, RSAFMN, X, INCX )
+            CALL DSCAL( N-1, RSAFMN, Xtr, INCX )
             BETA = BETA*RSAFMN
             ALPHA = ALPHA*RSAFMN
             IF( ABS( BETA ).LT.SAFMIN )
@@ -175,11 +175,11 @@
 *
 *           New BETA is at most 1, at least SAFMIN
 *
-            XNORM = DNRM2( N-1, X, INCX )
+            XNORM = DNRM2( N-1, Xtr, INCX )
             BETA = -SIGN( DLAPY2( ALPHA, XNORM ), ALPHA )
          END IF
          TAU = ( BETA-ALPHA ) / BETA
-         CALL DSCAL( N-1, ONE / ( ALPHA-BETA ), X, INCX )
+         CALL DSCAL( N-1, ONE / ( ALPHA-BETA ), Xtr, INCX )
 *
 *        If ALPHA is subnormal, it may lose relative accuracy
 *

@@ -18,14 +18,14 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE DLASSQ( N, X, INCX, SCALE, SUMSQ )
+*       SUBROUTINE DLASSQ( N, Xtr, INCX, SCALE, SUMSQ )
 * 
 *       .. Scalar Arguments ..
 *       INTEGER            INCX, N
 *       DOUBLE PRECISION   SCALE, SUMSQ
 *       ..
 *       .. Array Arguments ..
-*       DOUBLE PRECISION   X( * )
+*       DOUBLE PRECISION   Xtr( * )
 *       ..
 *  
 *
@@ -36,17 +36,17 @@
 *>
 *> DLASSQ  returns the values  scl  and  smsq  such that
 *>
-*>    ( scl**2 )*smsq = X( 1 )**2 +...+ X( n )**2 + ( scale**2 )*sumsq,
+*>    ( scl**2 )*smsq = Xtr( 1 )**2 +...+ Xtr( n )**2 + ( scale**2 )*sumsq,
 *>
-*> where  X( i ) = X( 1 + ( i - 1 )*INCX ). The value of  sumsq  is
+*> where  Xtr( i ) = Xtr( 1 + ( i - 1 )*INCX ). The value of  sumsq  is
 *> assumed to be non-negative and  scl  returns the value
 *>
-*>    scl = max( scale, abs( X( i ) ) ).
+*>    scl = max( scale, abs( Xtr( i ) ) ).
 *>
 *> scale and sumsq must be supplied in SCALE and SUMSQ and
 *> scl and smsq are overwritten on SCALE and SUMSQ respectively.
 *>
-*> The routine makes only one pass through the vector X.
+*> The routine makes only one pass through the vector Xtr.
 *> \endverbatim
 *
 *  Arguments:
@@ -55,20 +55,20 @@
 *> \param[in] N
 *> \verbatim
 *>          N is INTEGER
-*>          The number of elements to be used from the vector X.
+*>          The number of elements to be used from the vector Xtr.
 *> \endverbatim
 *>
-*> \param[in] X
+*> \param[in] Xtr
 *> \verbatim
-*>          X is DOUBLE PRECISION array, dimension (N)
+*>          Xtr is DOUBLE PRECISION array, dimension (N)
 *>          The vector for which a scaled sum of squares is computed.
-*>             X( i )  = X( 1 + ( i - 1 )*INCX ), 1 <= i <= n.
+*>             Xtr( i )  = Xtr( 1 + ( i - 1 )*INCX ), 1 <= i <= n.
 *> \endverbatim
 *>
 *> \param[in] INCX
 *> \verbatim
 *>          INCX is INTEGER
-*>          The increment between successive values of the vector X.
+*>          The increment between successive values of the vector Xtr.
 *>          INCX > 0.
 *> \endverbatim
 *>
@@ -101,7 +101,7 @@
 *> \ingroup auxOTHERauxiliary
 *
 *  =====================================================================
-      SUBROUTINE DLASSQ( N, X, INCX, SCALE, SUMSQ )
+      SUBROUTINE DLASSQ( N, Xtr, INCX, SCALE, SUMSQ )
 *
 *  -- LAPACK auxiliary routine (version 3.4.2) --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
@@ -113,7 +113,7 @@
       DOUBLE PRECISION   SCALE, SUMSQ
 *     ..
 *     .. Array Arguments ..
-      DOUBLE PRECISION   X( * )
+      DOUBLE PRECISION   Xtr( * )
 *     ..
 *
 * =====================================================================
@@ -137,7 +137,7 @@
 *
       IF( N.GT.0 ) THEN
          DO 10 IX = 1, 1 + ( N-1 )*INCX, INCX
-            ABSXI = ABS( X( IX ) )
+            ABSXI = ABS( Xtr( IX ) )
             IF( ABSXI.GT.ZERO.OR.DISNAN( ABSXI ) ) THEN
                IF( SCALE.LT.ABSXI ) THEN
                   SUMSQ = 1 + SUMSQ*( SCALE / ABSXI )**2
