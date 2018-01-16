@@ -1,3 +1,5 @@
 .idea/
 *.iml
 node_modules/
+environment/
+.ipynb_checkpoints/
