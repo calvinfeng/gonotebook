@@ -331,7 +331,14 @@ to say simultaneously. I will make sure that in my next video I will suppress my
 
 ## User Authentication
 ### Project Requirements
-TBA
+We need to set up our PostgreSQL first, please refer to the section below. I am going to introduce couple new open source
+libraries to you for this project:
+
+* `sirupsen/logrus`
+* `gorilla/mux`
+* `jinzhu/gorm` -  Object Relational Mapping for Go
+
+You should take a look at their Github page and see what they are for before you start working on this project.
 
 ### Postgres in Go
 I am going to use PostgreSQL for this project, so let's create one. The superuser on my computer is `cfeng` so I will use
@@ -358,6 +365,11 @@ I did mine with
 ```
 postgres=# alter user cfeng with password "cfeng";
 ```
+
+### Video 05: User Authentication in Go
+
+[User Authentication in Go Introduction](https://youtu.be/t7UaOV0THIQ)
+
 
 ## Additional Resource
 If you want to learn more about session storage, security, encryption, and many other topics relating to web applications,
@@ -414,4 +426,4 @@ jupyter notebook
 ```
 
 #### Neural Network Videos
-Coming soon
+Need more time to work on the videos for this project...
