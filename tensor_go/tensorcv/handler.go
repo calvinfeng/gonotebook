@@ -72,3 +72,17 @@ func NewImageRecognitionHandler(labels map[int]string) http.HandlerFunc {
 		}
 	}
 }
+
+// ArgMax takes in a list and return the index and value of the max element.
+func ArgMax(list []float32) (int, float32) {
+	idx := 0
+	max := list[idx]
+	for i, el := range list {
+		if el > max {
+			idx = i
+			max = el
+		}
+	}
+
+	return idx, max
+}

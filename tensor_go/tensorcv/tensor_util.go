@@ -17,32 +17,6 @@ const (
 	Scale       = float32(1)
 )
 
-// CreateImageTransformGraph creates a TensorFlow graph that will perform normalization and image
-// resizing on a given image.
-func CreateImageTransformGraph(imgFormat string, numChan int64) (*tf.Graph, tf.Output, tf.Output, error) {
-	s := op.NewScope()
-	input := op.Placeholder(s, tf.String)
-
-	// Decode either PNG or JPEG
-	var decode tf.Output
-	if imgFormat == "png" {
-		decode = op.DecodePng(s, input, op.DecodePngChannels(numChan))
-	} else {
-		decode = op.DecodeJpeg(s, input, op.DecodeJpegChannels(numChan))
-	}
-
-	// Build the graph step by step
-	expand := op.ExpandDims(s, op.Cast(s, decode, tf.Float), op.Const(s.SubScope("make_batch"), int32(0)))
-	resize := op.ResizeBilinear(s, expand, op.Const(s.SubScope("size"), []int32{ImageHeight, ImageWidth}))
-	subtractMean := op.Sub(s, resize, op.Const(s.SubScope("mean"), Mean))
-	output := op.Div(s, subtractMean, op.Const(s.SubScope("scale"), Scale))
-
-	// Graph is finalized!
-	graph, err := s.Finalize()
-
-	return graph, input, output, err
-}
-
 // GetTensorFromImagePath creates a tensor struct by taking an image path.
 func GetTensorFromImagePath(imgPath, imgFormat string, numChan int64) (*tf.Tensor, error) {
 	var err error
@@ -61,7 +35,7 @@ func GetTensorFromImagePath(imgPath, imgFormat string, numChan int64) (*tf.Tenso
 
 	var graph *tf.Graph
 	var input, output tf.Output
-	graph, input, output, err = CreateImageTransformGraph(imgFormat, numChan)
+	graph, input, output, err = createImageTransformGraph(imgFormat, numChan)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +72,7 @@ func GetTensorFromImageBuffer(imgBuffer bytes.Buffer, imgFormat string, numChan 
 
 	var graph *tf.Graph
 	var input, output tf.Output
-	graph, input, output, err = CreateImageTransformGraph(imgFormat, numChan)
+	graph, input, output, err = createImageTransformGraph(imgFormat, numChan)
 	if err != nil {
 		return nil, err
 	}
@@ -121,4 +95,30 @@ func GetTensorFromImageBuffer(imgBuffer bytes.Buffer, imgFormat string, numChan 
 	}
 
 	return nil, err
+}
+
+// createImageTransformGraph creates a TensorFlow graph that will perform normalization and image
+// resizing on a given image.
+func createImageTransformGraph(imgFormat string, numChan int64) (*tf.Graph, tf.Output, tf.Output, error) {
+	s := op.NewScope()
+	input := op.Placeholder(s, tf.String)
+
+	// Decode either PNG or JPEG
+	var decode tf.Output
+	if imgFormat == "png" {
+		decode = op.DecodePng(s, input, op.DecodePngChannels(numChan))
+	} else {
+		decode = op.DecodeJpeg(s, input, op.DecodeJpegChannels(numChan))
+	}
+
+	// Build the graph step by step
+	expand := op.ExpandDims(s, op.Cast(s, decode, tf.Float), op.Const(s.SubScope("make_batch"), int32(0)))
+	resize := op.ResizeBilinear(s, expand, op.Const(s.SubScope("size"), []int32{ImageHeight, ImageWidth}))
+	subtractMean := op.Sub(s, resize, op.Const(s.SubScope("mean"), Mean))
+	output := op.Div(s, subtractMean, op.Const(s.SubScope("scale"), Scale))
+
+	// Graph is finalized!
+	graph, err := s.Finalize()
+
+	return graph, input, output, err
 }

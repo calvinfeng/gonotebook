@@ -28,7 +28,7 @@ var recognizeCommand = &cobra.Command{
 
 // Execute will activate the root command.
 func Execute() {
-	recognizeCommand.Flags().String("imgpath", "", "image path for the image you wish to classify")
+	recognizeCommand.Flags().String("img", "", "image path for the image you wish to classify")
 
 	rootCommand.AddCommand(serveCommand, recognizeCommand)
 	if err := rootCommand.Execute(); err != nil {
