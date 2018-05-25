@@ -1,8 +1,8 @@
 # Table of contents
 
 * [Introduction](README.md)
-* [Getting Started with Go](.hello_world/README.md)
-* [Go Packages](packages_in_go.md)
+* [Getting Started with Go](./hello_world/README.md)
+* [Go Packages](./tic_tac_toe/README.md)
 * [HTTP Server](http_server.md)
 * [WebSocket Server](websocket_server.md)
 * [User Authentication](user_authentication.md)
