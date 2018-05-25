@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"fmt"
+	"go-academy/tensor_go/tensorcv"
 
 	"github.com/spf13/cobra"
 )
 
 func serve(cmd *cobra.Command, args []string) error {
-	fmt.Println("serving...")
+	tensorcv.HelloWorldFromTF()
 	return nil
 }
