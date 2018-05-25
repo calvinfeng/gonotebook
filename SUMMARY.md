@@ -7,5 +7,5 @@
 * [WebSocket Server](./chat_server/README.md)
 * [User Authentication](./user_auth/README.md)
 * [Neural Network](./neural_net/README.md)
-* [Tensorflow in Go](./tensorflow/README.md)
+* [Tensorflow in Go](./tensor_go/README.md)
 
