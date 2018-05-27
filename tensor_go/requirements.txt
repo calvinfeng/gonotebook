@@ -1,0 +1,4 @@
+tensorflow==1.6
+keras==2.1.5
+matplotlib==2.2.2
+h5py==2.7.1

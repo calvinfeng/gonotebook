@@ -21,8 +21,12 @@ const (
 func GetTensorFromImagePath(imgPath, imgFormat string, numChan int64) (*tf.Tensor, error) {
 	var err error
 
-	imgFile, _ := os.Open(imgPath)
-	defer imgFile.Close()
+	imgFile, err := os.Open(imgPath)
+	if err != nil {
+		return nil, err
+	} else {
+		defer imgFile.Close()
+	}
 
 	var imgBuffer bytes.Buffer
 	io.Copy(&imgBuffer, imgFile)
@@ -55,13 +59,14 @@ func GetTensorFromImagePath(imgPath, imgFormat string, numChan int64) (*tf.Tenso
 	fetches := []tf.Output{output}
 	if normalized, err := sess.Run(feeds, fetches, nil); err == nil {
 		return normalized[0], err
+	} else {
+		return nil, err
 	}
-
-	return nil, err
 }
 
 // GetTensorFromImageBuffer will take byte buffer and convert it into a tensor.
-func GetTensorFromImageBuffer(imgBuffer bytes.Buffer, imgFormat string, numChan int64) (*tf.Tensor, error) {
+func GetTensorFromImageBuffer(imgBuffer bytes.Buffer, imgFormat string,
+	numChan int64) (*tf.Tensor, error) {
 	var err error
 	var imgTensor *tf.Tensor
 

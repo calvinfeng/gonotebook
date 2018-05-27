@@ -7,8 +7,8 @@ import (
 )
 
 // RunResNetModel ...
-func RunResNetModel(imgTensor *tf.Tensor) [][]float32 {
-	model, err := tf.LoadSavedModel("./tf_resnet_py/model", []string{"serve"}, nil)
+func RunResNetModel(imgTensor *tf.Tensor, modelPath string) [][]float32 {
+	model, err := tf.LoadSavedModel(modelPath, []string{"serve"}, nil)
 	if err != nil {
 		fmt.Printf("Error loading saved model: %s\n", err.Error())
 		return nil

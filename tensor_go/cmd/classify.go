@@ -16,7 +16,12 @@ const (
 	JPEG = "jpeg"
 )
 
-func recognize(cmd *cobra.Command, args []string) error {
+// Model Path
+const (
+	ResNet = "./model/resnet"
+)
+
+func classify(cmd *cobra.Command, args []string) error {
 	imgPath, err := cmd.Flags().GetString("img")
 	if err != nil {
 		return err
@@ -40,10 +45,14 @@ func recognize(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("%s is not a valid image", imgPath)
 	}
 
-	tensor, err := tensorcv.GetTensorFromImagePath(imgPath, imgType, 4)
+	tensor, err := tensorcv.GetTensorFromImagePath(imgPath, imgType, 3)
+	if err != nil {
+		return err
+	}
+
 	fmt.Println("Image tensor is loaded:", tensor.Shape())
 
-	softmaxScore := tensorcv.RunResNetModel(tensor)
+	softmaxScore := tensorcv.RunResNetModel(tensor, ResNet)
 	if softmaxScore == nil {
 		return fmt.Errorf("unexpected problem occurred when resnet model is run, score is nil")
 	}

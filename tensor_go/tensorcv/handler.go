@@ -17,7 +17,7 @@ type Response struct {
 
 // NewImageRecognitionHandler returns a HTTP handler that will handle a request to perform image
 // recognition.
-func NewImageRecognitionHandler(labels map[int]string) http.HandlerFunc {
+func NewImageRecognitionHandler(labels map[int]string, modelPath string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
@@ -51,7 +51,7 @@ func NewImageRecognitionHandler(labels map[int]string) http.HandlerFunc {
 		imgTensor, err := GetTensorFromImageBuffer(imgBuffer, imgFormat, 3)
 		fmt.Println("Image tensor is loaded:", imgTensor.Shape())
 
-		softmaxScore := RunResNetModel(imgTensor)
+		softmaxScore := RunResNetModel(imgTensor, modelPath)
 		if softmaxScore != nil {
 			classIdx, prob := ArgMax(softmaxScore[0])
 			fmt.Printf("Predicted class is %s with %.2f probability\n", labels[classIdx], prob)
