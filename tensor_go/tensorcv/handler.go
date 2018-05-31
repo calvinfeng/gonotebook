@@ -53,7 +53,8 @@ func NewImageRecognitionHandler(labels map[int]string, modelPath string) http.Ha
 
 		softmaxScore := RunResNetModel(imgTensor, modelPath)
 		if softmaxScore != nil {
-			classIdx, prob := ArgMax(softmaxScore[0])
+			selected := make(map[int]bool)
+			classIdx, prob := ArgMax(softmaxScore[0], selected)
 			fmt.Printf("Predicted class is %s with %.2f probability\n", labels[classIdx], prob)
 
 			response := &Response{
@@ -74,15 +75,17 @@ func NewImageRecognitionHandler(labels map[int]string, modelPath string) http.Ha
 }
 
 // ArgMax takes in a list and return the index and value of the max element.
-func ArgMax(list []float32) (int, float32) {
+func ArgMax(list []float32, selected map[int]bool) (int, float32) {
 	idx := 0
 	max := list[idx]
 	for i, el := range list {
-		if el > max {
+		if el > max && !selected[i] {
 			idx = i
 			max = el
 		}
 	}
+
+	selected[idx] = true
 
 	return idx, max
 }

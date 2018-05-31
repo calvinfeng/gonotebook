@@ -11,79 +11,44 @@ import (
 
 // Constants for scaling images.
 const (
-	ImageHeight = 227
-	ImageWidth  = 227
+	ImageHeight = 224
+	ImageWidth  = 224
 	Mean        = float32(0)
 	Scale       = float32(1)
 )
 
-// GetTensorFromImagePath creates a tensor struct by taking an image path.
+// GetTensorFromImagePath creates a tensor by taking an image path.
 func GetTensorFromImagePath(imgPath, imgFormat string, numChan int64) (*tf.Tensor, error) {
 	var err error
 
 	imgFile, err := os.Open(imgPath)
 	if err != nil {
 		return nil, err
-	} else {
-		defer imgFile.Close()
 	}
+
+	defer imgFile.Close()
 
 	var imgBuffer bytes.Buffer
 	io.Copy(&imgBuffer, imgFile)
 
-	var imgTensor *tf.Tensor
-	imgTensor, err = tf.NewTensor(imgBuffer.String())
-	if err != nil {
-		return nil, err
-	}
-
-	var graph *tf.Graph
-	var input, output tf.Output
-	graph, input, output, err = createImageTransformGraph(imgFormat, numChan)
-	if err != nil {
-		return nil, err
-	}
-
-	var sess *tf.Session
-	sess, err = tf.NewSession(graph, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer sess.Close()
-
-	feeds := map[tf.Output]*tf.Tensor{
-		input: imgTensor,
-	}
-
-	fetches := []tf.Output{output}
-	if normalized, err := sess.Run(feeds, fetches, nil); err == nil {
-		return normalized[0], err
-	} else {
-		return nil, err
-	}
+	return GetTensorFromImageBuffer(imgBuffer, imgFormat, numChan)
 }
 
-// GetTensorFromImageBuffer will take byte buffer and convert it into a tensor.
+// GetTensorFromImageBuffer creates a tensor by taking a byte buffer.
 func GetTensorFromImageBuffer(imgBuffer bytes.Buffer, imgFormat string,
 	numChan int64) (*tf.Tensor, error) {
-	var err error
-	var imgTensor *tf.Tensor
 
-	imgTensor, err = tf.NewTensor(imgBuffer.String())
+	imgTensor, err := tf.NewTensor(imgBuffer.String())
 	if err != nil {
 		return nil, err
 	}
 
-	var graph *tf.Graph
-	var input, output tf.Output
-	graph, input, output, err = createImageTransformGraph(imgFormat, numChan)
+	graph, input, output, err := createImageTransformGraph(imgFormat, numChan)
 	if err != nil {
 		return nil, err
 	}
 
-	var sess *tf.Session
-	sess, err = tf.NewSession(graph, nil)
+	sess, err := tf.NewSession(graph, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +60,8 @@ func GetTensorFromImageBuffer(imgBuffer bytes.Buffer, imgFormat string,
 	}
 
 	fetches := []tf.Output{output}
-	if normalized, err := sess.Run(feeds, fetches, nil); err == nil {
+	normalized, err := sess.Run(feeds, fetches, nil)
+	if err == nil {
 		return normalized[0], err
 	}
 
