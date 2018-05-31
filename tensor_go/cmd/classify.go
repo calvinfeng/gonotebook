@@ -74,8 +74,8 @@ func classify(cmd *cobra.Command, args []string) error {
 
 	// Pick top 5, using the lazy way instead of writing a quick select...
 	for i := 0; i < 5; i++ {
-		classIdx, prob := tensorcv.ArgMax(score, top)
-		fmt.Printf("Top predicted class is %s with %.2f probability\n", labels[classIdx], prob)
+		classIdx, _ := tensorcv.ArgMax(score, top)
+		fmt.Printf("Top 5 most probable class is %s\n", labels[classIdx])
 	}
 
 	return nil
