@@ -16,22 +16,6 @@ const (
 	JPEG = "jpeg"
 )
 
-// Model Path
-const (
-	ResNet = "./model/resnet"
-)
-
-var labels map[int]string
-
-func init() {
-	l, err := tensorcv.LoadLabels("./data/labels.json")
-	if err != nil {
-		panic(err)
-	}
-
-	labels = l
-}
-
 func classify(cmd *cobra.Command, args []string) error {
 	imgPath, err := cmd.Flags().GetString("img")
 	if err != nil {
@@ -73,10 +57,12 @@ func classify(cmd *cobra.Command, args []string) error {
 	top := make(map[int]bool)
 
 	// Pick top 5, using the lazy way instead of writing a quick select...
+	results := make([]string, 0, 5)
 	for i := 0; i < 5; i++ {
 		classIdx, _ := tensorcv.ArgMax(score, top)
-		fmt.Printf("Top 5 most probable class is %s\n", labels[classIdx])
+		results = append(results, labels[classIdx])
 	}
 
+	fmt.Printf("Top 5 classifications: %s\n", results)
 	return nil
 }

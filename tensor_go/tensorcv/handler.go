@@ -1,6 +1,8 @@
 package tensorcv
 
 import (
+	"github.com/gorilla/mux"
+
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -8,6 +10,16 @@ import (
 	"net/http"
 	"strings"
 )
+
+// LoadRoutes returns a http.Handler as a multiplexer to various routes.
+func LoadRoutes(labels map[int]string, modelPath string) http.Handler {
+	r := mux.NewRouter()
+
+	api := r.PathPrefix("/api").Subrouter()
+	api.Handle("/tf/recognition/", NewImageRecognitionHandler(labels, modelPath)).Methods("POST")
+	api.Handle("/tf/hello/", NewHelloWorldHandler()).Methods("GET")
+	return r
+}
 
 // Response defines the structure of a HTTP JSON response to client.
 type Response struct {
@@ -74,18 +86,15 @@ func NewImageRecognitionHandler(labels map[int]string, modelPath string) http.Ha
 	}
 }
 
-// ArgMax takes in a list and return the index and value of the max element.
-func ArgMax(list []float32, selected map[int]bool) (int, float32) {
-	idx := 0
-	max := list[idx]
-	for i, el := range list {
-		if el > max && !selected[i] {
-			idx = i
-			max = el
-		}
+// NewHelloWorldHandler returns a HTTP handler that will return a hello world message from
+// tensorflow to client.
+func NewHelloWorldHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
+		msg := HelloWorldFromTF()
+
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(msg))
 	}
-
-	selected[idx] = true
-
-	return idx, max
 }

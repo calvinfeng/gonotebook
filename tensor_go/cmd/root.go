@@ -4,10 +4,27 @@ package cmd
 
 import (
 	"fmt"
+	"go-academy/tensor_go/tensorcv"
 	"os"
 
 	"github.com/spf13/cobra"
 )
+
+// Model Path
+const (
+	ResNet = "./model/resnet"
+)
+
+var labels map[int]string
+
+func init() {
+	l, err := tensorcv.LoadLabels("./data/labels.json")
+	if err != nil {
+		panic(err)
+	}
+
+	labels = l
+}
 
 var rootCommand = &cobra.Command{
 	Use:   "tensorgo",

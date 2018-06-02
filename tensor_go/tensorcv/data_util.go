@@ -23,3 +23,19 @@ func LoadLabels(jsonPath string) (map[int]string, error) {
 
 	return labelMap, nil
 }
+
+// ArgMax takes in a list and return the index and value of the max element.
+func ArgMax(list []float32, selected map[int]bool) (int, float32) {
+	idx := 0
+	max := list[idx]
+	for i, el := range list {
+		if el > max && !selected[i] {
+			idx = i
+			max = el
+		}
+	}
+
+	selected[idx] = true
+
+	return idx, max
+}
