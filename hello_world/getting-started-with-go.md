@@ -1,4 +1,4 @@
-# Getting Started with Go
+# Getting Started With Go
 ## Installation
 Go to [Golang.org download page](https://golang.org/dl/) and download `go1.9.2.darwin-amd64.pkg` 
 for your Mac OS. It should include an installer and provide instruction on how to install Go step 
@@ -64,16 +64,4 @@ For example:
                                 - main.go
                                 - bye_world.go
 ```
-
-## Video 01: Hello World in Go
-By now you should have your Go installed, your workspace created, and your `$GOPATH` is pointing to 
-the workspace. Let's create our first program in Go!
-
-[Hello World in Go](https://youtu.be/5-FFapKA9sM)
-
-## Compiled Language
-In case you don't really know what a compiled language is or how language is being compiled from 
-source code to machine code. Here is a fun introduction to the concept.
-
-[How do computers read code?](https://www.youtube.com/watch?v=QXjU9qTsYCc)
 
