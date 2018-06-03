@@ -8,11 +8,12 @@ module.exports = {
         filename: "index.bundle.js"
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js"]
+        extensions: [".ts", ".tsx", ".js", ".jsx"]
     },
     module: {
         rules: [
-            { test: /\.tsx?$/, loader: "ts-loader" }
+            { test: /\.tsx?$/, loader: "ts-loader" },
+            { test: /\.scss$/, use: ["style-loader", "css-loader", "sass-loader"] }
         ]
     }
 };
