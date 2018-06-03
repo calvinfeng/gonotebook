@@ -1,11 +1,15 @@
 # Table of contents
 
 * [Introduction](README.md)
-* Hello World in Go
+* Hello World
     * [Getting Started With Go](./hello_world/getting-started-with-go.md)
     * [Hello World](./hello_world/hello-world.md)
-* [Go Packages](./tic_tac_toe/README.md)
-* [HTTP Server](./calc_server/README.md)
+* Tic Tac Toe
+    * [Packages in Go](./tic_tac_toe/packages-in-go.md)
+    * [Tic Tac Toe](./tic_tac_toe/tic_tac_toe.md)
+* HTTP Server
+    * [Calculator Server](./calc_server/calc-server.md)
+    * [HTTP Handler](./calc_server/http-handler.md)
 * [WebSocket Server](./chat_server/README.md)
 * [User Authentication](./user_auth/README.md)
 * [Neural Network](./neural_net/README.md)
