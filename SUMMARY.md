@@ -10,7 +10,9 @@
 * HTTP Server
     * [Calculator Server](./calc_server/calc-server.md)
     * [HTTP Handler](./calc_server/http-handler.md)
-* [WebSocket Server](./chat_server/README.md)
+* WebSocket Server
+    * [Concurrency](./chat_server/concurrency.md)
+    * [Chat Server](./chat_server/chat-server.md)
 * [User Authentication](./user_auth/README.md)
 * [Neural Network](./neural_net/README.md)
 * [Tensorflow in Go](./tensor_go/README.md)
