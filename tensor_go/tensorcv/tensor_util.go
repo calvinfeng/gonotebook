@@ -93,3 +93,39 @@ func createImageTransformGraph(imgFormat string, numChan int64) (*tf.Graph, tf.O
 
 	return graph, input, output, err
 }
+
+// Class refers to the classification of an image
+type Class struct {
+	Prob  float32
+	Index int
+}
+
+// Sort will perform quick sort in place on a list of Class elements.
+func Sort(list []Class, low, high int) {
+	if low < high {
+		partIdx := Partition(list, low, high)
+		Sort(list, low, partIdx-1)
+		Sort(list, partIdx+1, high)
+	}
+}
+
+// Partition will perform quick sort partitioning in place.
+func Partition(list []Class, low, high int) int {
+	pivot := list[high]
+
+	i := low - 1 // Index of the smaller element
+	for j := low; j < high; j++ {
+		if list[j].Prob <= pivot.Prob {
+			i++
+			temp := list[i]
+			list[i] = list[j]
+			list[j] = temp
+		}
+	}
+
+	temp := list[i+1]
+	list[i+1] = list[high]
+	list[high] = temp
+
+	return i + 1
+}

@@ -66,15 +66,22 @@ func NewImageRecognitionHandler(labels map[int]string, modelPath string) http.Ha
 
 		softmaxScore := RunResNetModel(imgTensor, modelPath)
 		if softmaxScore != nil {
-			selected := make(map[int]bool)
-			classIdx, prob := ArgMax(softmaxScore[0], selected)
-			fmt.Printf("Predicted class is %s with %.2f probability\n", labels[classIdx], prob)
+			classList := make([]Class, 0, len(softmaxScore[0]))
+			for idx, prob := range softmaxScore[0] {
+				classList = append(classList, Class{Prob: prob, Index: idx})
+			}
+
+			// Perform sorting
+			Sort(classList, 0, len(classList)-1)
+
+			message := fmt.Sprintf("Most probable classes: ")
+			for i := len(classList) - 1; i > len(classList)-6; i-- {
+				message += fmt.Sprintf(" %s ", labels[classList[i].Index])
+			}
 
 			response := &Response{
-				Status: http.StatusOK,
-				Message: fmt.Sprintf(
-					"Predicted class is %s with %.2f probability",
-					labels[classIdx], prob),
+				Status:  http.StatusOK,
+				Message: message,
 			}
 
 			if resBytes, err := json.Marshal(response); err == nil {

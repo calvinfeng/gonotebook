@@ -1,7 +1,14 @@
-// Import the entire library as a single variable
+/**
+ * @author Calvin Feng
+ */
+
+// Libraries
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import axios from 'axios';
+
+// Helpers
+import { classifyImageFile } from './util';
 
 // Style
 import './index.scss';
@@ -30,21 +37,21 @@ class Index extends React.Component<any, IndexState> {
         this.fileReader.onload = this.handleFileOnLoad;
     }
 
-    handleFileOnLoad = (e: ProgressEvent) => {
+    handleFileOnLoad = (e: ProgressEvent): void => {
         const img = new Image();
         img.src = this.fileReader.result;
 
         this.setState({ currentImage: img });
     }
 
-    handleImageFileSelected = (e: React.FormEvent<HTMLInputElement>) => {
+    handleImageFileSelected = (e: React.FormEvent<HTMLInputElement>): void => {
         const imageType = /image.*/;
         const file: File = e.currentTarget.files[0];
 
         if (file.type.match(imageType)) {
             this.fileReader.readAsDataURL(file);
 
-            this.requestServerClassify(file).then((res) => {
+            classifyImageFile(file).then((res) => {
                 this.setState({ 
                     resultMessage: res,
                     errorMessage: undefined 
@@ -57,22 +64,6 @@ class Index extends React.Component<any, IndexState> {
             });
         } else {
             this.setState({ errorMessage: "File not supported!" });
-        }
-    }
-
-    async requestServerClassify(file: File): Promise<string> {
-        const formData = new FormData();
-        formData.append("image", file);
-
-        const config = {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        }
-
-        try {
-            const result = await axios.post("api/tf/recognition/", formData, config);
-            return result.data.message;
-        } catch(e) {
-            throw e;
         }
     }
 
