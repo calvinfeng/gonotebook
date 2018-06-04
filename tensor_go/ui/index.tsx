@@ -6,6 +6,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
 
 // Helpers
 import { classifyImageFile } from './util';
@@ -68,21 +69,26 @@ class Index extends React.Component<any, IndexState> {
     }
 
     get imageLoader(): JSX.Element {
+        let image: JSX.Element;
         if (this.state.currentImage) {
-            return (
-                <section>
-                    <img src={this.state.currentImage.src} />
-                    <form>
-                        <input type="file" name="imageLoader" onChange={this.handleImageFileSelected} />
-                    </form>
-                </section>
-            );
+            image = <img src={this.state.currentImage.src} />;
+        } else {
+            image = <div />;
         }
 
         return (
             <section>
                 <form>
-                    <input type="file" name="imageLoader" onChange={this.handleImageFileSelected} />
+                    {image}
+                    <input className="image-input"
+                            accept="image/*"
+                            id="hidden-image-file-input" 
+                            type="file" 
+                            name="imageLoader" 
+                            onChange={this.handleImageFileSelected} />
+                    <label htmlFor="hidden-image-file-input">
+                        <Button variant="contained" component="span">Upload</Button>
+                    </label>
                 </form>
             </section>
         );
