@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func serve(cmd *cobra.Command, args []string) error {
+func server(cmd *cobra.Command, args []string) error {
 	port := ":3000"
 
 	if len(args) > 0 {

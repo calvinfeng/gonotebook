@@ -77,9 +77,11 @@ class Index extends React.Component<any, IndexState> {
         }
 
         return (
-            <section>
-                <form>
+            <section className="image-loader">
+                <div className="image-container">
                     {image}
+                </div>
+                <form>
                     <input className="image-input"
                             accept="image/*"
                             id="hidden-image-file-input" 
@@ -115,9 +117,11 @@ class Index extends React.Component<any, IndexState> {
             <section className="index-container">
                 <h1>Welcome!</h1>
                 <p>Let's try to recognize an image!</p>
-                {this.imageLoader}
-                {this.result}
-                {this.error}
+                <section className="image-classifier">
+                    {this.imageLoader}
+                    {this.result}
+                    {this.error}
+                </section>
             </section>
         )
     }
