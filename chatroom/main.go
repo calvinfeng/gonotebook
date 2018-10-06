@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/websocket"
 	"net/http"
+
+	"github.com/gorilla/websocket"
 )
 
 func main() {
-	fs := http.FileServer(http.Dir("public"))
-
 	b := &Broker{
 		ConnMap:   make(map[*websocket.Conn]bool),
 		Broadcast: make(chan Payload),
@@ -17,7 +16,7 @@ func main() {
 
 	go b.handleBroadcast()
 
-	http.Handle("/", fs)
+	http.Handle("/", http.FileServer(http.Dir("public")))
 	http.HandleFunc("/ws", b.getHandleConnections())
 
 	fmt.Println("Starting server on port 8000")

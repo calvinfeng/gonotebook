@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/websocket"
 	"net/http"
+
+	"github.com/gorilla/websocket"
 )
 
 type Payload struct {

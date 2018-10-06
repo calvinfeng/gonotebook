@@ -1,19 +1,18 @@
 # Table of contents
-
 * [Introduction](README.md)
 * Hello World
-    * [Getting Started With Go](./hello_world/getting-started-with-go.md)
-    * [Hello World](./hello_world/hello-world.md)
+    * [Getting Started With Go](./markdowns/getting-started-with-go.md)
+    * [Hello World](./helloworld/hello-world.md)
 * Tic Tac Toe
-    * [Packages in Go](./tic_tac_toe/packages-in-go.md)
-    * [Tic Tac Toe](./tic_tac_toe/tic_tac_toe.md)
+    * [Go Packages](./markdowns/go-packages.md)
+    * [Go Interfaces](./markdowns/go-interfaces.md)
+    * [Tic Tac Toe](./ttt/README.md)
 * HTTP Server
-    * [Calculator Server](./calc_server/calc-server.md)
-    * [HTTP Handler](./calc_server/http-handler.md)
+    * [HTTP Handler](./markdowns/http-handler.md)
+    * [Calculator Server](./calculator/README.md)
 * WebSocket Server
-    * [Concurrency](./chat_server/concurrency.md)
-    * [Chat Server](./chat_server/chat-server.md)
-* [User Authentication](./user_auth/README.md)
-* [Neural Network](./neural_net/README.md)
-* [Tensorflow in Go](./tensor_go/README.md)
+    * [Go-routines](./mardowns/go-routines.md)
+    * [Build a Chatroom](./chatroom/README.md)
+* [User Authentication](./auth/README.md)
+* [Neural Network](./neuralnet/README.md)
 
