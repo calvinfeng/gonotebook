@@ -47,7 +47,7 @@ func (cp *ComputerPlayer) minimax(b *Board, mark string, depth int) map[string]i
 	for _, pos := range b.GetAvailablePos() {
 		newBoard := b.Copy()
 		i, j := pos[0], pos[1]
-		newBoard.PlaceMark(i, j, mark)
+		newBoard[i][j] = mark
 
 		var score map[string]int
 		if mark == "X" {

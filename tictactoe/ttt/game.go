@@ -33,7 +33,7 @@ func (g *Game) Start() {
 		if i, j, err := g.CurrentPlayer.GetMove(g.Board); err != nil {
 			fmt.Println("Your input is invalid, please try again.")
 		} else {
-			g.Board.PlaceMark(i, j, g.CurrentPlayer.Mark())
+			g.Board[i][j] = g.CurrentPlayer.Mark()
 			g.switchPlayer()
 			g.TurnNum++
 		}
