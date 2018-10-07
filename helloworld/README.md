@@ -1,13 +1,11 @@
 # Hello World in Go
 By now you should have your Go installed, your workspace created, and your `$GOPATH` is pointing to 
-the workspace. Let's create our first program in Go! If you prefer to have everything explained step
-by step, please skip ahead and watch the video. Otherwise, text will be the quickest way to go 
-through this tutorial.
+the workspace. It's time for hello world.
 
 ## Functions
-First of all, create a new folder in your Go workspace and name it whatever you like. Inside the new
-folder, create a file called `main.go`. Package `fmt` is Go's builtin package for string formatting 
-and string printing. Let's create two functions inside `main.go` that will use `fmt`. 
+Create a new folder named `helloworld`. Inside this new folder, create a `main.go` file. Package 
+`fmt` is Go's builtin package for common I/O usage, e.g. printing a string to screen, scanning 
+terminal input. Let's create two functions inside `main.go` that will use `fmt`. 
 ```golang
 package main
 
@@ -18,7 +16,7 @@ func SayHello() {
 }
 
 func SayBye() {
-	fmt.Println("Bye!!!")
+	fmt.Println("Bye")
 }
 ```
 
@@ -31,7 +29,10 @@ func main() {
 }
 ```
 
-Now run `go run main.go`. You are done! This is Hello World in Go.
+In your terminal, run your program with
+```
+go run main.go
+```
 
 ## (Optional) Video 01: Hello World in Go
 [Hello World in Go](https://youtu.be/5-FFapKA9sM)
