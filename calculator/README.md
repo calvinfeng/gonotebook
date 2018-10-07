@@ -33,9 +33,8 @@ func main() {
 
 In the snippet above, we are using `http` package's built-in server. We add route to the server by
 calling `HandleFunc`. The function takes a path string and a handler function as arguments. What are
-the handler functions? They are functions that will handle requests.
-
-For example, this is a handler for the `Add` endpoint.
+the handler functions? They are functions that will handle requests. For example, this is a handler 
+for the `Add` endpoint.
 ```golang
 func HandleAdd(w http.ResponseWriter, r *http.Request) {
 	leftOp, leftErr := strconv.ParseFloat(r.URL.Query().Get("lop"), 64)
