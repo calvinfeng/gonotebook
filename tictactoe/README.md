@@ -50,13 +50,47 @@ For bonus phase, we also need the following.
 * `Copy() *Board`
 * `GetAvailablePos() [][2]int`
 
-There is a very neat trick with doing a deep copy of an array. 
-
+There is a very neat trick with doing a deep copy of an array. We can declare the function as value receiver, which means it takes the value of pointer to `Board` and copies into the function. Thus, the `b` inside the function is already a copy of the original board. We just need to take its pointer address and return it.
+```
+func (b Board) Copy() *Board {
+    return *b
+}
+```
 
 ### Player Interface
+Each player should have name and mark. Mark is either `X` or `O`. 
+```golang
+type Player interface {
+    GetMove(*Board) (int, int, error)
+    Mark() string
+    Name() string
+}
+```
 
 ### Human Player
+The main responsibility of a `HumanPlayer` struct is to obtain user input from terminal. And 
+of course, it should implement the `Player` interface.
+```golang 
+type HumanPlayer struct {
+	name string
+	mark string
+}
+```
 
+For example, we can use `fmt.Scanf` to get user inputs.
+```golang
+// GetMove returns next move.
+func (p *HumanPlayer) GetMove(b *Board) (int, int, error) {
+	fmt.Print("Enter position: ")
+	var i, j int
+	if n, err := fmt.Scanf("%d %d", &i, &j); err != nil || n != 2 {
+		return 0, 0, err
+	}
+
+	fmt.Println("Your input:", i, j)
+	return i, j, nil
+}
+```
 
 ## Additional Note
 ### Private vs Public
