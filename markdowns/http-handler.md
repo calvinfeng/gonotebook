@@ -1,24 +1,14 @@
 # Handlers
-When you google around about Go http handlers, you will notice that there is something called 
-`http.Handler` and `http.HandlerFunc`. It is natural to ask why do we have two types of handler and 
-they both work?!
+Inside the HTTP package, there are two handler types, `http.Handler` and `http.HandlerFunc`. It is 
+natural to ask why do we have two types of handler. 
 
-`http.Handler` is an interface. Any data type that implements the method `ServeHTTP` will qualify 
-as a HTTP handler. So, if you somehow can attach a method to a function, then that function is 
-indeed an authentic HTTP handler. In Go, you can attach methods to any data type, even a string or 
-an integer.
-```go
-type HandlerFunc func(ResponseWriter, *Request)
+* `http.Handler` is an interface.
+* `http.HandlerFunc` is a custom function type which takes two arguments, `ResponseWriter` and `*Request`.
 
-// ServeHTTP calls f(w, r).
-func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
-	f(w, r)
-}
-```
+Any data type that implements the method `ServeHTTP` will qualify as a HTTP handler. Thus, if we 
+attach a `ServeHTTP` method to a data type, then that data type is automatically a `http.Handler`.  
 
-Essentially, `HandlerFunc` is a type of `Handler`, just like Fuji apple is a type of apple. You can 
-define your own apple, or in this case, your own http handler. For example, I can use a string as my 
-HTTP handler! This is weird but it works.
+In Go, you can attach methods to any data type, even a string or an integer.
 ```go
 type HandlerString string
 
@@ -28,3 +18,17 @@ func (str HandlerString) ServeHTTP(w ResponseWriter, r *Request) {
     w.Write([]byte(str))
 }
 ```
+
+Now it is much easier to explain what is a `HandlerFunc`. Essentially it is a function that implements
+`ServeHTTP`.
+```go
+type HandlerFunc func(ResponseWriter, *Request)
+
+// ServeHTTP calls f(w, r).
+func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
+	f(w, r)
+}
+```
+
+If this is still confusing, don't worry. The concept will become clear once we work on calculator
+server.

@@ -1,5 +1,6 @@
 # Tic Tac Toe
 ## Object Oriented Programming in Go
+Let's define couple entities that we need for a terminal based Tic Tac Toe game. 
 
 
 ## Bonus
