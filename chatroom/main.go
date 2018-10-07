@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
 
-var charRunes = []rune("0123456789")
+var charRunes = []rune("0123456789abcdef")
 
 // Payload is the expected JSON format for a websocket payload.
 type Payload struct {
@@ -46,19 +47,19 @@ func (mb *MessageBroker) ListenBroadcast() {
 	for {
 		select {
 		case payload := <-mb.Broadcast:
-			for ID, c := range mb.ConnByID {
-				err := c.WriteJSON(payload)
+			for ID := range mb.ConnByID {
+				err := mb.ConnByID[ID].WriteJSON(payload)
 				if err != nil {
-					fmt.Printf("failed to write JSON to client:%s, %s", ID, err)
+					logerr("WriteJSON", err)
 				}
 			}
 		case r := <-mb.AddConn:
 			mb.ConnByID[r.ID] = r.Conn
-			fmt.Printf("client:%s has joined chatroom\n", r.ID)
+			loginfo(fmt.Sprintf("client:%s has joined chatroom", r.ID))
 
 		case r := <-mb.RemoveConn:
 			delete(mb.ConnByID, r.ID)
-			fmt.Printf("client:%s has left chatroom\n", r.ID)
+			loginfo(fmt.Sprintf("client:%s has left chatroom", r.ID))
 		}
 	}
 }
@@ -68,7 +69,7 @@ func NewStreamHandler(u *websocket.Upgrader, mb *MessageBroker) http.HandlerFunc
 	return func(w http.ResponseWriter, r *http.Request) {
 		conn, err := u.Upgrade(w, r, nil)
 		if err != nil {
-			fmt.Println("failed to upgrade connection", err)
+			logerr("Upgrade", err)
 			return
 		}
 
@@ -84,9 +85,9 @@ func NewStreamHandler(u *websocket.Upgrader, mb *MessageBroker) http.HandlerFunc
 				mb.RemoveConn <- rg
 				return
 			case err != nil:
-				fmt.Println("expected error", err)
+				logerr("ReadJSON", err)
 			default:
-				fmt.Println("broadcasting message:", p.Message)
+				loginfo(fmt.Sprintf("broadcasting message: %s", p.Message))
 				mb.Broadcast <- p
 			}
 		}
@@ -106,11 +107,19 @@ func main() {
 	go mb.ListenBroadcast()
 
 	http.Handle("/", http.FileServer(http.Dir("public")))
-	http.HandleFunc("/streams/", NewStreamHandler(u, mb))
+	http.Handle("/streams/", NewStreamHandler(u, mb))
 
-	fmt.Println("starting server on port 8000")
+	loginfo("starting server on port 8000")
 	err := http.ListenAndServe(":8000", nil)
 	if err != nil {
-		fmt.Println("ListenAndServe: ", err)
+		logerr("ListenAndServe", err)
 	}
+}
+
+func loginfo(msg string) {
+	fmt.Printf("[INFO][%s] %s\n", time.Now(), msg)
+}
+
+func logerr(trace string, err error) {
+	fmt.Printf("[EROR][%s] %s - %s\n", time.Now(), trace, err.Error())
 }
