@@ -6,7 +6,7 @@
     * [Go Packages](./markdowns/go-packages.md)
 * Tic Tac Toe
     * [Go Interfaces](./markdowns/go-interfaces.md)
-    * [Tic Tac Toe](./ttt/README.md)
+    * [Tic Tac Toe](./tictactoe/README.md)
 * HTTP Server
     * [HTTP Handler](./markdowns/http-handler.md)
     * [Calculator Server](./calculator/README.md)

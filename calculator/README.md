@@ -1,5 +1,5 @@
 # Calculator Server
-[Source code is here](https://github.com/calvinfeng/go-academy/tree/master/calc_server)
+[Source code is here](https://github.com/calvinfeng/go-academy/tree/master/calculator)
 
 ## Project Requirement
 We are going to use Go's built-in package `net/http` to create a calculator server. The server 

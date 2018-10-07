@@ -93,7 +93,7 @@ func (b *Board) isTied() bool {
 	for i := range b.Grid {
 		for j := range b.Grid[i] {
 			if b.Grid[i][j] == "_" {
-				spaceCount += 1
+				spaceCount++
 			}
 		}
 	}

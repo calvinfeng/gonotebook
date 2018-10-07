@@ -1,4 +1,6 @@
 # Hello World in Go
+[Source code is here](https://github.com/calvinfeng/go-academy/tree/master/helloworld)
+
 By now you should have your Go installed, your workspace created, and your `$GOPATH` is pointing to 
 the workspace. It's time for hello world.
 
