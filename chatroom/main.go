@@ -17,7 +17,7 @@ func main() {
 	go b.handleBroadcast()
 
 	http.Handle("/", http.FileServer(http.Dir("public")))
-	http.HandleFunc("/ws", b.getHandleConnections())
+	http.HandleFunc("/streams/", b.getHandleConnections())
 
 	fmt.Println("Starting server on port 8000")
 	err := http.ListenAndServe(":8000", nil)

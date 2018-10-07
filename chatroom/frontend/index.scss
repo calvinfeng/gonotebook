@@ -1,27 +1,11 @@
-body {
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
-}
-
-#react-application {
-  height: 100%;
-  width: 100%;
-  margin: 1rem; 
-  form {
+.input-form {
     display: flex;
     flex-direction: column;
-
     label {
-      margin: 0.3rem;
-      input {
-        margin-left: 0.3rem;
-      }
+        margin: 0.5rem;
     }
 
     input {
-      max-width: 200px;
+        max-width: 100px;
     }
-  }
 }
