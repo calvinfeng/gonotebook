@@ -2,9 +2,9 @@
 * [Introduction](README.md)
 * Hello World
     * [Getting Started With Go](./markdowns/getting-started-with-go.md)
-    * [Hello World](./helloworld/hello-world.md)
-* Tic Tac Toe
+    * [Hello World](./helloworld/README.md)
     * [Go Packages](./markdowns/go-packages.md)
+* Tic Tac Toe
     * [Go Interfaces](./markdowns/go-interfaces.md)
     * [Tic Tac Toe](./ttt/README.md)
 * HTTP Server

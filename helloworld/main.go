@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-academy/helloworld/foo"
 )
 
 func SayHello() {
@@ -14,7 +15,7 @@ func SayBye() {
 
 func main() {
 	fmt.Println("Hello World, this is Go!")
-
 	SayHello()
 	SayBye()
+	foo.SayHello()
 }

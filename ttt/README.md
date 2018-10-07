@@ -1,6 +1,6 @@
 # Tic Tac Toe
 ## Object Oriented Programming in Go
-Coming soon...
+
 
 ## Bonus
 Create a computer player that implements the `Player` interface and make it undefeatable with 

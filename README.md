@@ -18,4 +18,3 @@ If you are viewing this on Gitbook, the table of content is on the left-hand sid
 4. WebSocket Server
 5. User Authentication
 6. Neural Networks
-7. TBA
