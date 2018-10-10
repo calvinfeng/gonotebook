@@ -16,7 +16,10 @@
 * [User Authentication](./auth/README.md)
 * [Neural Network](./neuralnet/README.md)
 * Golang Patterns
-    * [Custom JSON Marshaling](./gopatterns/custom-json-marshaling.md)
+    * [Custom JSON Marshaling](./gopatterns/custom_json_marshaling.md)
     * [Builder](./gopatterns/builder.md)
+    * [Factory Method](./gopatterns/factory_method.md)
+    * [Object Pool](./gopatterns/object_pool.md)
+    * [Singleton](./gopatterns/singleton.md)
 
 
