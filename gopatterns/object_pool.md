@@ -49,5 +49,13 @@ package main
 func main() {
     a := army.New(100)
 
+    // Summon soldier in parallel
+    for i := 0; i < 100; i++ {
+        go func() {
+            s := <-a
+            s.March()
+            a <- s
+        }()
+    }
 }
 ```
