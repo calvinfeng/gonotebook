@@ -17,6 +17,6 @@
 * [Neural Network](./neuralnet/README.md)
 * Golang Patterns
     * [Custom JSON Marshaling](./gopatterns/custom-json-marshaling.md)
-    
+    * [Builder](./gopatterns/builder.md)
 
 
