@@ -5,6 +5,8 @@
 For example, I define an interface Pokemon and I have multiple types of pokemon that can satisfy
 this interface.
 ```golang
+package pokemon
+
 // Pokemon has a list of moves and attack.
 type Pokemon interface {
 	Moves() []string
