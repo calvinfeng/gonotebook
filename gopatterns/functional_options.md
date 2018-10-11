@@ -10,7 +10,8 @@ type Porsche struct {
 }
 ```
 
-Let's create a function that is basically a setter for Porsche.
+Let's create a function type that is basically a setter for Porsche. Along with it, we will create
+four setter factory, one for each field.
 ```golang
 type Option func(*Porsche)
 
