@@ -13,7 +13,7 @@ var (
     commander *General
 )
 
-// Outside of this package, no one can access this struct except through NewGeneral()` 
+// Outside of this package, no one can access this struct except through NewGeneral()
 type general struct {
     Army Army
 }

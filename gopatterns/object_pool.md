@@ -2,11 +2,15 @@
 The object pool creational design pattern is used to prepare and keep multiple instances according
 to the demand expectation.
 
-* Pro: object pool pattern is useful in cases where object initialization is more expensive than 
-object maintenance. It has positive effects on performance due to objects being initialized beforehand. 
-* Con: If there are spikes in demand as opposed to a steady demand, the maintenance overhead might out
-weight the benefits.
+## Advantage
+Object pool pattern is useful in cases where object initialization is more expensive than object 
+maintenance. It has positive effects on performance due to objects being initialized beforehand. 
 
+## Disadvantage
+If there are spikes in demand as opposed to a steady demand, the maintenance overhead might outweigh 
+the benefits.
+
+## Example
 For example, I have solider which requires *training* before I can initialize it.
 ```golang
 package army

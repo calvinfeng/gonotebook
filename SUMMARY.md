@@ -21,5 +21,6 @@
     * [Factory Method](./gopatterns/factory_method.md)
     * [Object Pool](./gopatterns/object_pool.md)
     * [Singleton](./gopatterns/singleton.md)
+    * [Functional Options](./gopatterns/functional_options.md)
 
 
