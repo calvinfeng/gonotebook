@@ -15,12 +15,14 @@
     * [Build a Chatroom](./chatroom/README.md)
 * [User Authentication](./auth/README.md)
 * [Neural Network](./neuralnet/README.md)
-* Golang Patterns
+* Idioms
     * [Custom JSON Marshaling](./gopatterns/custom_json_marshaling.md)
+    * [Functional Options](./gopatterns/functional_options.md)
+* Creational Patterns
     * [Builder](./gopatterns/builder.md)
     * [Factory Method](./gopatterns/factory_method.md)
     * [Object Pool](./gopatterns/object_pool.md)
     * [Singleton](./gopatterns/singleton.md)
-    * [Functional Options](./gopatterns/functional_options.md)
+* Behavioral Patterns
     * [Observer](./gopatterns/observer.md)
-
+    * [Strategy](./gopatterns/strategy.md)
