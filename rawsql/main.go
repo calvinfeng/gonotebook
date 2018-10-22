@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	randomdata "github.com/Pallinder/go-randomdata"
 	"github.com/gchaincl/dotsql"
 	_ "github.com/lib/pq"
 )
@@ -40,7 +41,7 @@ func createDogs(db *sql.DB) error {
 	}
 
 	for i := 0; i < 10; i++ {
-		_, err := dot.Exec(db, "insert_dog", 5, "Loki", true)
+		_, err := dot.Exec(db, "insert_dog", 5, randomdata.SillyName(), true)
 		if err != nil {
 			return err
 		}

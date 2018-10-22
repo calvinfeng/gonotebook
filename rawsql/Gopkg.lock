@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/Pallinder/go-randomdata"
+  packages = ["."]
+  revision = "15df0648130a623e418886f81b2aaecd0a00547b"
+
+[[projects]]
   name = "github.com/gchaincl/dotsql"
   packages = ["."]
   revision = "5487b6a5fc12870425fc14d9e05a3fabddd91d7e"
@@ -16,6 +22,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "206bcfef1bcc06bb6cbcc5a48cb7ed74912b102a8b9e179b04154725fb87ad03"
+  inputs-digest = "6eefb9f67efdf64c03a664d2c60e7cc2400c97f9d3a19a5a789cf3f6db115558"
   solver-name = "gps-cdcl"
   solver-version = 1
