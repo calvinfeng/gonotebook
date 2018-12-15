@@ -10,7 +10,8 @@ complete the **Basics** and **Methods and Interfaces** sections of the tutorial.
 expected to have Golang sytnax memorized right away. The best way to learn is always to build.
 
 ## Table of Contents
-If you are viewing this on Gitbook, the table of content is on the left-hand side of the screen.
+If you are viewing this on Gitbook, the table of content is also listed on the left-hand side of the 
+screen.
 
 1. Hello World
 2. Tic Tac Toe 

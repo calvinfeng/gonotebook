@@ -1,17 +1,17 @@
 # Table of contents
 * [Introduction](README.md)
 * Hello World
-    * [Getting Started With Go](./gobasics/getting-started-with-go.md)
+    * [Getting Started With Go](./markdowns/1_01_getting_started_with_go.md)
+    * [Go Packages](./markdowns/01_02_go_packages.md)
     * [Hello World](./helloworld/README.md)
-    * [Go Packages](./gobasics/go-packages.md)
 * Tic Tac Toe
-    * [Go Interfaces](./gobasics/go-interfaces.md)
+    * [Go Interfaces](./gobasics/02_01_go_interfaces.md)
     * [Tic Tac Toe](./tictactoe/README.md)
 * HTTP Server
-    * [HTTP Handler](./gobasics/http-handler.md)
+    * [HTTP Handler](./gobasics/03_01_go_http_handlers.md)
     * [Calculator Server](./calculator/README.md)
 * WebSocket Server
-    * [Go-routines](./gobasics/go-routines.md)
+    * [Go-routines](./gobasics/04_01_go_routines.md)
     * [Build a Chatroom](./chatroom/README.md)
 * [User Authentication](./auth/README.md)
 * [Neural Network](./neuralnet/README.md)
