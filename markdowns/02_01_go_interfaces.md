@@ -1,14 +1,15 @@
 # Go Interfaces
-Interface is a very powerful tool for creating abstractions in Go. It also enables us to create mock
-for unit testing. Since Go is strongly typed, every function expects a concrete type. For example,
+Interface is a very powerful tool for acheiving duck typings in Go. It enables us to create strong 
+API contract across packages, and create mock for unit testing. Since Go is strongly typed, every 
+function expects a concrete type. For example,
 ```golang
 func Feed(d *Dog) bool {
-    // Return true if the dog eats it else false.
+    // Return true if the dog accepts the feeding, else return false.
 }
 ```
 
-The `Feed` function can only feed dogs due to the strong typed nature of the language. One may naturally
-ask, *what if I want to feed a cat?*
+The `Feed` function can only feed dogs due to the strong typed nature of the language. One may 
+naturally ask, *what if I want to feed a cat?*
 ```golang
 func FeedCat(c *Cat) bool {
     // Implementation...
@@ -45,7 +46,7 @@ func (c *Cat) Eat(f Food) {
 }
 ```
 
-Now we just need to modify the `Feed` function a little bit.
+Now we just need to modify the argument type of `Feed` function a little bit.
 ```golang
 func Feed(a Animal) bool {
     // Now we can feed anything that has Eat()
@@ -59,8 +60,8 @@ the animals!
 type MockDog struct{}
 
 func (md *MockDog) Eat(f Food) {
-    assert.True(f.Volume > 100)
-    asssert.Called()
+    assert.True(f.Type == "DOG_FOOD")
+    assert.Called()
 }
 ```
 

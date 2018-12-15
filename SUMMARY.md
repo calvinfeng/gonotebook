@@ -5,13 +5,14 @@
     * [Go Packages](./markdowns/01_02_go_packages.md)
     * [Hello World](./helloworld/README.md)
 * Tic Tac Toe
-    * [Go Interfaces](./gobasics/02_01_go_interfaces.md)
+    * [Go Interfaces](./markdowns/02_01_go_interfaces.md)
+    * [Go Error Handling](./markdowns/02_02_go_error_handling.md)
     * [Tic Tac Toe](./tictactoe/README.md)
 * HTTP Server
-    * [HTTP Handler](./gobasics/03_01_go_http_handlers.md)
+    * [HTTP Handler](./markdowns/03_01_go_http_handlers.md)
     * [Calculator Server](./calculator/README.md)
 * WebSocket Server
-    * [Go-routines](./gobasics/04_01_go_routines.md)
+    * [Go-routines](./markdowns/04_01_go_routines.md)
     * [Build a Chatroom](./chatroom/README.md)
 * [User Authentication](./auth/README.md)
 * [Neural Network](./neuralnet/README.md)
