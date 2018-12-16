@@ -111,17 +111,17 @@ func (p *HumanPlayer) GetMove(b *Board) (int, int, error) {
 }
 ```
 
+## Tic Tac Toe in Go
+* [Tic Tac Toe in Go](https://www.youtube.com/channel/UCoKwJSadNdeJkpfBpI-f5Ow)
+
 ## Bonus
-Here are some recommendations for projects you can work on if you want more practice.
+Here are some recommendations for projects you can work on if you want more practice.-
 * Connect 4
 * Minesweeper
 * Sudoku
 
-## Tic Tac Toe in Go
-* [Tic Tac Toe in Go](https://www.youtube.com/channel/UCoKwJSadNdeJkpfBpI-f5Ow)
-
 ## Source
-[Github](https://github.com/calvinfeng/go-academy/tree/master/tictactoe)
+[GitHub](https://github.com/calvinfeng/go-academy/tree/master/tictactoe)
 
 
 

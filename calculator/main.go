@@ -7,13 +7,12 @@ import (
 
 func main() {
 	http.HandleFunc("/api/add", HandleAdd)
-	http.HandleFunc("/api/subtract", HandleSubtract)
-	http.HandleFunc("/api/multiply", OperationHandlerCreator(MUL))
-	http.HandleFunc("/api/divide", OperationHandlerCreator(DIV))
+	http.HandleFunc("/api/sub", HandleSubtract)
+	http.HandleFunc("/api/mul", CreateOperationHandler(Multiplication))
+	http.HandleFunc("/api/div", CreateOperationHandler(Division))
 
-	fmt.Println("Starting calculator server on port 8000")
-	err := http.ListenAndServe(":8000", nil)
-	if err != nil {
-		fmt.Println("Failed to start server")
+	fmt.Println("starting calculator server on port 8000")
+	if err := http.ListenAndServe(":8000", nil); err != nil {
+		fmt.Println("failed to serve", err)
 	}
 }
