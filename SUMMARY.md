@@ -14,7 +14,7 @@
 * WebSocket Server
     * [Go-routines](./markdowns/04_01_go_routines.md)
     * [Build a Chatroom](./chatroom/README.md)
-* [User Authentication](./auth/README.md)
+* [User Authentication](./userauth/README.md)
 * [Neural Network](./neuralnet/README.md)
 * Idioms
     * [Custom JSON Marshaling](./gopatterns/custom_json_marshaling.md)

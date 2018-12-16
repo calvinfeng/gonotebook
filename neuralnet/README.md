@@ -51,5 +51,5 @@ cd notebooks
 jupyter notebook
 ```
 
-## Videos
+## Neural Network in Go
 Need more time to work on the videos for this project...

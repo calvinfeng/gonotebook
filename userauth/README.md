@@ -36,10 +36,12 @@ I did mine with
 postgres=# alter user cfeng with password "cfeng";
 ```
 
-## Video 05: User Authentication in Go
-[User Authentication in Go Introduction](https://youtu.be/t7UaOV0THIQ)
+## User Authentication in Go
+* [User Authentication in Go](https://www.youtube.com/channel/UCoKwJSadNdeJkpfBpI-f5Ow)
 
+## Bonus & Additional Resource
+If you want to learn more about session storage, security, encryption, and many other topics 
+relating to web applications, take a look at this eBook [astaxie](https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/)
 
-## Additional Resource
-If you want to learn more about session storage, security, encryption, and many other topics relating 
-to web applications, take a look at this eBook: https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/.
+## Source
+[GitHub](https://github.com/calvinfeng/go-academy/tree/master/userauth)
