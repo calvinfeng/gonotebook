@@ -21,15 +21,15 @@ Go has this concept of a workspace. It's basically a folder where you'd put all 
 for all your Go programs. I usually put my workspace in my `~` directory. I called my workspace 
 `Gopher` or `Workspace`, but feel free to name it whatever you like.
 ```text
-Calvin
-        - Applications
-        - Desktop
-        - Documents
-        - etc...
-        - Gopher
-                - bin
-                - pkg
-                - src
+Calvin/
+        Applications/
+        Desktop/
+        Documents/
+        etc...
+        Gopher/
+                bin/
+                pkg/
+                src/
 ```
 
 ### Go Path
@@ -39,7 +39,7 @@ define your environmental variables in your `.bash_profile`.
 For example:
 ```text
 cd ~
-atom .bash_profile
+code .bash_profile
 ```
 
 And then insert the following into your bash profile:
@@ -52,14 +52,14 @@ export PATH=$PATH:$GO/bin:$GOPATH/bin
 
 Now, whenever you start a new project, put it into `$GOPATH/src` folder. For example:
 ```text
-- Gopher
-        - bin
-        - pkg
-        - src
-                - go-academy
-                        - first_program
-                                - hello_world.go
-                                - main.go
-                                - bye_world.go
+Gopher/
+        bin/
+        pkg/
+        src/
+                go-academy/
+                        first_program/
+                                hello_world.go
+                                main.go
+                                bye_world.go
 ```
 
