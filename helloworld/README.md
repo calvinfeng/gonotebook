@@ -7,9 +7,9 @@ Create a folder named `helloworld` in the `go-academy` directory. Then create a 
 `helloworld/` directory.
 ```
 WORKSPACE/
-    - src/
-        - go-academy/
-            - helloworld/
+    src/
+        go-academy/
+            helloworld/
                 main.go
 ```
 

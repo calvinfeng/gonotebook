@@ -81,7 +81,7 @@ class Index extends React.Component<IndexProps, IndexState> {
   };
 
   componentDidMount() {
-    this.websocket = new WebSocket("ws://localhost:8000/streams/")
+    this.websocket = new WebSocket("ws://localhost:8000/streams/messages")
     this.websocket.onopen = this.handleWebsocketOpen
     this.websocket.onclose = this.handleWebsocketClose
     this.websocket.onmessage = this.handleWebsocketMessage

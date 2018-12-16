@@ -12,7 +12,7 @@ Go is a tool for managing Go source coode.
 
 Usage:
 
-        go command [arguments]
+    go command [arguments]
 ```
 
 ## Project Structure
@@ -22,14 +22,14 @@ for all your Go programs. I usually put my workspace in my `~` directory. I call
 `Gopher` or `Workspace`, but feel free to name it whatever you like.
 ```text
 Calvin/
-        Applications/
-        Desktop/
-        Documents/
-        etc...
-        Gopher/
-                bin/
-                pkg/
-                src/
+    Applications/
+    Desktop/
+    Documents/
+    etc...
+    Gopher/
+        bin/
+        pkg/
+        src/
 ```
 
 ### Go Path
@@ -53,13 +53,13 @@ export PATH=$PATH:$GO/bin:$GOPATH/bin
 Now, whenever you start a new project, put it into `$GOPATH/src` folder. For example:
 ```text
 Gopher/
-        bin/
-        pkg/
-        src/
-                go-academy/
-                        first_program/
-                                hello_world.go
-                                main.go
-                                bye_world.go
+    bin/
+    pkg/
+    src/
+        go-academy/
+            first_program/
+                hello_world.go
+                main.go
+                bye_world.go
 ```
 

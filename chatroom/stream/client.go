@@ -1,4 +1,4 @@
-package chat
+package stream
 
 import (
 	"context"
@@ -9,24 +9,29 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// NewConsumer returns a consumer with channels initialized.
-func NewConsumer(c *websocket.Conn) *Consumer {
-	return &Consumer{
+// Client can read and write to demultiplexer.
+type Client interface {
+	ID() string
+}
+
+// NewWebSocketClient returns a consumer with channels initialized.
+func NewWebSocketClient(c *websocket.Conn) *WebSocketClient {
+	return &WebSocketClient{
 		conn:  c,
 		read:  make(chan json.RawMessage),
 		write: make(chan json.RawMessage),
 	}
 }
 
-// Consumer reads and writes to broker.
-type Consumer struct {
+// WebSocketClient reads and writes to broker.
+type WebSocketClient struct {
 	conn  *websocket.Conn
 	read  chan json.RawMessage
 	write chan json.RawMessage
 }
 
 // ReadPump pummps from read channel and perform some logic.
-func (c *Consumer) ReadPump(ctx context.Context) {
+func (c *WebSocketClient) ReadPump(ctx context.Context) {
 	c.conn.SetReadDeadline(time.Now().Add(time.Minute))
 	c.conn.SetPongHandler(func(s string) error {
 		c.conn.SetReadDeadline(time.Now().Add(time.Minute))
@@ -45,7 +50,7 @@ func (c *Consumer) ReadPump(ctx context.Context) {
 }
 
 // WritePump pumps from write channel and write to websocket connection.
-func (c *Consumer) WritePump(ctx context.Context) {
+func (c *WebSocketClient) WritePump(ctx context.Context) {
 	ticker := time.NewTicker(time.Minute)
 	defer ticker.Stop()
 
