@@ -15,7 +15,7 @@ type ComputerPlayer struct {
 }
 
 // GetMove returns next move.
-func (cp *ComputerPlayer) GetMove(b *Board) (int, int, error) {
+func (cp *ComputerPlayer) GetMove(b *board) (int, int, error) {
 	move := cp.minimax(b, cp.Mark(), 1)
 	i, j := move["i"], move["j"]
 	return i, j, nil
@@ -31,11 +31,11 @@ func (cp *ComputerPlayer) Name() string {
 	return cp.name
 }
 
-func (cp *ComputerPlayer) minimax(b *Board, mark string, depth int) map[string]int {
-	if b.IsOver() {
+func (cp *ComputerPlayer) minimax(b *board, mark string, depth int) map[string]int {
+	if b.isOver() {
 		var score map[string]int
 		score = make(map[string]int)
-		if b.Winner() == cp.Mark() {
+		if b.winner() == cp.Mark() {
 			score["value"] = 10 - depth
 		} else {
 			score["value"] = depth - 10
@@ -44,8 +44,8 @@ func (cp *ComputerPlayer) minimax(b *Board, mark string, depth int) map[string]i
 	}
 
 	scores := []map[string]int{}
-	for _, pos := range b.GetAvailablePos() {
-		newBoard := b.Copy()
+	for _, pos := range b.getAvailablePos() {
+		newBoard := b.copy()
 		i, j := pos[0], pos[1]
 		newBoard[i][j] = mark
 
@@ -60,7 +60,8 @@ func (cp *ComputerPlayer) minimax(b *Board, mark string, depth int) map[string]i
 		scores = append(scores, score)
 	}
 
-	if mark == cp.Mark() { // max
+	// max
+	if mark == cp.Mark() {
 		maxScore := scores[0]
 		for _, s := range scores {
 			if maxScore["value"] < s["value"] {

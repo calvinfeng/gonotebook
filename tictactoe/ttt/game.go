@@ -8,50 +8,59 @@ import (
 // NewGame is a constructor for a game.
 func NewGame(p1 Player, p2 Player) *Game {
 	return &Game{
-		PlayerOne:     p1,
-		PlayerTwo:     p2,
-		CurrentPlayer: p1,
-		Board:         NewBoard(),
-		TurnNum:       1,
+		p1:      p1,
+		p2:      p2,
+		current: p1,
+		board:   newBoard(),
+		round:   1,
 	}
 }
 
 // Game keeps track of the progress of a tic tac toe game.
 type Game struct {
-	PlayerOne     Player
-	PlayerTwo     Player
-	CurrentPlayer Player
-	Board         *Board
-	TurnNum       int
+	p1      Player
+	p2      Player
+	current Player
+	board   *board
+	round   int
 }
 
 // Start will start a game.
 func (g *Game) Start() {
 	fmt.Println("___Welcome to Tic Tac Toe in Go___")
-	for !g.Board.IsOver() {
+	for !g.board.isOver() {
 		g.printInfo()
-		if i, j, err := g.CurrentPlayer.GetMove(g.Board); err != nil {
-			fmt.Println("Your input is invalid, please try again.")
-		} else {
-			g.Board[i][j] = g.CurrentPlayer.Mark()
-			g.switchPlayer()
-			g.TurnNum++
+		i, j, err := g.current.GetMove(g.board)
+
+		if err != nil {
+			fmt.Println("your input is invalid, please try again.")
+			continue
 		}
+
+		if g.board[i][j] != "_" {
+			fmt.Println("position is already occupied, please try again")
+			continue
+		}
+
+		g.board[i][j] = g.current.Mark()
+		g.switchPlayer()
+		g.round++
 	}
-	fmt.Println(g.Board)
+
+	fmt.Println(g.board)
 	fmt.Println("Game over!")
 }
 
 func (g *Game) printInfo() {
-	fmt.Println("Turn #" + strconv.Itoa(g.TurnNum))
-	fmt.Println(g.Board)
-	fmt.Println("Current player:", g.CurrentPlayer.Name())
+	fmt.Println("Turn #" + strconv.Itoa(g.round))
+	fmt.Println(g.board)
+	fmt.Println("Current player:", g.current.Name())
 }
 
 func (g *Game) switchPlayer() {
-	if g.CurrentPlayer == g.PlayerOne {
-		g.CurrentPlayer = g.PlayerTwo
+	if g.current == g.p1 {
+		g.current = g.p2
 	} else {
-		g.CurrentPlayer = g.PlayerOne
+		g.current = g.p1
 	}
 }

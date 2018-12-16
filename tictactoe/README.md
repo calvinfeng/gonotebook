@@ -1,5 +1,24 @@
 # Tic Tac Toe
-[Source code is here](https://github.com/calvinfeng/go-academy/tree/master/tictactoe)
+Let's build a terminal based Tic Tac Toe game in Go!
+
+## Setup
+Create a folder named `tictactoe` in your `go-academy` directory. Then create a `main.go` inside it.
+We will put the game logic into a package named `ttt`. For now, just make an empty `ttt` folder
+inside `tictactoe`. 
+```
+WORKSPACE/
+    src/
+        go-academy/
+            tictactoe/
+                main.go
+                ttt/
+                    ...
+```
+
+## Quick Note
+### Private vs Public
+Functions or variables with upper-cased name are exported from a package. If the functions or 
+variables have lower-cased name, then program outside of the package cannot have reference to them.
 
 ## Object Oriented Programming in Go
 Let's define what are entities that we need for a terminal based Tic Tac Toe game. 
@@ -12,18 +31,15 @@ Let's define what are entities that we need for a terminal based Tic Tac Toe gam
     * `Name() string`
 4. `HumanPlayer` and `ComputerPlayer`
 
-First step, let's create a folder called `ttt` which is short for tic tac toe. Inside this folder we
-will create a `ttt` package.
-
 ### Game
 The data structure should look like the following.
 ```golang
 type Game struct {
-    PlayerOne Player
-    PlayerTwo Player
-    CurrentPlayer Player
-    Board *Board
-    TurnNum int
+    p1 Player 
+    p2 Player
+    current Player
+    board *Board 
+    round int
 }
 ```
 
@@ -35,8 +51,8 @@ func (g *Game) Start() {
 ```
 
 ### Board
-The board is probably the most complicated and annoying because one needs to check columns, rows,
-and diagonals. We can define Board as a 3 by 3 array of string.
+`Board` is probably the least pleasant piece in this project because it contains logic to check 
+columns, rows, and diagonals. We can define Board as a 3 by 3 array of string.
 ```golang
 type Board [3][3]string
 ```
@@ -50,7 +66,10 @@ For bonus phase, we also need the following.
 * `Copy() *Board`
 * `GetAvailablePos() [][2]int`
 
-There is a very neat trick with doing a deep copy of an array. We can declare the function as value receiver, which means it takes the value of pointer to `Board` and copies into the function. Thus, the `b` inside the function is already a copy of the original board. We just need to take its pointer address and return it.
+There is a very neat trick with doing a deep copy of an array. We can declare the function as value 
+receiver, which means it takes the value of pointer to `Board` and copies into the function. Thus, 
+the `b` inside the function is already a copy of the original board. We just need to take its pointer
+address and return it.
 ```
 func (b Board) Copy() *Board {
     return *b
@@ -92,21 +111,17 @@ func (p *HumanPlayer) GetMove(b *Board) (int, int, error) {
 }
 ```
 
-## Additional Note
-### Private vs Public
-Upper cased function names and variable names mean they are exported from a package. If they are
-lowered case, then program outside of the package cannot invoke them or call on them.
-
 ## Bonus
-Create a `ComputerPlayer` that implements the `Player` interface and make it undefeatable with 
-*Minimax* algorithm. Here are some other recommendations for projects you can work on
-
+Here are some recommendations for projects you can work on if you want more practice.
 * Connect 4
 * Minesweeper
 * Sudoku
 
-## (Optional) Video 02: Tic Tac Toe in Go
-* [Tic Tac Toe in Go Part 1](https://youtu.be/644HhokVkbI)
-* [Tic Tac Toe in Go Part 2](https://youtu.be/eL6ruTgOQG0)
-* [Tic Tac Toe in Go Part 3](https://youtu.be/rdSgqye50Qw)
+## Tic Tac Toe in Go
+* [Tic Tac Toe in Go](https://www.youtube.com/channel/UCoKwJSadNdeJkpfBpI-f5Ow)
+
+## Source
+[Github](https://github.com/calvinfeng/go-academy/tree/master/tictactoe)
+
+
 

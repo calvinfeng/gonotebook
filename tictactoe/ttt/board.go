@@ -1,8 +1,8 @@
 package ttt
 
 // NewBoard is a constructor for an empty board.
-func NewBoard() *Board {
-	var b Board
+func newBoard() *board {
+	var b board
 	for i := 0; i < len(b); i++ {
 		for j := 0; j < len(b[i]); j++ {
 			b[i][j] = "_"
@@ -13,20 +13,20 @@ func NewBoard() *Board {
 }
 
 // Board is a 3 by 3 grid.
-type Board [3][3]string
+type board [3][3]string
 
 // Copy creates a copy of the original board.
-func (b Board) Copy() *Board {
+func (b board) copy() *board {
 	return &b
 }
 
 // IsOver checks if a game is over.
-func (b *Board) IsOver() bool {
+func (b *board) isOver() bool {
 	return b.isWon() || b.isTied()
 }
 
 // String returns the string representation of a board.
-func (b *Board) String() string {
+func (b *board) String() string {
 	str := "    "
 	for i := range b {
 		for j := range b[i] {
@@ -37,15 +37,15 @@ func (b *Board) String() string {
 	return str
 }
 
-func (b *Board) isWon() bool {
-	if b.Winner() != "" {
+func (b *board) isWon() bool {
+	if b.winner() != "" {
 		return true
 	}
 	return false
 }
 
 // Winner returns the winner of the board.
-func (b *Board) Winner() string {
+func (b *board) winner() string {
 	xStreak := [3]string{"X", "X", "X"}
 	oStreak := [3]string{"O", "O", "O"}
 
@@ -82,7 +82,7 @@ func (b *Board) Winner() string {
 	return ""
 }
 
-func (b *Board) isTied() bool {
+func (b *board) isTied() bool {
 	count := 0
 	for i := range b {
 		for j := range b[i] {
@@ -92,18 +92,18 @@ func (b *Board) isTied() bool {
 		}
 	}
 
-	if count == 0 && b.Winner() == "" {
+	if count == 0 && b.winner() == "" {
 		return true
 	}
 
 	return false
 }
 
-func (b *Board) rows() [3][3]string {
+func (b *board) rows() [3][3]string {
 	return *b
 }
 
-func (b *Board) columns() [3][3]string {
+func (b *board) columns() [3][3]string {
 	columns := [3][3]string{}
 	for i := range b {
 		for j := range b[i] {
@@ -113,7 +113,7 @@ func (b *Board) columns() [3][3]string {
 	return columns
 }
 
-func (b *Board) diagonals() [2][3]string {
+func (b *board) diagonals() [2][3]string {
 	diagonals := [2][3]string{}
 	for i := range b {
 		diagonals[0][i] = b[i][i]
@@ -126,9 +126,9 @@ func (b *Board) diagonals() [2][3]string {
 	return diagonals
 }
 
-// GetAvailablePos returns all empty spots of the board. This is needed for bonus phase: Minimax
+// getAvailablePos returns all empty spots of the board. This is needed for bonus phase: Minimax
 // algorithm
-func (b *Board) GetAvailablePos() [][2]int {
+func (b *board) getAvailablePos() [][2]int {
 	availPos := [][2]int{}
 	for i := range b {
 		for j := range b[i] {

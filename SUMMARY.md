@@ -1,7 +1,7 @@
 # Table of contents
 * [Introduction](README.md)
 * Hello World
-    * [Getting Started With Go](./markdowns/1_01_getting_started_with_go.md)
+    * [Getting Started With Go](./markdowns/01_01_getting_started_with_go.md)
     * [Go Packages](./markdowns/01_02_go_packages.md)
     * [Hello World](./helloworld/README.md)
 * Tic Tac Toe

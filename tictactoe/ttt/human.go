@@ -17,7 +17,7 @@ type HumanPlayer struct {
 }
 
 // GetMove returns next move.
-func (p *HumanPlayer) GetMove(b *Board) (int, int, error) {
+func (p *HumanPlayer) GetMove(b *board) (int, int, error) {
 	fmt.Print("Enter position: ")
 	var i, j int
 	if n, err := fmt.Scanf("%d %d", &i, &j); err != nil || n != 2 {
