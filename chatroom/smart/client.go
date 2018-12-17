@@ -60,7 +60,7 @@ func (c *WebSocketClient) Listen() {
 
 		// This is an abnormal error, important to log it for debugging.
 		if err != nil {
-			util.LogErr("ReadJSON", err)
+			util.LogErr("conn.ReadMessage", err)
 			return
 		}
 
@@ -91,13 +91,14 @@ func (c *WebSocketClient) readLoop(ctx context.Context) {
 		case <-ctx.Done():
 			util.LogInfo(fmt.Sprintf("client %s has termianted read loop", c.id))
 			return
+
 		case raw := <-c.read:
 			c.conn.SetReadDeadline(time.Now().Add(2 * time.Second))
 			p := Payload{}
 
 			err := json.Unmarshal(raw, &p)
 			if err != nil {
-				util.LogErr("JSON Unmarshal", err)
+				util.LogErr("json.Unmarshal", err)
 				continue
 			}
 
@@ -122,7 +123,7 @@ func (c *WebSocketClient) writeLoop(ctx context.Context) {
 			c.conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
 			bytes, err := json.Marshal(p)
 			if err != nil {
-				util.LogErr("JSON Marshal", err)
+				util.LogErr("json.Marshal", err)
 				continue
 			}
 

@@ -44,7 +44,7 @@ func NewMessageStreamHandler(u *websocket.Upgrader) (http.HandlerFunc, error) {
 
 			if err != nil {
 				// This is an abnormal error, important to log it for debugging.
-				util.LogErr("ReadJSON", err)
+				util.LogErr("conn.ReadJSON", err)
 				return
 			}
 
