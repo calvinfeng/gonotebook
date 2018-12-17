@@ -6,7 +6,6 @@ type IndexProps = {}
 
 type IndexState = {
   username: string,
-  email: string,
   message: string,
   payloads: Payload[],
   connected: boolean,
@@ -15,7 +14,6 @@ type IndexState = {
 
 type Payload = {
   username: string,
-  email: string,
   message: string
 }
 
@@ -27,7 +25,6 @@ class Index extends React.Component<IndexProps, IndexState> {
     this.state = {
       payloads: [],
       username: "",
-      email: "",
       message: "",
       connected: false,
       error: ""
@@ -59,16 +56,11 @@ class Index extends React.Component<IndexProps, IndexState> {
     this.setState({ message: fev.currentTarget.value });
   };
 
-  handleEmailChange = (fev: React.FormEvent<HTMLInputElement>) => {
-    this.setState({ email: fev.currentTarget.value });
-  }
-
   handleFormSubmit = (fev: React.FormEvent<HTMLFormElement>) => {
     fev.preventDefault();
     
     const p: Payload = {
       username: this.state.username,
-      email: this.state.email,
       message: this.state.message
     };
 
@@ -112,9 +104,6 @@ class Index extends React.Component<IndexProps, IndexState> {
   get messageInput() {
     return (
       <form onSubmit={this.handleFormSubmit} className="input-form">
-        <label>
-          Email:<input type="text" name="username" onChange={this.handleEmailChange} value={this.state.email} />
-        </label>
         <label>
           Username:<input type="text" name="username" onChange={this.handleUsernameChange} value={this.state.username} />
         </label>

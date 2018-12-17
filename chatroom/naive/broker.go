@@ -8,7 +8,6 @@ import (
 
 // Payload is the expected JSON format for a websocket payload.
 type Payload struct {
-	Email    string `json:"email"`
 	Username string `json:"username"`
 	Message  string `json:"message"`
 }
@@ -24,7 +23,7 @@ func RunBroker() {
 		removeConn: make(chan registration),
 	}
 
-	go broker.run()
+	go broker.loop()
 }
 
 // MessageBroker carries the responsibility of broadcasting.
@@ -42,7 +41,7 @@ type registration struct {
 }
 
 // ListenBroadcast listens to broadcast and write it to every client.
-func (mb *MessageBroker) run() {
+func (mb *MessageBroker) loop() {
 	for {
 		select {
 		case payload := <-mb.broadcast:

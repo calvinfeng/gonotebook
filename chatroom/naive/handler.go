@@ -31,7 +31,7 @@ func NewMessageStreamHandler(u *websocket.Upgrader) (http.HandlerFunc, error) {
 			broker.removeConn <- reg
 		}()
 
-		util.LogInfo(fmt.Sprintf("client:%s has joined chatroom", reg.id))
+		util.LogInfo(fmt.Sprintf("client %s has joined chatroom", reg.id))
 
 		for {
 			p := Payload{}

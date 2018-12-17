@@ -1,51 +1,81 @@
 package smart
 
 import (
-	"encoding/json"
-	"fmt"
+	"context"
 	"go-academy/chatroom/util"
 )
 
 // Payload is the expected JSON format for a websocket payload.
 type Payload struct {
-	RoomID   string `json:"room_id"`
+	RoomID   string `json:"room_id"` // Optional bonus problem
 	Username string `json:"username"`
 	Message  string `json:"message"`
 }
 
-// Broker takes an input and fans it out to all consumers.
-type Broker struct {
-	Broadcast    chan json.RawMessage
-	ClientByID   map[string]Client
-	RoomByID     map[string][]string
-	AddClient    chan Client
-	RemoveClient chan Client
+var broker *MessageBroker
+
+// RunBroker configures a broker and runs it.
+func RunBroker(ctx context.Context) {
+	broker = &MessageBroker{
+		ctx:          ctx,
+		clientByID:   make(map[string]Client),
+		cancelByID:   make(map[string]context.CancelFunc),
+		broadcast:    make(chan Payload),
+		addClient:    make(chan Client),
+		removeClient: make(chan Client),
+	}
+
+	go broker.loop()
+}
+
+// MessageBroker takes an input and broadcasts it out to all consumers.
+type MessageBroker struct {
+	ctx          context.Context
+	clientByID   map[string]Client
+	cancelByID   map[string]context.CancelFunc
+	broadcast    chan Payload
+	addClient    chan Client
+	removeClient chan Client
+
+	groupByRoomID map[string][]Client // Optional bonus problem
 }
 
 // Loop listens for all updates.
-func (b *Broker) Loop() {
+func (mb *MessageBroker) loop() {
 	for {
 		select {
-		case rm := <-b.Broadcast:
-			b.handleBroadcast(rm)
-		case c := <-b.AddClient:
-			b.handleAddClient(c)
-		case c := <-b.RemoveClient:
-			b.handleRemoveClient(c)
+		case <-mb.ctx.Done():
+			util.LogInfo("broker loop has terminated")
+			return
+		case rm := <-mb.broadcast:
+			mb.handleBroadcast(rm)
+		case c := <-mb.addClient:
+			mb.handleAddClient(c)
+		case c := <-mb.removeClient:
+			mb.handleRemoveClient(c)
 		}
 	}
 }
 
-func (b *Broker) handleBroadcast(rm json.RawMessage) {
-	p := Payload{}
-	json.Unmarshal(rm, &p)
-	util.LogInfo(fmt.Sprintf("received message %s", p.Message))
+func (mb *MessageBroker) handleBroadcast(p Payload) {
+	for id := range mb.clientByID {
+		select {
+		case mb.clientByID[id].WriteQueue() <- p:
+		default:
+		}
+	}
 }
 
-func (b *Broker) handleAddClient(c Client) {
-	// Create a new room for consumer if the room does not exist.
+func (mb *MessageBroker) handleAddClient(c Client) {
+	childCtx, cancel := context.WithCancel(mb.ctx)
+	mb.clientByID[c.ID()] = c
+	mb.cancelByID[c.ID()] = cancel
+	c.SetBroadcast(mb.broadcast)
+	c.Activate(childCtx)
 }
 
-func (b *Broker) handleRemoveClient(c Client) {
-	// Delete the room if it is empty.
+func (mb *MessageBroker) handleRemoveClient(c Client) {
+	mb.cancelByID[c.ID()]()
+	delete(mb.cancelByID, c.ID())
+	delete(mb.clientByID, c.ID())
 }
