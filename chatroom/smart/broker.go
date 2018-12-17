@@ -1,8 +1,9 @@
-package stream
+package smart
 
 import (
 	"encoding/json"
 	"fmt"
+	"go-academy/chatroom/util"
 )
 
 // Payload is the expected JSON format for a websocket payload.
@@ -14,7 +15,7 @@ type Payload struct {
 
 // Broker takes an input and fans it out to all consumers.
 type Broker struct {
-	In           chan json.RawMessage
+	Broadcast    chan json.RawMessage
 	ClientByID   map[string]Client
 	RoomByID     map[string][]string
 	AddClient    chan Client
@@ -25,7 +26,7 @@ type Broker struct {
 func (b *Broker) Loop() {
 	for {
 		select {
-		case rm := <-b.In:
+		case rm := <-b.Broadcast:
 			b.handleBroadcast(rm)
 		case c := <-b.AddClient:
 			b.handleAddClient(c)
@@ -38,7 +39,7 @@ func (b *Broker) Loop() {
 func (b *Broker) handleBroadcast(rm json.RawMessage) {
 	p := Payload{}
 	json.Unmarshal(rm, &p)
-	loginfo(fmt.Sprintf("received message %s", p.Message))
+	util.LogInfo(fmt.Sprintf("received message %s", p.Message))
 }
 
 func (b *Broker) handleAddClient(c Client) {

@@ -8,12 +8,18 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func naiveSetup() {
-	mb := naive.NewBroker()
-	u := &websocket.Upgrader{}
-	go mb.ListenBroadcast()
+func naiveSetup() error {
+	naive.RunBroker()
+
+	streamHandler, err := naive.NewMessageStreamHandler(&websocket.Upgrader{})
+	if err != nil {
+		return err
+	}
+
 	http.Handle("/", http.FileServer(http.Dir("public")))
-	http.Handle("/streams/messages", naive.NewMessageStreamHandler(u, mb))
+	http.Handle("/streams/messages", streamHandler)
+
+	return nil
 }
 
 func main() {

@@ -1,4 +1,4 @@
-package stream
+package smart
 
 import (
 	"context"
@@ -12,6 +12,8 @@ import (
 // Client can read and write to demultiplexer.
 type Client interface {
 	ID() string
+	Activate(ctx context.Context)
+	Destroy()
 }
 
 // NewWebSocketClient returns a consumer with channels initialized.
@@ -30,7 +32,7 @@ type WebSocketClient struct {
 	write chan json.RawMessage
 }
 
-// ReadPump pummps from read channel and perform some logic.
+// ReadPump pummps from read channel and processes the message..
 func (c *WebSocketClient) ReadPump(ctx context.Context) {
 	c.conn.SetReadDeadline(time.Now().Add(time.Minute))
 	c.conn.SetPongHandler(func(s string) error {
