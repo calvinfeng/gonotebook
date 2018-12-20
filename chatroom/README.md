@@ -57,9 +57,10 @@ Client-side socket connection typically accepts 4 callbacks:
     4. Callback is invoked when socket is closed.
 
 ### Node Modules
-I am using babel and webpack for compiling the latest ES6/ES7 syntax into browser compatible version. 
-I am also using `node-sass` for compiling `.scss` into `.css`. I make promise-based requests to 
-server using `axios`. For the complete list of node modules, please look at the `package.json`.
+I am using babel and webpack for compiling the latest ES6/ES7 syntax into browser compatible 
+version. I am also using `node-sass` for compiling `.scss` into `.css`. I make promise-based 
+requests to server using `axios`. For the complete list of node modules, please look at the 
+`package.json`.
 
 ## Chatroom
 * [Chatroom](https://www.youtube.com/channel/UCoKwJSadNdeJkpfBpI-f5Ow)
