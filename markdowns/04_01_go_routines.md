@@ -33,24 +33,50 @@ do parallelized processing like a mini map reduce and fully utilize each CPU cor
 modern days machine. A typical Intel processsor has 4 cores at least. The high end models even have
 8 or 16 cores.
 
-## Details 
+## Runtime Scheduler 
 If we read carefully, we should know that goroutine is not an OS thread. It is an abstraction of a 
-thread! An actual OS thread is typically assigned with multiple goroutines. It is Go runtime's job
-to manage how many OS threads to create and how goroutines are mapped to operating system threads.
-So now let's deep dive into how does Go runtime scheduler works.
+thread! You can call it an *application* thread. An OS thread is typically assigned with multiple 
+goroutines. It is Go runtime's job to manage how many OS threads to create and how goroutines are 
+mapped to OS threads.
 
-### G Struct
-Each goroutine is described by a struct named `G` which can be found on [here][1]. The struct keeps 
-track of various runtime information, like stack and status. The status indicates whether the 
-goroutine is blocked, runnable, or running. 
+### G, M, P
+Each goroutine is described by a [G][1] struct. The struct keeps track of various runtime information, 
+like stack trace and status. There are three possible states for a goroutine.
+* Waiting
+* Runnable
+* Executing
 
-### M Struct
-TBW
+[P][3] stands for *logical processor*. It can be seen as an abstract resource or context, which needs 
+to be acquired. Every virtual core is given a logical processor when a Go program starts. Although a 
+typical processor advertises itself with having 4 cores, hyperthreading would allow each core to have 
+multiple hardware threads (different from OS level threads). Each hardware thread is presented as one 
+virtual core. That means if I have 8 virtual cores and 8 logical processor, I can execute 8 OS threads 
+in parallel.
 
-### P Struct
-TBW
+You can check the number of virtual core by using `runtime` package.
+```
+package main
 
-### Context Switch
-The cost of context switching is around 50~100 nanoseconds, quoting from some internet sources.
+import (
+    "fmt"
+    "runtime"
+)
 
-[1]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go)
+func main() {
+    fmt.Println(runtime.NumCPU())
+}
+```
+
+[M][2] maps to an OS thread which can execute G or goroutine. In order to execute G, Go runtime needs
+assign P with a M. However M can be blocked or in system call without an associated P.
+
+### Run Queue(s)
+There are two types of run queue in Go scheduler. GRQ is the global run queue and LRQ is the local
+run queue. Each logical processor is given a LRQ which manages swapping goroutine on and off M that 
+is assigned to the processor. GRQ is for goroutines that have not been assigned to a P yet.
+
+### Work Sharing & Stealing
+
+[1]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L339
+[2]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L404
+[3]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L474
