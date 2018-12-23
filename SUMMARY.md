@@ -12,7 +12,7 @@
     * [HTTP Handler](./markdowns/03_01_go_http_handlers.md)
     * [Calculator Server](./calculator/README.md)
 * WebSocket Server
-    * [Go-routines](./markdowns/04_01_go_routines.md)
+    * [Goroutines](./markdowns/04_01_go_routines.md)
     * [Build a Chatroom](./chatroom/README.md)
 * [User Authentication](./userauth/README.md)
 * [Neural Network](./neuralnet/README.md)
