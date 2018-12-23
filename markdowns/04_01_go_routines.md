@@ -93,6 +93,7 @@ your **P** can continue to process all the other runnable **G**s. This is also w
 because it holds the execution context. *Blocking thread != stop the world*.
 
 I will use circle to represent **G**, square to represent **P** and triangle to represent **M**.
+
 ![shapes](./assets/gpm.png)
 
 ### Run Queue(s)
@@ -101,15 +102,18 @@ run queue. Each logical processor **P** is given a LRQ which manages swapping go
 **M** that is assigned to the processor. GRQ is for goroutines that have not been assigned to a P yet.
 
 Suppose we only have one **P** like I mentioned above. We can still create bunch of goroutines and they will get queued up to **P**'s LRQ.
+
 ![local run queue](./assets/local_run_queue.png)
 
 ### Blocked Thread
 Now what if your **M1** is blocked by system call (e.g. fetch data from hard disk, wait for network
 requests.) Go runtime will create a new OS thread!
+
 ![thread is blocked](./assets/thread_is_blocked.png)
 
 
 ### Work Sharing & Stealing
+
 
 [1]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L339
 [2]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L404
