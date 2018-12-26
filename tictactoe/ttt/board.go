@@ -15,14 +15,9 @@ func newBoard() *board {
 // Board is a 3 by 3 grid.
 type board [3][3]string
 
-// Copy creates a copy of the original board.
-func (b board) copy() *board {
-	return &b
-}
-
 // IsOver checks if a game is over.
 func (b *board) isOver() bool {
-	return b.isWon() || b.isTied()
+	return b.winner() != "" || b.emptyCount() == 0
 }
 
 // String returns the string representation of a board.
@@ -82,7 +77,12 @@ func (b *board) winner() string {
 	return ""
 }
 
-func (b *board) isTied() bool {
+// Copy creates a copy of the original board.
+func (b board) copy() *board {
+	return &b
+}
+
+func (b *board) emptyCount() int {
 	count := 0
 	for i := range b {
 		for j := range b[i] {
@@ -92,11 +92,7 @@ func (b *board) isTied() bool {
 		}
 	}
 
-	if count == 0 && b.winner() == "" {
-		return true
-	}
-
-	return false
+	return count
 }
 
 func (b *board) rows() [3][3]string {
