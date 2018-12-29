@@ -17,8 +17,7 @@ type ComputerPlayer struct {
 // GetMove returns next move.
 func (cp *ComputerPlayer) GetMove(b *board) (int, int, error) {
 	move := cp.minimax(b, cp.Mark(), 1)
-	i, j := move["i"], move["j"]
-	return i, j, nil
+	return move.i, move.j, nil
 }
 
 // Mark is a getter for player's mark.
@@ -31,53 +30,63 @@ func (cp *ComputerPlayer) Name() string {
 	return cp.name
 }
 
-func (cp *ComputerPlayer) minimax(b *board, mark string, depth int) map[string]int {
-	if b.isOver() {
-		var score map[string]int
-		score = make(map[string]int)
+type move struct {
+	value int
+	i     int
+	j     int
+}
+
+func (cp *ComputerPlayer) minimax(b *board, mark string, depth int) move {
+	if b.winner() != "" || b.emptyCount() == 0 {
+		m := move{}
 		if b.winner() == cp.Mark() {
-			score["value"] = 10 - depth
+			m.value = 10 - depth
 		} else {
-			score["value"] = depth - 10
+			m.value = depth - 10
 		}
-		return score
+
+		return m
 	}
 
-	scores := []map[string]int{}
+	moves := []move{}
 	for _, pos := range b.getAvailablePos() {
 		newBoard := b.copy()
 		i, j := pos[0], pos[1]
 		newBoard[i][j] = mark
 
-		var score map[string]int
+		var opponent string
 		if mark == "X" {
-			score = cp.minimax(newBoard, "O", depth+1)
+			opponent = "O"
 		} else {
-			score = cp.minimax(newBoard, "X", depth+1)
+			opponent = "X"
 		}
-		score["i"] = i
-		score["j"] = j
-		scores = append(scores, score)
+
+		m := cp.minimax(newBoard, opponent, depth+1)
+		m.i = i
+		m.j = j
+
+		moves = append(moves, m)
 	}
 
-	// max
+	// maximize move value
 	if mark == cp.Mark() {
-		maxScore := scores[0]
-		for _, s := range scores {
-			if maxScore["value"] < s["value"] {
-				maxScore = s
+		max := moves[0]
+		for _, m := range moves {
+			if max.value < m.value {
+				max = m
 			}
 		}
-		return maxScore
+
+		return max
 	}
 
-	// min
-	minScore := scores[0]
-	for _, s := range scores {
-		if minScore["value"] > s["value"] {
-			minScore = s
+	// minimize move value
+	min := moves[0]
+	for _, m := range moves {
+		if min.value > m.value {
+			min = m
 		}
 	}
 
-	return minScore
+	return min
 }

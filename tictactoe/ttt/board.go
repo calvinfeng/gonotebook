@@ -15,11 +15,6 @@ func newBoard() *board {
 // Board is a 3 by 3 grid.
 type board [3][3]string
 
-// IsOver checks if a game is over.
-func (b *board) isOver() bool {
-	return b.winner() != "" || b.emptyCount() == 0
-}
-
 // String returns the string representation of a board.
 func (b *board) String() string {
 	str := "    "

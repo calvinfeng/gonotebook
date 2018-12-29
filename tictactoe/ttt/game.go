@@ -28,7 +28,7 @@ type Game struct {
 // Start will start a game.
 func (g *Game) Start() {
 	fmt.Println("___Welcome to Tic Tac Toe in Go___")
-	for !g.board.isOver() {
+	for !g.isOver() {
 		g.printInfo()
 		i, j, err := g.current.GetMove(g.board)
 
@@ -49,6 +49,11 @@ func (g *Game) Start() {
 
 	fmt.Println(g.board)
 	fmt.Println("Game over!")
+}
+
+// IsOver checks if a game is over.
+func (g *Game) isOver() bool {
+	return g.board.winner() != "" || g.board.emptyCount() == 0
 }
 
 func (g *Game) printInfo() {
