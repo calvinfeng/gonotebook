@@ -1,6 +1,6 @@
 package ttt
 
-// NewBoard is a constructor for an empty board.
+// newBoard is a constructor for an empty board.
 func newBoard() *board {
 	var b board
 	for i := 0; i < len(b); i++ {
@@ -12,7 +12,7 @@ func newBoard() *board {
 	return &b
 }
 
-// Board is a 3 by 3 grid.
+// board is a 3 by 3 grid.
 type board [3][3]string
 
 // String returns the string representation of a board.
@@ -72,11 +72,6 @@ func (b *board) winner() string {
 	return ""
 }
 
-// Copy creates a copy of the original board.
-func (b board) copy() *board {
-	return &b
-}
-
 func (b *board) emptyCount() int {
 	count := 0
 	for i := range b {
@@ -115,6 +110,11 @@ func (b *board) diagonals() [2][3]string {
 	}
 
 	return diagonals
+}
+
+// copy creates a copy of the original board.
+func (b board) copy() *board {
+	return &b
 }
 
 // getAvailablePos returns all empty spots of the board. This is needed for bonus phase: Minimax

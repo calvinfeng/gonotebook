@@ -24,9 +24,9 @@ variables have lower-cased name, then program outside of the package cannot have
 Let's define what are entities that we need for a terminal based Tic Tac Toe game. 
 
 1. `Game`: This is a struct that keeps track of the turns, the players, and the board information.
-2. `Board`: This is a struct that keeps track of `X` and `O` marks. 
+2. `board`: This is a struct that keeps track of `X` and `O` marks. 
 3. `Player`: This is an interface that implements the following methods
-    * `GetMove(*Board) (int, int, error)`
+    * `GetMove(*board) (int, int, error)`
     * `Mark() string`
     * `Name() string`
 4. `HumanPlayer` and `ComputerPlayer`
@@ -38,7 +38,7 @@ type Game struct {
     p1 Player 
     p2 Player
     current Player
-    board *Board 
+    board *board 
     round int
 }
 ```
@@ -51,27 +51,27 @@ func (g *Game) Start() {
 ```
 
 ### Board
-`Board` is probably the least pleasant piece in this project because it contains logic to check 
-columns, rows, and diagonals. We can define Board as a 3 by 3 array of string.
+`board` is probably the least pleasant piece in this project because it contains logic to check 
+columns, rows, and diagonals. We can define board as a 3 by 3 array of string.
 ```golang
-type Board [3][3]string
+type board [3][3]string
 ```
 
 It should have the following API(s).
-* `IsOver() bool`
 * `String() string`
-* `Winner() string`
+* `winner() string`
+* `getEmptyCount() int`
 
 For bonus phase, we also need the following.
-* `Copy() *Board`
-* `GetAvailablePos() [][2]int`
+* `copy() *board`
+* `getAvailablePos() [][2]int`
 
 There is a very neat trick with doing a deep copy of an array. We can declare the function as value 
-receiver, which means it takes the value of pointer to `Board` and copies into the function. Thus, 
+receiver, which means it takes the value of pointer to `board` and copies into the function. Thus, 
 the `b` inside the function is already a copy of the original board. We just need to take its pointer
 address and return it.
 ```
-func (b Board) Copy() *Board {
+func (b board) copy() *board {
     return *b
 }
 ```
@@ -80,7 +80,7 @@ func (b Board) Copy() *Board {
 Each player should have name and mark. Mark is either `X` or `O`. 
 ```golang
 type Player interface {
-    GetMove(*Board) (int, int, error)
+    GetMove(*board) (int, int, error)
     Mark() string
     Name() string
 }
@@ -99,7 +99,7 @@ type HumanPlayer struct {
 For example, we can use `fmt.Scanf` to get user inputs.
 ```golang
 // GetMove returns next move.
-func (p *HumanPlayer) GetMove(b *Board) (int, int, error) {
+func (p *HumanPlayer) GetMove(b *board) (int, int, error) {
 	fmt.Print("Enter position: ")
 	var i, j int
 	if n, err := fmt.Scanf("%d %d", &i, &j); err != nil || n != 2 {
