@@ -1,7 +1,9 @@
 # Functional Options
-Golang does not provide optional arguments. Thus, we need to be a little creative here. A Porsche 
+
+Golang does not provide optional arguments. Thus, we need to be a little creative here. A Porsche
 has four fields that are configurable.
-```golang
+
+```go
 type Porsche struct {
     Model  string
     Trim   string
@@ -12,56 +14,59 @@ type Porsche struct {
 
 Let's create a function type that is basically a setter for Porsche. Along with it, we will create
 four setter factory, one for each field.
-```golang
+
+```go
 type Option func(*Porsche)
 
 func Model(val string) Option {
-	return func(p *Porsche) {
-		p.Model = val
-	}
+  return func(p *Porsche) {
+    p.Model = val
+  }
 }
 
 func Trim(val string) Option {
-	return func(p *Porsche) {
-		p.Trim = val
-	}
+  return func(p *Porsche) {
+    p.Trim = val
+  }
 }
 
 func Color(val string) Option {
-	return func(p *Porsche) {
-		p.Color = val
-	}
+  return func(p *Porsche) {
+    p.Color = val
+  }
 }
 
 func Wheels(val string) Option {
-	return func(p *Porsche) {
-		p.Wheels = val
-	}
+  return func(p *Porsche) {
+    p.Wheels = val
+  }
 }
 ```
 
 The constructor will use the setters to optionally set properties for Porsche.
-```golang
+
+```go
 func NewPorsche(setters ...Option) *Porsche {
-	// Default configuration
-	p := &Porsche{
-		Model:  "911",
-		Trim:   "Base",
-		Color:  "GT Silver",
-		Wheels: "Carrera",
-	}
+  // Default configuration
+  p := &Porsche{
+    Model:  "911",
+    Trim:   "Base",
+    Color:  "GT Silver",
+    Wheels: "Carrera",
+  }
 
-	for _, setter := range setters {
-		setter(p)
-	}
+  for _, setter := range setters {
+    setter(p)
+  }
 
-	return p
+  return p
 }
 ```
 
 The expected usage will look like this.
-```golang
+
+```go
 func main() {
-	NewPorsche(Trim("Turbo S"), Color("Carmine Red"))
+  NewPorsche(Trim("Turbo S"), Color("Carmine Red"))
 }
 ```

@@ -41,8 +41,8 @@ game board.
 
 ## Tic Tac Toe in Go
 
-* [Tic Tac Toe Introduction](https://youtu.be/CqsfJw4HJyA)
-* [Tic Tac Toe Implementation](https://youtu.be/EgpXNBqmhP8)
+* [Lesson 2 Tic Tac Toe Introduction](https://youtu.be/CqsfJw4HJyA)
+* [Lesson 2 Tic Tac Toe Implementation](https://youtu.be/EgpXNBqmhP8)
 
 ## Homework
 
