@@ -21,7 +21,7 @@ Each endpoint takes in 2 query parameters, left operand and right operand, denot
 
 ## Project Calculator
 
-* [Lesson 3 Calculator Server]()
+* [Lesson 3 Calculator Server](https://youtu.be/_baFDzyZxPg)
 
 ## Homework
 

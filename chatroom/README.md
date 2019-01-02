@@ -68,8 +68,10 @@ using `axios`. For the complete list of node modules, please look at the `packag
 
 ## Project Chatroom
 
-* [Lesson 4 Chatroom Introduction]()
-* [Lesson 4 Chatroom Implementation]()
+Coming soon
+
+* [Lesson 4 Chatroom Introduction]
+* [Lesson 4 Chatroom Implementation]
 
 ## Source
 
