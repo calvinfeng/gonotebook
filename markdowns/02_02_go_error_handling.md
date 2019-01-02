@@ -1,9 +1,11 @@
 # Go Error Handling
-Error handling is a must for any program. The common approach in JavaScript, Python and Java is 
-using try catch statement, but we don't have that in Go! For example, let's say we are trying to 
+
+Error handling is a must for any program. The common approach in JavaScript, Python and Java is
+using try catch statement, but we don't have that in Go! For example, let's say we are trying to
 feed Eric Cartman with unhealthy food.
 
 In Python, we would do the following.
+
 ```python
 def feed(kid, food):
   if food.calorie > 1000:
@@ -21,6 +23,7 @@ def main():
 ```
 
 In Go, we would simply return an error.
+
 ```golang
 func feed(k *Kid, f *Food) error {
   if food.calorie > 1000 {
@@ -39,4 +42,3 @@ func main() {
   }
 }
 ```
-
