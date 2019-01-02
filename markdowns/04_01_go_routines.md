@@ -124,6 +124,8 @@ requests.) Go runtime will create a new OS thread!
 
 ### Work Sharing & Stealing
 
+To be written...
+
 [1]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L339
 [2]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L404
 [3]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L474

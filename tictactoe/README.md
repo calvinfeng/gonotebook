@@ -39,7 +39,7 @@ have lower-cased name, then program outside of the package cannot have reference
 make `board` a private struct because user need not to care about the implementation and usage of
 game board.
 
-## Tic Tac Toe in Go
+## Project Tic Tac Toe
 
 * [Lesson 2 Tic Tac Toe Introduction](https://youtu.be/CqsfJw4HJyA)
 * [Lesson 2 Tic Tac Toe Implementation](https://youtu.be/EgpXNBqmhP8)

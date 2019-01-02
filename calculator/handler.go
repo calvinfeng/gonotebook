@@ -11,13 +11,15 @@ func HandleAdd(w http.ResponseWriter, r *http.Request) {
 	rightOp, rightErr := strconv.ParseFloat(r.URL.Query().Get("rop"), 64)
 
 	result := fmt.Sprintf("%v + %v = %v", leftOp, rightOp, leftOp+rightOp)
-	if leftErr == nil && rightErr == nil {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(result))
-	} else {
+	if leftErr != nil || rightErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Invalid query parameters"))
+		return
+
 	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(result))
 }
 
 func HandleSubtract(w http.ResponseWriter, r *http.Request) {
@@ -25,13 +27,13 @@ func HandleSubtract(w http.ResponseWriter, r *http.Request) {
 	rightOp, rightErr := strconv.ParseFloat(r.URL.Query().Get("rop"), 64)
 
 	result := fmt.Sprintf("%v - %v = %v", leftOp, rightOp, leftOp-rightOp)
-	if leftErr == nil && rightErr == nil {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(result))
-	} else {
+	if leftErr != nil || rightErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Invalid query parameters"))
 	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(result))
 }
 
 // CreateOperationHandler dynamically creates new handler for different type of operations.
