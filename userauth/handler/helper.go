@@ -20,9 +20,10 @@ type (
 
 	// UserJSONResponse is a payload that server returns to client upon successful registration.
 	UserJSONResponse struct {
-		Name         string `json:"name"`
-		Email        string `json:"email"`
-		SessionToken string `json:"session_token"`
+		Name         string   `json:"name"`
+		Email        string   `json:"email"`
+		SessionToken string   `json:"session_token"`
+		Messages     []string `json:"messages"`
 	}
 
 	// LoginRequest is a payload that client submits.

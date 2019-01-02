@@ -15,17 +15,23 @@ func NewUserListHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var users []model.User
 
-		if err := db.Find(&users).Error; err != nil {
+		if err := db.Preload("Messages").Find(&users).Error; err != nil {
 			renderError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		res := []*UserJSONResponse{}
 		for _, user := range users {
+			msgs := []string{}
+			for _, msg := range user.Messages {
+				msgs = append(msgs, msg.Body)
+			}
+
 			res = append(res, &UserJSONResponse{
 				Name:         user.Name,
 				Email:        user.Email,
 				SessionToken: user.SessionToken,
+				Messages:     msgs,
 			})
 		}
 
