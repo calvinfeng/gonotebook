@@ -312,3 +312,45 @@ func main() {
 ```
 
 ## Daisy Chain
+
+Let's try to pass data from one channel to another, and repeat this process many times. We are daisy
+chaining go routines.
+
+For each pass, we increment the value of an integer by one.
+
+```go
+func pass(left, right chan int) {
+  value := <-left
+  right <- value + 1
+  fmt.Printf("Left[%d] -> Right[%d]\n", value, value + 1)
+}
+```
+
+Now create the goroutines and chain them up.
+
+```go
+func main() {  
+  end := make(chan int)
+
+  var left chan int
+  var right chan int
+
+  right = end
+  for i := 0; i < 6; i++ {
+    left = make(chan int)
+    go pass(left, right)
+    right = left
+  }
+
+  fmt.Println("All goroutines are waiting.")
+
+  // Send the initial value  to first channel.
+  initVal := 1
+  go func(ch chan int, val int) {
+    fmt.Println("Give left most channel the initial value")
+    ch <- 1
+  }(left, initVal)
+
+  fmt.Printf("Final value is %d\n", <-end)
+}
+```
