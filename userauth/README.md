@@ -1,18 +1,6 @@
 # User Authentication
 
-## Project Requirements
-
-We need to set up our PostgreSQL first, please refer to the section below. I am going to introduce
-couple new open source libraries to you for this project:
-
-* `sirupsen/logrus`
-* `gorilla/mux`
-* `jinzhu/gorm` -  Object Relational Mapping for Go
-
-You should take a look at their Github page and see what they are for before you start working on
-this project.
-
-## Postgres in Go
+## Postgres Setup
 
 I am going to use PostgreSQL for this project, so let's create one. The superuser on my computer is
 `cfeng` so I will use that to create a database named `go_user_auth`. If you don't have a role or
@@ -33,11 +21,22 @@ Actually just in case you don't remember the password to your `ROLE`, do the fol
 
 I did mine with
 
-    postgres=# alter user cfeng with password "cfeng";
+    postgres=# alter user cfeng with password 'cfeng';
 
-## User Authentication in Go
+## Project Dependencies
 
-* [User Authentication in Go](https://www.youtube.com/channel/UCoKwJSadNdeJkpfBpI-f5Ow)
+I am going to introduce couple new open source libraries to you for this project:
+
+* `sirupsen/logrus`
+* `gorilla/mux`
+* `jinzhu/gorm` -  Object Relational Mapping for Go
+
+You should take a look at their Github page and see what they are for before you start working on
+this project.
+
+## Project User Authentication
+
+* [Lesson 5 User Authentication](https://www.youtube.com/channel/UCoKwJSadNdeJkpfBpI-f5Ow)
 
 ## Bonus & Additional Resource
 

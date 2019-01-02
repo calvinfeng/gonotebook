@@ -2,31 +2,21 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/jinzhu/gorm"
-	"go-academy/user_auth/model"
-	"golang.org/x/crypto/bcrypt"
+	"go-academy/userauth/model"
 	"net/http"
 	"time"
+
+	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
-type UserJSONResponse struct {
-	Name         string `json:"name"`
-	Email        string `json:"email"`
-	SessionToken string `json:"session_token"`
-}
-
-type RegisterRequest struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
+// NewUserListHandler returns a handler that renders the list of users on the server.
 func NewUserListHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var users []model.User
 
 		if err := db.Find(&users).Error; err != nil {
-			RenderError(w, err.Error(), http.StatusInternalServerError)
+			renderError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
@@ -40,7 +30,7 @@ func NewUserListHandler(db *gorm.DB) http.HandlerFunc {
 		}
 
 		if bytes, err := json.Marshal(res); err != nil {
-			RenderError(w, err.Error(), http.StatusInternalServerError)
+			renderError(w, err.Error(), http.StatusInternalServerError)
 		} else {
 			w.WriteHeader(http.StatusOK)
 			w.Write(bytes)
@@ -48,24 +38,25 @@ func NewUserListHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// NewUserCreateHandler returns a handler that creates user.
 func NewUserCreateHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 
 		var regReq RegisterRequest
 		if err := decoder.Decode(&regReq); err != nil {
-			RenderError(w, "Failed to parse request JSON into struct", http.StatusInternalServerError)
+			renderError(w, "Failed to parse request JSON into struct", http.StatusInternalServerError)
 			return
 		}
 
 		if len(regReq.Email) == 0 || len(regReq.Password) == 0 || len(regReq.Name) == 0 {
-			RenderError(w, "Please provide name, email and password for registration", http.StatusBadRequest)
+			renderError(w, "Please provide name, email and password for registration", http.StatusBadRequest)
 			return
 		}
 
 		hashBytes, hashErr := bcrypt.GenerateFromPassword([]byte(regReq.Password), 10)
 		if hashErr != nil {
-			RenderError(w, hashErr.Error(), http.StatusInternalServerError)
+			renderError(w, hashErr.Error(), http.StatusInternalServerError)
 			return
 		}
 
@@ -78,7 +69,7 @@ func NewUserCreateHandler(db *gorm.DB) http.HandlerFunc {
 		newUser.ResetSessionToken()
 
 		if err := db.Create(&newUser).Error; err != nil {
-			RenderError(w, err.Error(), http.StatusInternalServerError)
+			renderError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
@@ -94,7 +85,7 @@ func NewUserCreateHandler(db *gorm.DB) http.HandlerFunc {
 		}
 
 		if bytes, err := json.Marshal(res); err != nil {
-			RenderError(w, err.Error(), http.StatusInternalServerError)
+			renderError(w, err.Error(), http.StatusInternalServerError)
 		} else {
 			w.WriteHeader(http.StatusOK)
 			w.Write(bytes)

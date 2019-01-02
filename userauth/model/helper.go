@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 )
 
-func GenerateRandomBytes(n int) ([]byte, error) {
+func generateRandomBytes(n int) ([]byte, error) {
 	byteArray := make([]byte, n)
 	_, err := rand.Read(byteArray)
 	if err != nil {
@@ -15,7 +15,7 @@ func GenerateRandomBytes(n int) ([]byte, error) {
 	return byteArray, nil
 }
 
-func GenerateRandomString(length int) (string, error) {
-	bytes, err := GenerateRandomBytes(length)
+func generateRandomString(length int) (string, error) {
+	bytes, err := generateRandomBytes(length)
 	return base64.URLEncoding.EncodeToString(bytes), err
 }

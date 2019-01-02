@@ -1,15 +1,18 @@
 package main
 
 import (
+	"go-academy/userauth/handler"
+	"net/http"
+
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	"go-academy/user_auth/handler"
-	"net/http"
+	"github.com/sirupsen/logrus"
 )
 
-// Gorilla mux library is a bit overkill for this example but it's good to introduce this powerful tool to you. Mux
-// library offers URL pattern matching, query params patter matching, URL host matching and the list goes on.
+// Gorilla mux library is a bit overkill for this example but it's good to introduce this powerful
+// tool to you. Mux library offers URL pattern matching, query params patter matching, URL host
+// matching and the list goes on.
 // For example:
 //
 // r := mux.NewRouter()
@@ -17,12 +20,24 @@ import (
 // r.HandleFunc("/articles/{category}/", ArticlesCategoryHandler)
 // r.HandleFunc("/articles/{category}/{id:[0-9]+}", ArticleHandler)
 //
-// Notice that key and category will become available as a variable through mux router pattern matching. If I were to
-// send a request with the URL /products/1/, then key will hold the value 1.
+// Notice that key and category will become available as a variable through mux router pattern
+// matching. If I were to send a request with the URL /products/1/, then key will hold the value 1.
 
-func LoadRoutes(db *gorm.DB) http.Handler {
+// HTTPMiddleware intercepts the a request before it reaches a handler.
+type HTTPMiddleware func(http.Handler) http.Handler
+
+func newServerLoggingMiddleware() HTTPMiddleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			logrus.Infof("%s %s %s %s", r.Proto, r.Method, r.URL, r.Host)
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+func loadRoutes(db *gorm.DB) http.Handler {
 	// Defining middleware
-	logMiddleware := NewServerLoggingMiddleware()
+	logMiddleware := newServerLoggingMiddleware()
 
 	// Instantiate our router object
 	muxRouter := mux.NewRouter().StrictSlash(true)

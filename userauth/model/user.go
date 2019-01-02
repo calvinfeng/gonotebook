@@ -2,18 +2,19 @@ package model
 
 import "github.com/jinzhu/gorm"
 
-// Default table name is users
+// User is a model for user entity.
 type User struct {
 	gorm.Model
-	Name           string    `gorm:"type:varchar(100)" json:"name"`
+	Name           string    `gorm:"type:varchar(100)"              json:"name"`
 	Email          string    `gorm:"type:varchar(100);unique_index" json:"email"`
-	SessionToken   string    `gorm:"type:varchar(100);unique_index"`
-	PasswordDigest []byte    `gorm:"type:bytea;unique_index"`
-	Messages       []Message `gorm:"ForeignKey:UserID"` // has-many
+	SessionToken   string    `gorm:"type:varchar(100);unique_index" json:"-"`
+	PasswordDigest []byte    `gorm:"type:bytea;unique_index"        json:"-"`
+	Messages       []Message `gorm:"ForeignKey:UserID"              json:"-"` // has-many
 }
 
+// ResetSessionToken resets the token that user has.
 func (u *User) ResetSessionToken() {
-	if randStr, err := GenerateRandomString(20); err == nil {
+	if randStr, err := generateRandomString(20); err == nil {
 		u.SessionToken = randStr
 	}
 }
