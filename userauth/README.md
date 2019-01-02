@@ -48,4 +48,4 @@ relating to web applications, take a look at this eBook [astaxie][1]
 
 [GitHub](https://github.com/calvinfeng/go-academy/tree/master/userauth)
 
-[1](https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/)
+[1]:https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/
