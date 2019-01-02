@@ -18,6 +18,7 @@
 
 * WebSocket Server
   * [Goroutines](./markdowns/04_01_go_routines.md)
+  * [Go Concurrency](./markdowns/04_02_go_concurrency.md)
   * [Build a Chatroom](./chatroom/README.md)
 
 * [User Authentication](./userauth/README.md)
