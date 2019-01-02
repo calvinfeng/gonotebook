@@ -187,3 +187,128 @@ func main() {
   fmt.Println("Enough pings, done!")
 }
 ```
+
+## Select
+
+If you already know how many channels you want to listen to, it's better to use `select` instead of
+fan-in. However, it's also reasonable to combine two techniques together. Let's say I want a timeout
+on my fan-in.
+
+```go
+func main() {
+  out := fanIn(pingGen("ping"), pingGen("ding"), pingGen("sing"))
+  timeout := time.After(5 * time.Second)
+
+  for {
+    select {
+      case msg := <-out:
+        fmt.Println(msg.content)
+        msg.ready <- true
+      case <-timeout:
+        fmt.Println("Too late")
+        return
+    }
+  }
+}
+```
+
+## Quit Channel
+
+We know how to terminate the reader, but how about the writer? Notice that despite the for-loop has
+terminated, the goroutine in each generator is not terminated. Let's do something clever, i.e. use
+a channel to signal quit. We need to stop using `fanIn` for a moment because that will cause a deadlock
+if we terminate the writer without terminating the goroutines from `fanIn`.
+
+```go
+func pingGen(msg string, quit chan bool) <-chan message {
+  ch := make(chan message)
+  rdy := make(chan bool)
+
+  go func(ready chan bool) {
+    for i := 0; ; i++ {
+      select {
+      case ch <- message{fmt.Sprintf("%s %d", msg, i), ready}:
+        time.Sleep(time.Duration(rand.Intn(1e3)) * time.Millisecond)
+        <-ready
+      case <-quit:
+        fmt.Printf("stopped sending %s\n", msg)
+        return
+      }
+    }
+  }(rdy)
+
+  return ch
+}
+```
+
+Now we can tell it to stop.
+
+```go
+func main() {
+  stopPing := make(chan bool)
+
+  ping := pingGen("ping", stopPing)
+
+  for i := 0; i < 10; i++ {
+    msg := <-ping
+    fmt.Println(msg.content)
+    msg.ready <- true
+  }
+
+  fmt.Println("Enough pings, stop it!")
+  
+  stopPing <- true
+}
+```
+
+## Receive on Quit
+
+The problem is that how do we know the quit signal has been received and processed? We can wait for
+the quit channel to tell us that it is done! We make a channel that passes channel which passes
+string.
+
+```go
+func pingGen(msg string, quit chan chan string) <-chan message {
+  ch := make(chan message)
+  rdy := make(chan bool)
+
+  go func(ready chan bool) {
+    for i := 0; ; i++ {
+      select {
+      case ch <- message{fmt.Sprintf("%s %d", msg, i), ready}:
+        time.Sleep(time.Duration(rand.Intn(1e3)) * time.Millisecond)
+        <-ready
+      case reply := <-quit:
+        reply <- fmt.Sprintf("stopped sending %s\n", msg)
+        return
+      }
+    }
+  }(rdy)
+
+  return ch
+}
+```
+
+We would create a quit channel that passes a reply channel.
+
+```go
+func main() {
+  stopPing := make(chan chan string)
+
+  ping := pingGen("ping", stopPing)
+
+  for i := 0; i < 10; i++ {
+    msg := <-ping
+    fmt.Println(msg.content)
+    msg.ready <- true
+  }
+
+  fmt.Println("Enough pings, stop it!")
+  
+  reply := make(chan string)
+  stopPing <- reply
+  fmt.Println(<-reply)
+}
+```
+
+## Daisy Chain
