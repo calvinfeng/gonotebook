@@ -1,14 +1,36 @@
-package main
+package cmd
 
 import (
+	"fmt"
 	"go-academy/userauth/handler"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
+
+	// Driver for Postgres
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
+
+const addr = ":3000"
+
+func connectDB() (*gorm.DB, error) {
+	db, err := gorm.Open(
+		"postgres",
+		fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?%s",
+			user, password, host, port, database, sslMode),
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
 
 // Gorilla mux library is a bit overkill for this example but it's good to introduce this powerful
 // tool to you. Mux library offers URL pattern matching, query params patter matching, URL host
@@ -54,4 +76,31 @@ func loadRoutes(db *gorm.DB) http.Handler {
 	muxRouter.PathPrefix("/").Handler(http.FileServer(http.Dir("public")))
 
 	return handlers.CORS()(logMiddleware(muxRouter))
+}
+
+func runserver(cmd *cobra.Command, args []string) error {
+	logrus.SetFormatter(&logrus.TextFormatter{
+		FullTimestamp: true,
+	})
+
+	db, err := connectDB()
+	if err != nil {
+		return err
+	}
+
+	defer db.Close()
+
+	server := &http.Server{
+		Handler:      loadRoutes(db),
+		Addr:         addr,
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	logrus.Infof("HTTP server is listening and serving on port %v", addr)
+	if err := server.ListenAndServe(); err != nil {
+		return err
+	}
+
+	return nil
 }

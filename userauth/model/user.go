@@ -5,11 +5,11 @@ import "github.com/jinzhu/gorm"
 // User is a model for user entity.
 type User struct {
 	gorm.Model
-	Name           string    `gorm:"type:varchar(100)"              json:"name"`
-	Email          string    `gorm:"type:varchar(100);unique_index" json:"email"`
-	SessionToken   string    `gorm:"type:varchar(100);unique_index" json:"-"`
-	PasswordDigest []byte    `gorm:"type:bytea;unique_index"        json:"-"`
-	Messages       []Message `gorm:"ForeignKey:UserID"              json:"-"` // has-many
+	Name           string    `gorm:"column:name"`
+	Email          string    `gorm:"column:email"`
+	SessionToken   string    `gorm:"column:session_token"`
+	PasswordDigest []byte    `gorm:"column:password_digest"`
+	Messages       []Message `gorm:"foreignkey:UserID"` // has-many
 }
 
 // ResetSessionToken resets the token that user has.
