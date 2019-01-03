@@ -14,7 +14,7 @@
 
 * HTTP Server
   * [HTTP Handler](./markdowns/03_01_go_http_handlers.md)
-  * [Calculator Server](./calculator/README.md)
+  * [Build a Calculator](./calculator/README.md)
 
 * WebSocket Server
   * [Goroutines](./markdowns/04_01_go_routines.md)
@@ -22,7 +22,9 @@
   * [Go Concurrency Part 2](./markdowns/04_03_go_concurrency_part_2.md)
   * [Build a Chatroom](./chatroom/README.md)
 
-* [User Authentication](./userauth/README.md)
+* User Authentication
+  * [Popular Web Libraries](./markdowns/05_01_popular_web_libraries.md)
+  * [Build User Authentication](./userauth/README.md)
 
 * [Neural Network](./neuralnet/README.md)
 

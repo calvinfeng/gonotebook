@@ -65,6 +65,13 @@ func main() {
 }
 ```
 
+We should expect to see the following output.
+
+```text
+[web result for "golang", video result for "golang", image result for "golang"]
+66.194887ms
+```
+
 ## Search with Timeout
 
 We can make our search a bit more robust by introducing timeout because there's a chance that some

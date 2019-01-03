@@ -32,19 +32,6 @@ func connectDB() (*gorm.DB, error) {
 	return db, nil
 }
 
-// Gorilla mux library is a bit overkill for this example but it's good to introduce this powerful
-// tool to you. Mux library offers URL pattern matching, query params patter matching, URL host
-// matching and the list goes on.
-// For example:
-//
-// r := mux.NewRouter()
-// r.HandleFunc("/products/{key}", ProductHandler)
-// r.HandleFunc("/articles/{category}/", ArticlesCategoryHandler)
-// r.HandleFunc("/articles/{category}/{id:[0-9]+}", ArticleHandler)
-//
-// Notice that key and category will become available as a variable through mux router pattern
-// matching. If I were to send a request with the URL /products/1/, then key will hold the value 1.
-
 // HTTPMiddleware intercepts the a request before it reaches a handler.
 type HTTPMiddleware func(http.Handler) http.Handler
 

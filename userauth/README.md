@@ -27,12 +27,10 @@ I did mine with
 
 I am going to introduce couple new open source libraries to you for this project:
 
+* `spf13/cobra`
 * `sirupsen/logrus`
 * `gorilla/mux`
-* `jinzhu/gorm` -  Object Relational Mapping for Go
-
-You should take a look at their Github page and see what they are for before you start working on
-this project.
+* `jinzhu/gorm`
 
 ## Project User Authentication
 
