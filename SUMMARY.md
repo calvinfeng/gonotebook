@@ -22,7 +22,7 @@
   * [Go Concurrency Part 2](./markdowns/04_03_go_concurrency_part_2.md)
 
 * WebSocket Server
-  * [Websocket Handler](./markdowns/05_01_go_websocket_handlers.md)
+  * [WebSocket Handler](./markdowns/05_01_go_websocket_handlers.md)
   * [Build a Chatroom](./chatroom/README.md)
 
 * User Authentication
