@@ -16,14 +16,17 @@
   * [HTTP Handler](./markdowns/03_01_go_http_handlers.md)
   * [Build a Calculator](./calculator/README.md)
 
-* WebSocket Server
+* Concurrency
   * [Goroutines](./markdowns/04_01_go_routines.md)
   * [Go Concurrency Part 1](./markdowns/04_02_go_concurrency_part_1.md)
   * [Go Concurrency Part 2](./markdowns/04_03_go_concurrency_part_2.md)
+
+* WebSocket Server
+  * [Websocket Handler](./markdowns/05_01_go_websocket_handlers.md)
   * [Build a Chatroom](./chatroom/README.md)
 
 * User Authentication
-  * [Popular Web Libraries](./markdowns/05_01_popular_web_libraries.md)
+  * [Popular Web Libraries](./markdowns/06_01_popular_web_libraries.md)
   * [Build User Authentication](./userauth/README.md)
 
 * [Neural Network](./neuralnet/README.md)
