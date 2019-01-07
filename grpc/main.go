@@ -14,7 +14,7 @@ func main() {
 		Short: "gRPC in Go",
 	}
 
-	root.AddCommand(cmd.Server)
+	root.AddCommand(cmd.Server, cmd.Client)
 
 	if err := root.Execute(); err != nil {
 		log.Fatal(err)

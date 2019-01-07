@@ -1,14 +1,13 @@
-package main
+package cli
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 func NewTodo(id int) *Todo {
 	return &Todo{
 		ID:        id,
-		Networker: NewHTTPNetworker(),
+		Networker: NewHTTPNetworker("https://jsonplaceholder.typicode.com/todos"),
 	}
 }
 
@@ -22,8 +21,7 @@ type Todo struct {
 }
 
 func (t *Todo) Load() error {
-	url := fmt.Sprintf("https://jsonplaceholder.typicode.com/todos/%d/", t.ID)
-	data, err := t.Get(url)
+	data, err := t.Get(t.ID)
 	if err != nil {
 		return err
 	}

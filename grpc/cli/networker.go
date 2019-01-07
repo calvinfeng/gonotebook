@@ -1,27 +1,34 @@
-package main
+package cli
 
 import (
 	"bytes"
+	"context"
 	"fmt"
+	"go-academy/grpc/pb/todo"
 	"net/http"
+	"time"
 )
 
 type Networker interface {
-	Get(url string) ([]byte, error)
-	Set(url string, data []byte) error
+	Get(id int) ([]byte, error)
+	Set(id int, data []byte) error
 }
 
-func NewHTTPNetworker() Networker {
+func NewHTTPNetworker(endpoint string) Networker {
 	return &HTTPNetworker{
-		client: http.DefaultClient,
+		client:   http.DefaultClient,
+		endpoint: endpoint,
 	}
 }
 
 type HTTPNetworker struct {
-	client *http.Client
+	client   *http.Client
+	endpoint string
 }
 
-func (net *HTTPNetworker) Get(url string) ([]byte, error) {
+func (net *HTTPNetworker) Get(id int) ([]byte, error) {
+	url := fmt.Sprintf("%s/%d/", net.endpoint, id)
+
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -47,7 +54,9 @@ func (net *HTTPNetworker) Get(url string) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (net *HTTPNetworker) Set(url string, data []byte) error {
+func (net *HTTPNetworker) Set(id int, data []byte) error {
+	url := fmt.Sprintf("%s/%d/", net.endpoint, id)
+
 	req, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(data))
 	if err != nil {
 		return err
@@ -70,5 +79,31 @@ func (net *HTTPNetworker) Set(url string, data []byte) error {
 		return fmt.Errorf("bad status %d - %s", res.StatusCode, buf.String())
 	}
 
+	return nil
+}
+
+func NewGRPCNetworker() Networker {
+	return &GRPCNetworker{}
+}
+
+type GRPCNetworker struct {
+	client todo.TodoClient
+}
+
+func (net *GRPCNetworker) Get(id int) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	res, err := net.client.Get(ctx, &todo.TodoRequest{Id: 1})
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(res)
+
+	return nil, nil
+}
+
+func (net *GRPCNetworker) Set(id int, data []byte) error {
 	return nil
 }

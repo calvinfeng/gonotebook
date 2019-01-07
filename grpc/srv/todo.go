@@ -13,5 +13,5 @@ type RPCTodoServer struct {
 }
 
 func (srv *RPCTodoServer) Get(ctx context.Context, req *todo.TodoRequest) (*todo.TodoResponse, error) {
-	return nil, nil
+	return &todo.TodoResponse{Id: 1, UserId: 1, Title: "Hello World", Completed: false}, nil
 }
