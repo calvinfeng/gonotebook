@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package planner;
+
+message TodoRequest {
+  google.protobuf.Int64Value id = 1; 
+  google.protobuf.BytesValue data = 2;
+}
+
+message TodoResponse {
+  bytes data = 2;
+}
+
+service Todo {
+  rpc Get(TodoRequest) returns (TodoResponse);
+  rpc Set(TodoRequest) returns (TodoResponse);
+}

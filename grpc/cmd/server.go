@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"net"
 
-	"go-academy/grpc/pb/todo"
+	"go-academy/grpc/pb/planner"
 	"go-academy/grpc/srv"
 
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 )
@@ -27,8 +28,9 @@ func server(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	logrus.Infof("launching gRPC server on port %d", port)
 	gRPCServer := grpc.NewServer()
-	todo.RegisterTodoServer(gRPCServer, srv.NewRPCTodoServer())
+	planner.RegisterTodoServer(gRPCServer, srv.NewRPCTodoServer())
 
 	return gRPCServer.Serve(lis)
 }

@@ -4,14 +4,18 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"go-academy/grpc/pb/todo"
+	"go-academy/grpc/pb/planner"
 	"net/http"
 	"time"
+
+	wrappers "github.com/golang/protobuf/ptypes/wrappers"
+
+	"google.golang.org/grpc"
 )
 
 type Networker interface {
-	Get(id int) ([]byte, error)
-	Set(id int, data []byte) error
+	Get(id int64) ([]byte, error)
+	Set(id int64, data []byte) ([]byte, error)
 }
 
 func NewHTTPNetworker(endpoint string) Networker {
@@ -26,7 +30,7 @@ type HTTPNetworker struct {
 	endpoint string
 }
 
-func (net *HTTPNetworker) Get(id int) ([]byte, error) {
+func (net *HTTPNetworker) Get(id int64) ([]byte, error) {
 	url := fmt.Sprintf("%s/%d/", net.endpoint, id)
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
@@ -54,12 +58,12 @@ func (net *HTTPNetworker) Get(id int) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (net *HTTPNetworker) Set(id int, data []byte) error {
+func (net *HTTPNetworker) Set(id int64, data []byte) ([]byte, error) {
 	url := fmt.Sprintf("%s/%d/", net.endpoint, id)
 
 	req, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(data))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -67,7 +71,7 @@ func (net *HTTPNetworker) Set(id int, data []byte) error {
 
 	res, err := net.client.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	defer res.Body.Close()
@@ -76,34 +80,49 @@ func (net *HTTPNetworker) Set(id int, data []byte) error {
 	buf.ReadFrom(res.Body)
 
 	if res.StatusCode >= 300 {
-		return fmt.Errorf("bad status %d - %s", res.StatusCode, buf.String())
+		return nil, fmt.Errorf("bad status %d - %s", res.StatusCode, buf.String())
 	}
 
-	return nil
+	return buf.Bytes(), nil
 }
 
-func NewGRPCNetworker() Networker {
-	return &GRPCNetworker{}
+func NewGRPCNetworker(conn *grpc.ClientConn) Networker {
+	return &GRPCNetworker{planner.NewTodoClient(conn)}
 }
 
 type GRPCNetworker struct {
-	client todo.TodoClient
+	client planner.TodoClient
 }
 
-func (net *GRPCNetworker) Get(id int) ([]byte, error) {
+func (net *GRPCNetworker) Get(id int64) ([]byte, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	res, err := net.client.Get(ctx, &todo.TodoRequest{Id: 1})
+	req := &planner.TodoRequest{
+		Id: &wrappers.Int64Value{Value: id},
+	}
+
+	res, err := net.client.Get(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println(res)
-
-	return nil, nil
+	return res.Data, nil
 }
 
-func (net *GRPCNetworker) Set(id int, data []byte) error {
-	return nil
+func (net *GRPCNetworker) Set(id int64, data []byte) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	req := &planner.TodoRequest{
+		Id:   &wrappers.Int64Value{Value: id},
+		Data: &wrappers.BytesValue{Value: data},
+	}
+
+	res, err := net.client.Set(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res.Data, nil
 }

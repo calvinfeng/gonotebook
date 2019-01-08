@@ -3,9 +3,9 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"go-academy/grpc/pb/todo"
-	"time"
+	"go-academy/grpc/cli"
 
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 )
@@ -29,17 +29,21 @@ func client(cmd *cobra.Command, args []string) error {
 
 	defer conn.Close()
 
-	todoCli := todo.NewTodoClient(conn)
+	t := cli.NewTodo(1)
 
-	ctx, cancel := context.WithTimeout(bg, 5*time.Second)
-	defer cancel()
+	t.Networker = cli.NewHTTPNetworker("https://jsonplaceholder.typicode.com/todos")
+	t.Load()
 
-	res, err := todoCli.Get(ctx, &todo.TodoRequest{Id: 1})
-	if err != nil {
-		return err
-	}
+	logrus.Infof("fetched todo from HTTP, %v", t)
 
-	fmt.Println(res)
+	t.Networker = cli.NewGRPCNetworker(conn)
+	t.Load()
+
+	t.Title = "Bye World"
+	t.Save()
+
+	t.Load()
+	logrus.Infof("fetched todo from gRPC, %v", t)
 
 	return nil
 }
