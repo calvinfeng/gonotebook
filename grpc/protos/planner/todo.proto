@@ -5,7 +5,7 @@ import "google/protobuf/wrappers.proto";
 package planner;
 
 message TodoRequest {
-  google.protobuf.Int64Value id = 1; 
+  int64 id = 1; 
   google.protobuf.BytesValue data = 2;
 }
 

@@ -22,7 +22,7 @@ func client(cmd *cobra.Command, args []string) error {
 	opts = append(opts, grpc.WithInsecure())
 
 	bg := context.Background()
-	conn, err := grpc.DialContext(bg, fmt.Sprintf("%s:%d", hostname, port), opts...)
+	conn, err := grpc.DialContext(bg, fmt.Sprintf("%s:%d", hostname, rpcPort), opts...)
 	if err != nil {
 		return err
 	}

@@ -98,9 +98,7 @@ func (net *GRPCNetworker) Get(id int64) ([]byte, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	req := &planner.TodoRequest{
-		Id: &wrappers.Int64Value{Value: id},
-	}
+	req := &planner.TodoRequest{Id: id}
 
 	res, err := net.client.Get(ctx, req)
 	if err != nil {
@@ -115,7 +113,7 @@ func (net *GRPCNetworker) Set(id int64, data []byte) ([]byte, error) {
 	defer cancel()
 
 	req := &planner.TodoRequest{
-		Id:   &wrappers.Int64Value{Value: id},
+		Id:   id,
 		Data: &wrappers.BytesValue{Value: data},
 	}
 

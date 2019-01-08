@@ -43,10 +43,6 @@ func (s *InMemStorage) Set(t *TodoModel) error {
 		return errors.New("title is required")
 	}
 
-	if _, ok := s.todos[t.ID]; !ok {
-		t.ID = int64(len(s.todos) + 1)
-	}
-
 	s.todos[t.ID] = t
 	return nil
 }
