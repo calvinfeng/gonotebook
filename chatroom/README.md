@@ -10,13 +10,10 @@ Part 3 of [Go Tour](https://tour.golang.org/concurrency/1).
 
 ## Project Requirement
 
-We are going to learn about how to perform dependency management in Go and how to use Gorilla library
-to implement a websocket connection in Go.
-
 ## Dependency Management - `dep`
 
-Dep is an awesome dependency management tool for Go, it's equivalent to `npm` for JavaScript. You can
-learn more about [Dep](https://github.com/golang/dep).
+Dep is an awesome dependency management tool for Go, it's equivalent to `npm` for JavaScript. You
+can learn more about [Dep](https://github.com/golang/dep).
 
 ### Installation
 
@@ -34,6 +31,17 @@ the following.
 
     brew install dep
     brew upgrade dep
+
+### Run `dep`
+
+Once `dep` is installed, you can run `dep init` to initialize a dep environment for your project.
+
+    cd $GOPATH/src/go-academy/your_project/
+    dep init
+
+You will see `Gopkg.lock` and `Gopkg.toml` files. Now run `dep ensure`.
+
+    dep ensure -v
 
 ## Frontend
 
@@ -66,12 +74,22 @@ I am using babel and webpack for compiling the latest ES6/ES7 syntax into browse
 I am also using `node-sass` for compiling `.scss` into `.css`. I make promise-based requests to server
 using `axios`. For the complete list of node modules, please look at the `package.json`.
 
+### Build `index.js`
+
+Navigate to the `frontend/` folder and run the following npm commands.
+
+    cd frontend/
+    npm install
+    npm run build
+
+**Remember** to run `npm run build`, otherwise you won't see an `index.js` in your `public` folder.
+
 ## Project Chatroom
 
 Coming soon
 
-* [Lesson 4 Chatroom Introduction]
-* [Lesson 4 Chatroom Implementation]
+* [Lesson 4 Chatroom Naive Implementation](https://youtu.be/6vS6wYLbyjg)
+* [Lesson 4 Chatroom Smart Implementation](https://youtu.be/Q29wM5sYKiw)
 
 ## Source
 
