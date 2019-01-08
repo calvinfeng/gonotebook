@@ -29,21 +29,26 @@ func client(cmd *cobra.Command, args []string) error {
 
 	defer conn.Close()
 
-	t := cli.NewTodo(1)
+	httpNet := cli.NewHTTPNetworker(fmt.Sprintf("http://%s:%d/todos", hostname, httpPort))
+	grpcNet := cli.NewGRPCNetworker(conn)
 
-	t.Networker = cli.NewHTTPNetworker("https://jsonplaceholder.typicode.com/todos")
+	t := cli.NewTodo(1, httpNet)
+	t.Title = "Hello World"
+	t.Completed = true
+	t.UserID = 1
+
+	logrus.Info("save todo via HTTP")
+	if err := t.Save(); err != nil {
+		logrus.Error(err)
+	}
+
+	t = cli.NewTodo(1, httpNet)
 	t.Load()
+	logrus.Infof("fetched todo via HTTP, %v", t)
 
-	logrus.Infof("fetched todo from HTTP, %v", t)
-
-	t.Networker = cli.NewGRPCNetworker(conn)
+	t = cli.NewTodo(1, grpcNet)
 	t.Load()
-
-	t.Title = "Bye World"
-	t.Save()
-
-	t.Load()
-	logrus.Infof("fetched todo from gRPC, %v", t)
+	logrus.Infof("fetched todo via gRPC, %v", t)
 
 	return nil
 }

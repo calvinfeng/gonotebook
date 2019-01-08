@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"go-academy/grpc/pb/planner"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -82,9 +82,67 @@ func (s *HTTPTodoServer) Register() {
 }
 
 func (s *HTTPTodoServer) handleGet(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Getting something")
+	vars := mux.Vars(r)
+
+	id, err := strconv.ParseInt(vars["id"], 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	model, err := store.Get(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	data, err := json.Marshal(model)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
 }
 
+// Use json.Decoder if data is coming from io.Reader
+// Use json.Unmarshal if data is already in bytes
+
 func (s *HTTPTodoServer) handlePost(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Create something")
+	vars := mux.Vars(r)
+
+	id, err := strconv.ParseInt(vars["id"], 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	decoder := json.NewDecoder(r.Body)
+
+	model := &TodoModel{}
+
+	err = decoder.Decode(model)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	model.ID = id
+	store.Set(model)
+
+	data, err := json.Marshal(model)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
 }

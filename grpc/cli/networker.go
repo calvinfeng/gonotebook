@@ -61,7 +61,9 @@ func (net *HTTPNetworker) Get(id int64) ([]byte, error) {
 func (net *HTTPNetworker) Set(id int64, data []byte) ([]byte, error) {
 	url := fmt.Sprintf("%s/%d/", net.endpoint, id)
 
-	req, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(data))
+	fmt.Println(url)
+
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}

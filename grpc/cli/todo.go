@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 )
 
-func NewTodo(id int64) *Todo {
+func NewTodo(id int64, net Networker) *Todo {
 	return &Todo{
-		ID: id,
+		ID:        id,
+		Networker: net,
 	}
 }
 
