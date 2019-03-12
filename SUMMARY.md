@@ -35,6 +35,7 @@
   * [Custom JSON Marshaling](./gopatterns/custom_json_marshaling.md)
   * [Functional Options](./gopatterns/functional_options.md)
   * [Type Embedding](./gopatterns/type_embedding.md)
+  * [Laws of Reflection](./gopatterns/laws_of_reflection.md)
 
 * Design Patterns
   * [Builder](./gopatterns/builder.md)
