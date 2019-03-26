@@ -103,7 +103,7 @@ because it holds the execution context. *Blocking thread != stop the world*.
 
 I will use circle to represent **G**, square to represent **P** and triangle to represent **M**.
 
-![shapes](./assets/gpm.png)
+![G M P](./assets/gpm.png)
 
 ## Go Scheduler
 
@@ -161,7 +161,6 @@ context-switch the M off the core. This means that P can't get any work done eve
 goroutine in a runnable state. When a P finishes its LRQ very quickly, it needs to perform a work
 stealing to prevent M entering a waiting state.
 
-```text
 ```text
 var found bool
 
