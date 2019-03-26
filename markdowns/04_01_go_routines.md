@@ -193,7 +193,5 @@ switch that we were losing when using threads. Go scheduler attempts to use less
 on each thread.
 
 [1]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L339
-
 [2]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L404
-
 [3]: https://github.com/golang/go/blob/master/src/runtime/runtime2.go#L474
