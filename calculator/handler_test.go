@@ -7,30 +7,66 @@ import (
 	"testing"
 )
 
-func addQueryParam(r *http.Request, lop, rop string) {
+type QueryParam struct {
+	Name  string
+	Value string
+}
+
+func addQueryParam(r *http.Request, params ...QueryParam) {
 	q := r.URL.Query()
-	q.Add("lop", lop)
-	q.Add("rop", rop)
+	for _, param := range params {
+		q.Add(param.Name, param.Value)
+	}
 	r.URL.RawQuery = q.Encode()
 }
 
+type HandlerTestCase struct {
+	ExpectedStatus int
+	LeftOperand    string
+	RightOperand   string
+	ExpectedBody   string
+}
+
+// TestAddHandler is an example of how to use httptest package to test a handler.
 func TestAddHandler(t *testing.T) {
-	handler := CreateOperationHandler(Addition)
-
-	r := httptest.NewRequest(http.MethodGet, "http://example.com", nil)
-	addQueryParam(r, "1", "1")
-	w := httptest.NewRecorder()
-
-	handler(w, r)
-
-	// Extract response from the handler.
-	resp := w.Result()
-	body, _ := ioutil.ReadAll(resp.Body)
-	if resp.StatusCode != http.StatusOK {
-		t.Error("bad status code from handler")
+	testCases := []HandlerTestCase{
+		HandlerTestCase{
+			ExpectedStatus: http.StatusOK,
+			LeftOperand:    "1",
+			RightOperand:   "1",
+			ExpectedBody:   "1 + 1 = 2",
+		},
+		HandlerTestCase{
+			ExpectedStatus: http.StatusBadRequest,
+			LeftOperand:    "foo",
+			RightOperand:   "2",
+			ExpectedBody:   "invalid lop query parameter",
+		},
+		HandlerTestCase{
+			ExpectedStatus: http.StatusBadRequest,
+			LeftOperand:    "1",
+			RightOperand:   "foo",
+			ExpectedBody:   "invalid rop query parameter",
+		},
 	}
 
-	if string(body) != "1 + 1 = 2" {
-		t.Error("wrong result from handler")
+	handler := CreateOperationHandler(Addition)
+
+	for _, tc := range testCases {
+		r := httptest.NewRequest(http.MethodGet, "http://example.com", nil)
+		addQueryParam(r, QueryParam{"lop", tc.LeftOperand}, QueryParam{"rop", tc.RightOperand})
+		w := httptest.NewRecorder()
+
+		handler(w, r)
+
+		resp := w.Result()
+		body, _ := ioutil.ReadAll(resp.Body)
+		if resp.StatusCode != tc.ExpectedStatus {
+			t.Errorf("actual status %d != expected status %d", resp.StatusCode, tc.ExpectedStatus)
+		}
+
+		if string(body) != tc.ExpectedBody {
+			t.Errorf("actual body %s != expected body %s", body, tc.ExpectedBody)
+		}
 	}
 }

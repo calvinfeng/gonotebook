@@ -1,8 +1,8 @@
 # Go Error Handling
 
 Error handling is a must for any program. The common approach in JavaScript, Python and Java is
-using try catch statement, but we don't have that in Go! For example, let's say we are trying to
-feed Eric Cartman with unhealthy food.
+using try catch statement to handle exceptions, but we don't have exceptions in Go! For example,
+let's say we are trying to feed Eric Cartman with unhealthy food.
 
 In Python, we would do the following.
 

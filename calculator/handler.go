@@ -37,7 +37,7 @@ func HandleAdd(w http.ResponseWriter, r *http.Request) {
 	result := fmt.Sprintf("%v + %v = %v", leftOp, rightOp, leftOp+rightOp)
 	if leftErr != nil || rightErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Invalid query parameters"))
+		w.Write([]byte("invalid query parameters"))
 		return
 
 	}
@@ -54,7 +54,7 @@ func HandleSubtract(w http.ResponseWriter, r *http.Request) {
 	result := fmt.Sprintf("%v - %v = %v", leftOp, rightOp, leftOp-rightOp)
 	if leftErr != nil || rightErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Invalid query parameters"))
+		w.Write([]byte("invalid query parameters"))
 	}
 
 	w.WriteHeader(http.StatusOK)

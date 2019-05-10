@@ -15,6 +15,7 @@
 * HTTP Server
   * [HTTP Handler](./markdowns/03_01_go_http_handlers.md)
   * [Build a Calculator](./calculator/README.md)
+  * [HTTP Unit Test](./markdowns/03_02_go_http_unit_tests.md)
 
 * Concurrency
   * [Goroutines](./markdowns/04_01_go_routines.md)
