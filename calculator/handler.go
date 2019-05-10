@@ -6,6 +6,30 @@ import (
 	"strconv"
 )
 
+// Operator is a function that performs arithmetic operation.
+type Operator func(lop float64, rop float64) string
+
+// Addition adds two numbers together.
+func Addition(lop float64, rop float64) string {
+	return fmt.Sprintf("%v + %v = %v", lop, rop, lop+rop)
+}
+
+// Subtraction subtracts one number from another.
+func Subtraction(lop float64, rop float64) string {
+	return fmt.Sprintf("%v - %v = %v", lop, rop, lop-rop)
+}
+
+// Multiplication multiples two numbers.
+func Multiplication(lop float64, rop float64) string {
+	return fmt.Sprintf("%v * %v = %v", lop, rop, lop*rop)
+}
+
+// Division divides one number from another.
+func Division(lop float64, rop float64) string {
+	return fmt.Sprintf("%v / %v = %v", lop, rop, lop/rop)
+}
+
+// HandleAdd is a handler that adds two query params together.
 func HandleAdd(w http.ResponseWriter, r *http.Request) {
 	leftOp, leftErr := strconv.ParseFloat(r.URL.Query().Get("lop"), 64)
 	rightOp, rightErr := strconv.ParseFloat(r.URL.Query().Get("rop"), 64)
@@ -22,6 +46,7 @@ func HandleAdd(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(result))
 }
 
+// HandleSubtract is a handler that subtracts one query param from another.
 func HandleSubtract(w http.ResponseWriter, r *http.Request) {
 	leftOp, leftErr := strconv.ParseFloat(r.URL.Query().Get("lop"), 64)
 	rightOp, rightErr := strconv.ParseFloat(r.URL.Query().Get("rop"), 64)
