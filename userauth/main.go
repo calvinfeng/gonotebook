@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go-academy/userauth/cmd"
+	"github.com/calvinfeng/go-academy/userauth/cmd"
 )
 
 func main() {

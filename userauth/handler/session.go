@@ -2,9 +2,10 @@ package handler
 
 import (
 	"encoding/json"
-	"go-academy/userauth/model"
 	"net/http"
 	"time"
+
+	"github.com/calvinfeng/go-academy/userauth/model"
 
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
@@ -103,7 +104,12 @@ func NewSessionDestroyHandler(db *gorm.DB) http.HandlerFunc {
 func NewTokenAuthenticateHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Find current user using token from cookies
-		cookie, _ := r.Cookie("session_token")
+		cookie, err := r.Cookie("session_token")
+		if err != nil {
+			renderError(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
 		if user, err := findUserByToken(db, cookie.Value); err == nil {
 			res := UserJSONResponse{
 				Name:         user.Name,

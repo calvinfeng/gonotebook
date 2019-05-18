@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"go-academy/userauth/handler"
 	"net/http"
 	"time"
+
+	"github.com/calvinfeng/go-academy/userauth/handler"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"

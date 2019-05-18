@@ -2,9 +2,10 @@ package handler
 
 import (
 	"encoding/json"
-	"go-academy/userauth/model"
 	"net/http"
 	"time"
+
+	"github.com/calvinfeng/go-academy/userauth/model"
 
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
