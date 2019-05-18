@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/calvinfeng/go-academy/userauth/handler"
 
@@ -17,21 +16,14 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-const addr = ":3000"
-
-func connectDB() (*gorm.DB, error) {
-	db, err := gorm.Open(
-		"postgres",
-		fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?%s",
-			user, password, host, port, database, sslMode),
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return db, nil
+// RunServerCmd is a command to run server from terminal.
+var RunServerCmd = &cobra.Command{
+	Use:   "runserver",
+	Short: "run user authentication server",
+	RunE:  runserver,
 }
+
+const addr = ":3000"
 
 // HTTPMiddleware intercepts the a request before it reaches a handler.
 type HTTPMiddleware func(http.Handler) http.Handler
@@ -67,11 +59,11 @@ func loadRoutes(db *gorm.DB) http.Handler {
 }
 
 func runserver(cmd *cobra.Command, args []string) error {
-	logrus.SetFormatter(&logrus.TextFormatter{
-		FullTimestamp: true,
-	})
+	db, err := gorm.Open(
+		"postgres",
+		fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?%s", user, password, host, port, database, ssl),
+	)
 
-	db, err := connectDB()
 	if err != nil {
 		return err
 	}
@@ -79,10 +71,8 @@ func runserver(cmd *cobra.Command, args []string) error {
 	defer db.Close()
 
 	server := &http.Server{
-		Handler:      loadRoutes(db),
-		Addr:         addr,
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
+		Handler: loadRoutes(db),
+		Addr:    addr,
 	}
 
 	logrus.Infof("HTTP server is listening and serving on port %v", addr)

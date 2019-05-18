@@ -3,6 +3,10 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/calvinfeng/go-academy/userauth/model"
+	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type (
@@ -40,9 +44,31 @@ type (
 	}
 )
 
-func renderError(w http.ResponseWriter, errMsg string, code int) {
-	res := &ErrorResponse{errMsg}
+func renderError(w http.ResponseWriter, code int, msg string) {
+	res := &ErrorResponse{msg}
 	bytes, _ := json.Marshal(res)
 	w.WriteHeader(code)
 	w.Write(bytes)
+}
+
+func findUserByToken(db *gorm.DB, token string) (*model.User, error) {
+	var user model.User
+	if err := db.Where("session_token = ?", token).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func findUserByCredential(db *gorm.DB, email, password string) (*model.User, error) {
+	var user model.User
+	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	if err := bcrypt.CompareHashAndPassword(user.PasswordDigest, []byte(password)); err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }

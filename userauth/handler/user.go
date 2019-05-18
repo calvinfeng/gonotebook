@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/calvinfeng/go-academy/userauth/model"
+	"github.com/sirupsen/logrus"
 
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
@@ -17,7 +18,8 @@ func NewUserListHandler(db *gorm.DB) http.HandlerFunc {
 		var users []model.User
 
 		if err := db.Preload("Messages").Find(&users).Error; err != nil {
-			renderError(w, err.Error(), http.StatusInternalServerError)
+			logrus.WithField("src", "handler.user").Error(err)
+			renderError(w, http.StatusInternalServerError, "database error")
 			return
 		}
 
@@ -36,12 +38,15 @@ func NewUserListHandler(db *gorm.DB) http.HandlerFunc {
 			})
 		}
 
-		if bytes, err := json.Marshal(res); err != nil {
-			renderError(w, err.Error(), http.StatusInternalServerError)
-		} else {
-			w.WriteHeader(http.StatusOK)
-			w.Write(bytes)
+		bytes, err := json.Marshal(res)
+		if err != nil {
+			logrus.WithField("src", "handler.user").Error(err)
+			renderError(w, http.StatusInternalServerError, "failed to marshal response")
+			return
 		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Write(bytes)
 	}
 }
 
@@ -52,18 +57,20 @@ func NewUserCreateHandler(db *gorm.DB) http.HandlerFunc {
 
 		var regReq RegisterRequest
 		if err := decoder.Decode(&regReq); err != nil {
-			renderError(w, "Failed to parse request JSON into struct", http.StatusInternalServerError)
+			logrus.WithField("src", "handler.user").Error(err)
+			renderError(w, http.StatusInternalServerError, "failed to unmarshal request data")
 			return
 		}
 
 		if len(regReq.Email) == 0 || len(regReq.Password) == 0 || len(regReq.Name) == 0 {
-			renderError(w, "Please provide name, email and password for registration", http.StatusBadRequest)
+			renderError(w, http.StatusBadRequest, "please provide name, email and password for registration")
 			return
 		}
 
-		hashBytes, hashErr := bcrypt.GenerateFromPassword([]byte(regReq.Password), 10)
-		if hashErr != nil {
-			renderError(w, hashErr.Error(), http.StatusInternalServerError)
+		hashBytes, err := bcrypt.GenerateFromPassword([]byte(regReq.Password), 10)
+		if err != nil {
+			logrus.WithField("src", "handler.user").Error(err)
+			renderError(w, http.StatusInternalServerError, "failed to generate hash bytes")
 			return
 		}
 
@@ -76,7 +83,8 @@ func NewUserCreateHandler(db *gorm.DB) http.HandlerFunc {
 		newUser.ResetSessionToken()
 
 		if err := db.Create(&newUser).Error; err != nil {
-			renderError(w, err.Error(), http.StatusInternalServerError)
+			logrus.WithField("src", "handler.user").Error(err)
+			renderError(w, http.StatusInternalServerError, "database error")
 			return
 		}
 
@@ -91,11 +99,14 @@ func NewUserCreateHandler(db *gorm.DB) http.HandlerFunc {
 			SessionToken: newUser.SessionToken,
 		}
 
-		if bytes, err := json.Marshal(res); err != nil {
-			renderError(w, err.Error(), http.StatusInternalServerError)
-		} else {
-			w.WriteHeader(http.StatusOK)
-			w.Write(bytes)
+		bytes, err := json.Marshal(res)
+		if err != nil {
+			logrus.WithField("src", "handler.user").Error(err)
+			renderError(w, http.StatusInternalServerError, "failed to marshal response")
+			return
 		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Write(bytes)
 	}
 }

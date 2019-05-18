@@ -19,7 +19,17 @@ Actually just in case you don't remember the password to your `ROLE`, do the fol
 
     postgres=# alter user <your_username> with password <whatever you like>
 
-I did mine with
+### Example
+
+Create `cfeng`
+
+    postgres=# create role cfeng superuser login;
+
+Create database
+
+    postgres=# create database go_user_auth with owner=cfeng;
+
+Update password
 
     postgres=# alter user cfeng with password 'cfeng';
 
@@ -34,7 +44,7 @@ I am going to introduce couple new open source libraries to you for this project
 
 ## Project User Authentication
 
-* [Lesson 5 User Authentication](https://www.youtube.com/channel/UCoKwJSadNdeJkpfBpI-f5Ow)
+* [Lesson 5 User Authentication](...)
 
 ## Bonus & Additional Resource
 
