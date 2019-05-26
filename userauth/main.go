@@ -14,12 +14,16 @@ func main() {
 		FullTimestamp: true,
 	})
 
+	logrus.SetOutput(os.Stdout)
+
+	logrus.SetLevel(logrus.DebugLevel)
+
 	root := &cobra.Command{
 		Use:   "userauth",
 		Short: "user authentication service",
 	}
 
-	root.AddCommand(cmd.RunMigrationCmd, cmd.RunServerCmd)
+	root.AddCommand(cmd.RunMigrationsCmd, cmd.RunServerCmd)
 	if err := root.Execute(); err != nil {
 		logrus.Fatal(err)
 		os.Exit(1)

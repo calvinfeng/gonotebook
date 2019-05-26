@@ -1,15 +1,16 @@
 package cmd
 
 import (
-	"fmt"
+	"io"
 	"net/http"
+	"os"
 
 	"github.com/calvinfeng/go-academy/userauth/handler"
 
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+
 	"github.com/jinzhu/gorm"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
 	// Driver for Postgres
@@ -20,63 +21,36 @@ import (
 var RunServerCmd = &cobra.Command{
 	Use:   "runserver",
 	Short: "run user authentication server",
-	RunE:  runserver,
+	RunE:  runServer,
 }
 
-const addr = ":3000"
-
-// HTTPMiddleware intercepts the a request before it reaches a handler.
-type HTTPMiddleware func(http.Handler) http.Handler
-
-func newServerLoggingMiddleware() HTTPMiddleware {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			logrus.Infof("%s %s %s %s", r.Proto, r.Method, r.URL, r.Host)
-			next.ServeHTTP(w, r)
-		})
-	}
-}
-
-func loadRoutes(db *gorm.DB) http.Handler {
-	// Defining middleware
-	logMiddleware := newServerLoggingMiddleware()
-
-	// Instantiate our router object
-	muxRouter := mux.NewRouter().StrictSlash(true)
-
-	// Name-spacing the API
-	api := muxRouter.PathPrefix("/api").Subrouter()
-	api.Handle("/users/login", handler.NewSessionCreateHandler(db)).Methods("POST")
-	api.Handle("/users/logout", handler.NewSessionDestroyHandler(db)).Methods("DELETE")
-	api.Handle("/users/authenticate", handler.NewTokenAuthenticateHandler(db)).Methods("GET")
-	api.Handle("/users/register", handler.NewUserCreateHandler(db)).Methods("POST")
-	api.Handle("/users", handler.NewUserListHandler(db)).Methods("GET")
-
-	// Serve public folder to clients
-	muxRouter.PathPrefix("/").Handler(http.FileServer(http.Dir("public")))
-
-	return handlers.CORS()(logMiddleware(muxRouter))
-}
-
-func runserver(cmd *cobra.Command, args []string) error {
-	db, err := gorm.Open(
-		"postgres",
-		fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?%s", user, password, host, port, database, ssl),
-	)
-
+func runServer(cmd *cobra.Command, args []string) error {
+	conn, err := gorm.Open("postgres", pgAddress)
 	if err != nil {
 		return err
 	}
 
-	defer db.Close()
+	srv := echo.New()
 
-	server := &http.Server{
-		Handler: loadRoutes(db),
-		Addr:    addr,
-	}
+	srv.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "HTTP[${time_rfc3339}] ${method} ${path} status=${status} latency=${latency_human}\n",
+		Output: io.MultiWriter(os.Stdout),
+	}))
 
-	logrus.Infof("HTTP server is listening and serving on port %v", addr)
-	if err := server.ListenAndServe(); err != nil {
+	srv.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
+
+	srv.File("/", "public/index.html")
+	srv.POST("api/register/", handler.NewUserCreateHandler(conn))
+	srv.POST("api/authenticate/", handler.NewUserAuthenticateHandler(conn))
+
+	users := srv.Group("api/users")
+	users.Use(handler.NewTokenAuthMiddleware(conn))
+	users.GET("/", handler.NewUserListHandler(conn))
+
+	if err := srv.Start(":8080"); err != nil {
 		return err
 	}
 

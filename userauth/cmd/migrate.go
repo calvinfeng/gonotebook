@@ -3,70 +3,80 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/calvinfeng/go-academy/userauth/model"
 	"github.com/golang-migrate/migrate"
 	_ "github.com/golang-migrate/migrate/database/postgres" // Driver
 	_ "github.com/golang-migrate/migrate/source/file"       // Driver
-	_ "github.com/lib/pq"                                   // Driver
+	"github.com/jinzhu/gorm"
+	_ "github.com/lib/pq" // Driver
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
-	up       = "up"
-	reset    = "reset"
-	host     = "localhost"
-	port     = "5432"
-	user     = "cfeng"
-	password = "cfeng"
-	database = "go_user_auth"
-	ssl      = "sslmode=disable"
+	host         = "localhost"
+	port         = "5432"
+	user         = "cfeng"
+	password     = "cfeng"
+	database     = "go_user_auth"
+	ssl          = "sslmode=disable"
+	migrationDir = "file://./migrations/"
 )
 
-const migrationUsage = `
-Commands:
-	up                   Migrate the DB to the most recent version available
-	reset                Resets the database
-Usage:
-	userauth migrate <command>
-`
+var log = logrus.WithFields(logrus.Fields{
+	"pkg": "cmd",
+})
 
-const migrationDir = "file://./migrations/"
+var pgAddress = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?%s", user, password, host, port, database, ssl)
 
-// RunMigrationCmd is a command to run migration.
-var RunMigrationCmd = &cobra.Command{
-	Use:   "runmigration",
+// RunMigrationsCmd is a command to run migration.
+var RunMigrationsCmd = &cobra.Command{
+	Use:   "runmigrations",
 	Short: "run migration on database",
-	RunE:  runmigration,
+	RunE:  runmigrations,
 }
 
-func runmigration(cmd *cobra.Command, args []string) error {
-	if len(args) == 0 {
-		fmt.Println(migrationUsage)
-		return fmt.Errorf("no commands provided")
-	}
-
-	addr := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?%s", user, password, host, port, database, ssl)
-
-	migration, err := migrate.New(migrationDir, addr)
+func runmigrations(cmd *cobra.Command, args []string) error {
+	migration, err := migrate.New(migrationDir, pgAddress)
 	if err != nil {
 		return err
 	}
 
-	command := args[0]
-	switch command {
-	case up:
-		if err := migration.Up(); err != nil {
-			return err
-		}
-
-		logrus.Info("migration has been performed successfully")
-	case reset:
-		if err = migration.Drop(); err != nil {
-			return err
-		}
-
-		logrus.Info("database has been reset")
+	log.Info("performing reset on database")
+	if err = migration.Drop(); err != nil {
+		return err
 	}
 
+	if err := migration.Up(); err != nil {
+		return err
+	}
+
+	log.Info("migration has been performed successfully")
+
+	db, err := gorm.Open("postgres", pgAddress)
+	if err != nil {
+		return err
+	}
+
+	admin := &model.User{
+		Name:     "Calvin Feng",
+		Email:    "cfeng@goacademy.com",
+		Password: "cfeng",
+	}
+
+	hashBytes, err := bcrypt.GenerateFromPassword([]byte(admin.Password), 10)
+	if err != nil {
+		return err
+	}
+
+	admin.PasswordDigest = hashBytes
+	admin.JWTToken = "admin"
+
+	if err := db.Create(admin).Error; err != nil {
+		return err
+	}
+
+	log.Info("admin is created")
 	return nil
 }

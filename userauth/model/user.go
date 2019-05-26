@@ -1,20 +1,50 @@
 package model
 
-import "github.com/jinzhu/gorm"
+import "time"
 
-// User is a model for user entity.
+// User is a user model.
 type User struct {
-	gorm.Model
-	Name           string     `gorm:"column:name"`
-	Email          string     `gorm:"column:email"`
-	SessionToken   string     `gorm:"column:session_token"`
-	PasswordDigest []byte     `gorm:"column:password_digest"`
-	Messages       []*Message `gorm:"foreignkey:user_id"` // has-many
+	// Database only
+	ID             uint      `gorm:"column:id"              json:"-"`
+	CreatedAt      time.Time `gorm:"column:created_at"      json:"-"`
+	UpdatedAt      time.Time `gorm:"column:updated_at"      json:"-"`
+	PasswordDigest []byte    `gorm:"column:password_digest" json:"-"`
+	JWTToken       string    `gorm:"column:jwt_token"       json:"-"`
+
+	// JSON only
+	Password string `sql:"-" json:"password,omitempty"`
+
+	// Both
+	Name     string     `gorm:"column:name"        json:"name" `
+	Email    string     `gorm:"column:email"       json:"email"`
+	Messages []*Message `gorm:"foreignkey:user_id" json:"messages,omitempty"`
 }
 
-// ResetSessionToken resets the token that user has.
-func (u *User) ResetSessionToken() {
-	if randStr, err := generateRandomString(20); err == nil {
-		u.SessionToken = randStr
+// TableName tells GORM where to find this record.
+func (User) TableName() string {
+	return "users"
+}
+
+// Validate performs validation on user model.
+func (u *User) Validate() error {
+	if len(u.Name) == 0 {
+		return &ValidationError{Field: "name", Message: "cannot be empty"}
+	}
+
+	if len(u.Email) == 0 {
+		return &ValidationError{Field: "email", Message: "cannot be empty"}
+	}
+
+	if len(u.Password) == 0 {
+		return &ValidationError{Field: "password", Message: "too short"}
+	}
+
+	return nil
+}
+
+// ResetJWTToken resets the fake JWT token.
+func (u *User) ResetJWTToken() {
+	if randStr, err := fakeJWTToken(20); err == nil {
+		u.JWTToken = randStr
 	}
 }
