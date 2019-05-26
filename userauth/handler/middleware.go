@@ -15,6 +15,7 @@ func NewTokenAuthMiddleware(db *gorm.DB) echo.MiddlewareFunc {
 
 			if user, err := findUserByToken(db, token); err == nil {
 				log.Debugf("%s from authenticated user %s", ctx.Request().Method, user.Email)
+				ctx.Set("current_user", user)
 				return next(ctx)
 			}
 

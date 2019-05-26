@@ -51,26 +51,28 @@ class Welcome extends React.Component<WelcomeProps, WelcomeState> {
 
     handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        axios.post('/api/users/register', {
+        axios.post('/api/register', {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password
         }).then((res: AxiosResponse) => {
+            localStorage.setItem("jwt_token", res.data.jwt_token)
             this.props.handleSetUser(res.data)
         }).catch((err: any) => {
-            this.setState({ error: err.response.data.error })
+            this.setState({ error: err.response.data })
         })
     }
 
     handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        axios.post('api/users/login', {
+        axios.post('api/authenticate', {
             email: this.state.email,
             password: this.state.password
         }).then((res: AxiosResponse) => {
+            localStorage.setItem("jwt_token", res.data.jwt_token)
             this.props.handleSetUser(res.data)
         }).catch((err: any) => {
-            this.setState({ error: err.response.data.error })
+            this.setState({ error: "wrong email or password" })
         })
     }
 

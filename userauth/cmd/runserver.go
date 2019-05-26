@@ -42,13 +42,14 @@ func runServer(cmd *cobra.Command, args []string) error {
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
-	srv.File("/", "public/index.html")
-	srv.POST("api/register/", handler.NewUserCreateHandler(conn))
-	srv.POST("api/authenticate/", handler.NewUserAuthenticateHandler(conn))
+	srv.Static("/", "public")
+	srv.POST("api/register", handler.NewUserCreateHandler(conn))
+	srv.POST("api/authenticate", handler.NewUserAuthenticateHandler(conn))
 
 	users := srv.Group("api/users")
 	users.Use(handler.NewTokenAuthMiddleware(conn))
 	users.GET("/", handler.NewUserListHandler(conn))
+	users.GET("/current", handler.NewCurrentUserRetrieveHandler(conn))
 
 	if err := srv.Start(":8080"); err != nil {
 		return err

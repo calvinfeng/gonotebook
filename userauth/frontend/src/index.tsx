@@ -13,7 +13,7 @@ interface IndexState {
 export type User = {
     name: string
     email: string
-    sessionToken: string
+    jwt: string
 }
 
 class Index extends React.Component<any, IndexState> {
@@ -34,11 +34,16 @@ class Index extends React.Component<any, IndexState> {
     }
 
     componentDidMount() {
-        axios.get("api/users/authenticate").then((res: AxiosResponse) => {
-            this.setState({ user: res.data })
-        }).catch((err) => {
-            console.log("no current user")
-        })
+        const token = localStorage.getItem("jwt_token")
+        if (token) {
+            axios.get("api/users/current", {
+                headers: { "Token": token }
+            }).then((res: AxiosResponse) => {
+                this.setState({ user: res.data })
+            }).catch((err) => {
+                console.log("no current user")
+            })
+        }
     }
 
     get content() {

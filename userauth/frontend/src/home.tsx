@@ -10,13 +10,10 @@ interface HomeProps {
 
 class Home extends React.Component<HomeProps, any> {
     handleLogout = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+        // TODO: reset token on server side
         e.preventDefault()
-        axios.delete('api/users/logout').then((res: AxiosResponse) => {
-            console.log(`user ${res.data.name} has logged out`)
-            this.props.handleClearUser();
-        }).catch((err: any) => {
-            console.log(err.response.data.error)
-        })
+        localStorage.clear()
+        this.props.handleClearUser()
     }
 
     render() {

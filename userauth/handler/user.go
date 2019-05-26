@@ -21,3 +21,10 @@ func NewUserListHandler(db *gorm.DB) echo.HandlerFunc {
 		return ctx.JSON(http.StatusOK, users)
 	}
 }
+
+// NewCurrentUserRetrieveHandler returns a handler that fetches current user by token.
+func NewCurrentUserRetrieveHandler(db *gorm.DB) echo.HandlerFunc {
+	return func(ctx echo.Context) error {
+		return ctx.JSON(http.StatusOK, ctx.Get("current_user"))
+	}
+}

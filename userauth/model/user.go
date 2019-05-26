@@ -9,12 +9,12 @@ type User struct {
 	CreatedAt      time.Time `gorm:"column:created_at"      json:"-"`
 	UpdatedAt      time.Time `gorm:"column:updated_at"      json:"-"`
 	PasswordDigest []byte    `gorm:"column:password_digest" json:"-"`
-	JWTToken       string    `gorm:"column:jwt_token"       json:"-"`
 
 	// JSON only
 	Password string `sql:"-" json:"password,omitempty"`
 
 	// Both
+	JWTToken string     `gorm:"column:jwt_token"   json:"jwt_token"`
 	Name     string     `gorm:"column:name"        json:"name" `
 	Email    string     `gorm:"column:email"       json:"email"`
 	Messages []*Message `gorm:"foreignkey:user_id" json:"messages,omitempty"`
