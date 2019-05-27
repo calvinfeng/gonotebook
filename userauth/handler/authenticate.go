@@ -63,6 +63,7 @@ func NewUserCreateHandler(db *gorm.DB) echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusInternalServerError, err)
 		}
 
+		user.Password = ""
 		user.PasswordDigest = hashBytes
 		user.ResetJWTToken()
 
