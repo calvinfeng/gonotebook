@@ -39,7 +39,7 @@ I am going to introduce couple new open source libraries to you for this project
 
 * `spf13/cobra`
 * `sirupsen/logrus`
-* `gorilla/mux`
+* `labstack/echo`
 * `jinzhu/gorm`
 
 ## Project User Authentication

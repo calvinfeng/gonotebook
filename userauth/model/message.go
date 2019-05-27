@@ -4,7 +4,7 @@ import "time"
 
 // Message is a model for messages.
 type Message struct {
-	ID        uint      `gorm:"column:id"         json:"-"`
+	ID        uint      `gorm:"column:id"         json:"id"`
 	CreatedAt time.Time `gorm:"column:created_at" json:"created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"-"`
 	Body      string    `gorm:"column:body"       json:"body"`

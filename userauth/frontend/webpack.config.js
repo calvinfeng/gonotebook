@@ -3,7 +3,7 @@ module.exports = {
     devtool: "inline-source-map",
     entry: "./src/index.tsx",
     output: {
-        path: __dirname + "/../public",
+        path: __dirname + "/../public/assets/javascripts",
         filename: "index.bundle.js"
     },
     resolve: {
