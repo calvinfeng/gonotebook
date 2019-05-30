@@ -19,7 +19,7 @@ const (
 	port         = "5432"
 	user         = "cfeng"
 	password     = "cfeng"
-	database     = "go_user_auth"
+	database     = "go_academy_userauth"
 	ssl          = "sslmode=disable"
 	migrationDir = "file://./migrations/"
 )

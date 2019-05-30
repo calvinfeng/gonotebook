@@ -2,18 +2,17 @@
 
 ## Postgres Setup
 
-I am going to use PostgreSQL for this project, so let's create one. The superuser on my computer is
-`cfeng` so I will use that to create a database named `go_user_auth`. If you don't have a role or
-wish to create a separate role for this project, then just do the following
+I am going to use PostgreSQL for this project, so let's create a database. The superuser on my computer is
+`cfeng`. If you don't have a role or wish to create a separate role for this project, then just do the following
 
     $ psql postgres
     postgres=# create role <name> superuser login;
 
-Create a database named `go_user_auth` with owner pointing to whichever role you like. I am using
+Create a database named `go_academy_userauth` with owner pointing to whichever role you like. I am using
 cfeng on my computer.
 
     $ psql postgres
-    postgres=# create database go_user_auth with owner=cfeng;
+    postgres=# create database go_academy_userauth with owner=cfeng;
 
 Actually just in case you don't remember the password to your `ROLE`, do the following
 
@@ -27,7 +26,7 @@ Create `cfeng`
 
 Create database
 
-    postgres=# create database go_user_auth with owner=cfeng;
+    postgres=# create database go_academy_userauth with owner=cfeng;
 
 Update password
 

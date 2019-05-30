@@ -15,8 +15,13 @@ func NewUserListHandler(db *gorm.DB) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		var users []*model.User
 
-		if err := db.Preload("Messages").Find(&users).Error; err != nil {
+		if err := db.Find(&users).Error; err != nil {
 			return echo.NewHTTPError(http.StatusNotFound, err)
+		}
+
+		// Clear token for security
+		for _, u := range users {
+			u.JWTToken = ""
 		}
 
 		return ctx.JSON(http.StatusOK, users)

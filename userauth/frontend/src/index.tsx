@@ -5,15 +5,10 @@ import Button from '@material-ui/core/Button'
 import Home from './home'
 import Welcome from './welcome'
 import './index.scss'
+import { User } from './shared'
 
 interface IndexState {
     user: User       
-}
-
-export type User = {
-    name: string
-    email: string
-    jwt: string
 }
 
 class Index extends React.Component<any, IndexState> {
@@ -36,7 +31,7 @@ class Index extends React.Component<any, IndexState> {
     componentDidMount() {
         const token = localStorage.getItem("jwt_token")
         if (token) {
-            axios.get("api/users/current", {
+            axios.get("api/users/current/", {
                 headers: { "Token": token }
             }).then((res: AxiosResponse) => {
                 this.setState({ user: res.data })

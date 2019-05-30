@@ -4,20 +4,19 @@ import "time"
 
 // User is a user model.
 type User struct {
-	// Database only
-	ID             uint      `gorm:"column:id"              json:"-"`
-	CreatedAt      time.Time `gorm:"column:created_at"      json:"-"`
-	UpdatedAt      time.Time `gorm:"column:updated_at"      json:"-"`
-	PasswordDigest []byte    `gorm:"column:password_digest" json:"-"`
+	// Both
+	ID       uint   `gorm:"column:id"          json:"id"`
+	Name     string `gorm:"column:name"        json:"name" `
+	Email    string `gorm:"column:email"       json:"email"`
+	JWTToken string `gorm:"column:jwt_token"   json:"jwt_token,omitempty"`
 
 	// JSON only
 	Password string `sql:"-" json:"password,omitempty"`
 
-	// Both
-	JWTToken string     `gorm:"column:jwt_token"   json:"jwt_token"`
-	Name     string     `gorm:"column:name"        json:"name" `
-	Email    string     `gorm:"column:email"       json:"email"`
-	Messages []*Message `gorm:"foreignkey:user_id" json:"messages,omitempty"`
+	// Database only
+	CreatedAt      time.Time `gorm:"column:created_at"      json:"-"`
+	UpdatedAt      time.Time `gorm:"column:updated_at"      json:"-"`
+	PasswordDigest []byte    `gorm:"column:password_digest" json:"-"`
 }
 
 // TableName tells GORM where to find this record.

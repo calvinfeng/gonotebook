@@ -2,7 +2,7 @@ import * as React from 'react'
 import RaisedButton from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import axios, { AxiosResponse } from 'axios'
-import { User } from './index'
+import { User } from './shared'
 import { Button } from '@material-ui/core';
 
 enum Page {
@@ -51,7 +51,7 @@ class Welcome extends React.Component<WelcomeProps, WelcomeState> {
 
     handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        axios.post('/api/register', {
+        axios.post('/api/register/', {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password
@@ -65,7 +65,7 @@ class Welcome extends React.Component<WelcomeProps, WelcomeState> {
 
     handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        axios.post('api/authenticate', {
+        axios.post('api/authenticate/', {
             email: this.state.email,
             password: this.state.password
         }).then((res: AxiosResponse) => {

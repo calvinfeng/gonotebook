@@ -2,12 +2,11 @@ import * as React from 'react'
 import axios, { AxiosResponse } from 'axios'
 import RaisedButton from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
-import { User } from './index'
-
-export type Message = {
-    body: string
-    id: number
-}
+import { User, Message } from './shared'
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
 
 interface HomeProps {
     handleClearUser: () => void
@@ -15,8 +14,10 @@ interface HomeProps {
 }
 
 interface HomeState {
-    messages: Message[]
-    textFieldInput: string
+    received: Message[]
+    sent: Message[]
+    recipients: User[]
+    inputFieldText: string
 }
 
 class Home extends React.Component<HomeProps, HomeState> {
@@ -24,19 +25,51 @@ class Home extends React.Component<HomeProps, HomeState> {
         super(props)
 
         this.state = {
-            messages: [],
-            textFieldInput: ""
+            received: [],
+            sent: [],
+            recipients: [],
+            inputFieldText: ""
         }
     }
 
-    refresh() {
+    fetchUsers() {
         const token = localStorage.getItem("jwt_token")
         if (token) {
-            axios.get("api/messages/current", {
+            axios.get("api/users/", {
                 headers: { "Token": token }
             }).then((res: AxiosResponse) => {
                 this.setState({
-                    messages: res.data
+                    recipients: res.data
+                })
+            }).catch((err) => {
+                console.log("failed to fetch messages for current user")
+            })
+        }
+    }
+
+    fetchSentMessages() {
+        const token = localStorage.getItem("jwt_token")
+        if (token) {
+            axios.get("api/messages/sent/", {
+                headers: { "Token": token }
+            }).then((res: AxiosResponse) => {
+                this.setState({
+                    sent: res.data
+                })
+            }).catch((err) => {
+                console.log("failed to fetch messages for current user")
+            })
+        }
+    }
+
+    fetchReceivedMessages() {
+        const token = localStorage.getItem("jwt_token")
+        if (token) {
+            axios.get("api/messages/received/", {
+                headers: { "Token": token }
+            }).then((res: AxiosResponse) => {
+                this.setState({
+                    received: res.data
                 })
             }).catch((err) => {
                 console.log("failed to fetch messages for current user")
@@ -45,7 +78,9 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     componentDidMount() {
-        this.refresh()
+        this.fetchSentMessages()
+        this.fetchReceivedMessages()
+        this.fetchUsers()
     }
 
     handleLogout = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -57,19 +92,19 @@ class Home extends React.Component<HomeProps, HomeState> {
     handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const token = localStorage.getItem("jwt_token")
-        if (this.state.textFieldInput.length > 0 && token) {
+        if (this.state.inputFieldText.length > 0 && token) {
             axios.post("api/messages/", {
-                body: this.state.textFieldInput 
+                body: this.state.inputFieldText 
             },{
                 headers: { "Token": token }
             }).then((res: AxiosResponse) => {
-                this.refresh()
+                this.fetchSentMessages()
             }).catch((err) => {
                 console.error("failed to create message")
             })
             
             const newState: HomeState = Object.assign({}, this.state)
-            newState.textFieldInput = ""
+            newState.inputFieldText = ""
             this.setState(newState)
         }
     }
@@ -77,33 +112,59 @@ class Home extends React.Component<HomeProps, HomeState> {
     messageOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         const newState: HomeState = Object.assign({}, this.state)
-        newState.textFieldInput = e.target.value
+        newState.inputFieldText = e.target.value
         this.setState(newState)
     }
 
     get form() {
         return (
             <form onSubmit={this.handleSubmit}>
-                <TextField placeholder={"Type your message"} onChange={this.messageOnChange} value={this.state.textFieldInput} />
+                {this.selector}<br/>
+                <TextField placeholder={"Type your message"} onChange={this.messageOnChange} value={this.state.inputFieldText} />
                 <RaisedButton type="submit">Send</RaisedButton>
             </form>
         )   
     }
 
-    get messages() {
-        const items = this.state.messages.map((msg: Message) => {
-            return <li key={msg.id}>{msg.body}</li>
+    get receivedMessages() {
+        console.log(this.state.received)
+        const items = this.state.received.map((msg: Message) => {
+            return <li key={msg.id}>From {msg.sender.name}: {msg.body}</li>
         })
 
         return <ul>{items}</ul>
-    }    
+    }
+    
+    get sentMessages() {
+        console.log(this.state.sent)
+        const items = this.state.received.map((msg: Message) => {
+            return <li key={msg.id}>To {msg.receiver.name}: {msg.body}</li>
+        })
+
+        return <ul>{items}</ul>
+    }
+
+    get selector() {
+        const items = this.state.recipients.map((user: User) => {
+            return <MenuItem value={user.id}>{user.name}</MenuItem>
+        })
+
+        return (
+            <FormControl>
+                <InputLabel>Send to</InputLabel>
+                <Select value={10}>{items}</Select>
+            </FormControl>
+        )
+    }
 
     render() {
         return (
             <section>
                 <h1>Hi {this.props.currentUser.name} </h1>
-                <h2>Your Messages</h2>
-                {this.messages}
+                <h2>Received Messages</h2>
+                {this.receivedMessages}
+                <h2>Sent Messages</h2>
+                {this.sentMessages}
                 {this.form}
                 <RaisedButton onClick={this.handleLogout}>Logout</RaisedButton>
             </section>
