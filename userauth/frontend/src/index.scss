@@ -13,6 +13,7 @@ body {
 
 #react-application {
     display: flex;
+    justify-content: flex-start;
     width: calc(100% - 2rem);
     height: calc(100% - 2rem);
     padding: 1rem;

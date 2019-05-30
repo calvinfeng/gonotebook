@@ -37,6 +37,23 @@ var RunMigrationsCmd = &cobra.Command{
 	RunE:  runmigrations,
 }
 
+func createUserList(db *gorm.DB, users []*model.User) error {
+	for i, u := range users {
+		hashBytes, err := bcrypt.GenerateFromPassword([]byte(u.Password), 10)
+		if err != nil {
+			return err
+		}
+
+		u.PasswordDigest = hashBytes
+		u.JWTToken = fmt.Sprintf("admin-%d", i)
+		if err := db.Create(u).Error; err != nil {
+			return err
+		}
+		logrus.Infof("user %s is created", u.Email)
+	}
+	return nil
+}
+
 func runmigrations(cmd *cobra.Command, args []string) error {
 	migration, err := migrate.New(migrationDir, pgAddress)
 	if err != nil {
@@ -59,24 +76,21 @@ func runmigrations(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	admin := &model.User{
-		Name:     "Calvin Feng",
-		Email:    "cfeng@goacademy.com",
-		Password: "cfeng",
-	}
-
-	hashBytes, err := bcrypt.GenerateFromPassword([]byte(admin.Password), 10)
-	if err != nil {
-		return err
-	}
-
-	admin.PasswordDigest = hashBytes
-	admin.JWTToken = "admin"
-
-	if err := db.Create(admin).Error; err != nil {
-		return err
-	}
-
-	log.Info("admin is created")
-	return nil
+	return createUserList(db, []*model.User{
+		&model.User{
+			Name:     "Alice",
+			Email:    "alice@goacademy.com",
+			Password: "alice",
+		},
+		&model.User{
+			Name:     "Bob",
+			Email:    "bob@goacademy.com",
+			Password: "bob",
+		},
+		&model.User{
+			Name:     "Calvin",
+			Email:    "calvin@goacademy.com",
+			Password: "calvin",
+		},
+	})
 }
