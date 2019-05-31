@@ -30,7 +30,7 @@
   * [Popular Web Libraries](./markdowns/06_01_popular_web_libraries.md)
   * [Build User Authentication](./userauth/README.md)
 
-* [Neural Network](./neuralnet/README.md)
+* [gRPC](./grpc/README.md)
 
 * Idioms
   * [Custom JSON Marshaling](./gopatterns/custom_json_marshaling.md)

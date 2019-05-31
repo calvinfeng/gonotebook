@@ -22,6 +22,5 @@ screen. The following is a list of materials that is covered in Go Academy.
 - HTTP Server
 - WebSocket Server
 - User Authentication
-- Neural Networks
 - gRPC
 - Design Patterns
