@@ -28,13 +28,13 @@ var log = logrus.WithFields(logrus.Fields{
 	"pkg": "cmd",
 })
 
-var pgAddress = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?%s", user, password, host, port, database, ssl)
+var pgAddr = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?%s", user, password, host, port, database, ssl)
 
 // RunMigrationsCmd is a command to run migration.
 var RunMigrationsCmd = &cobra.Command{
 	Use:   "runmigrations",
 	Short: "run migration on database",
-	RunE:  runmigrations,
+	RunE:  runMigrations,
 }
 
 func createUserList(db *gorm.DB, users []*model.User) error {
@@ -54,8 +54,8 @@ func createUserList(db *gorm.DB, users []*model.User) error {
 	return nil
 }
 
-func runmigrations(cmd *cobra.Command, args []string) error {
-	migration, err := migrate.New(migrationDir, pgAddress)
+func runMigrations(cmd *cobra.Command, args []string) error {
+	migration, err := migrate.New(migrationDir, pgAddr)
 	if err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func runmigrations(cmd *cobra.Command, args []string) error {
 
 	log.Info("migration has been performed successfully")
 
-	db, err := gorm.Open("postgres", pgAddress)
+	db, err := gorm.Open("postgres", pgAddr)
 	if err != nil {
 		return err
 	}
