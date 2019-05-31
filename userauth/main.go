@@ -26,6 +26,5 @@ func main() {
 	root.AddCommand(cmd.RunMigrationsCmd, cmd.RunServerCmd)
 	if err := root.Execute(); err != nil {
 		logrus.Fatal(err)
-		os.Exit(1)
 	}
 }
