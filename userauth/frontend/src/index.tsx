@@ -30,7 +30,7 @@ class Index extends React.Component<any, IndexState> {
 
     componentDidMount() {
         const token = localStorage.getItem("jwt_token")
-        if (token) {
+        if (token !== null) {
             axios.get("api/users/current/", {
                 headers: { "Token": token }
             }).then((res: AxiosResponse) => {
