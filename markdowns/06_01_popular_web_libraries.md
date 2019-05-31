@@ -2,30 +2,31 @@
 
 As our application gets larger and more complex, we need help from some open source libraries to make
 our life easier. There are many good web frameworks out there but I am going to show you the couple
-familiar libraries I've been using at work.
+popular libraries I've enjoyed using.
 
-## [Gorilla Mux](https://github.com/gorilla/mux)
+## [Echo](https://github.com/labstack/echo)
 
-Mux stands for HTTP request multiplexer. It is essentially a router that routes requests to the
-appropriate request handler in your application. Mux library offers URL pattern matching, query
-params patter matching, URL host matching and the list goes on.
-
-For example:
+Echo is a minimalist web framework. I am using it primarily for routing and HTTP request/response
+handling. The setup is very easy; I create a server and then configure handlers for it.
 
 ```go
-r := mux.NewRouter()
-r.HandleFunc("/robots/{name}", RobotHandler)
-r.HandleFunc("/maps/destinations/{id:[0-9]+}", DestinationHandler)
+srv := echo.New()
+srv.File("/", "public/index.html")
+srv.GET("/robots/{name}", RetrieveRobotHandler)
+srv.POST("/robots", CreateRobotHandler)
 ```
 
-Notice that key and category will become available as a variable through mux router pattern matching.
-If I were to send a request to the `/robots/bender/` endpoint, then `name` will hold the value
-`bender`. I can extract this value using `mux.Vars(r)`.
+Each handler looks like the following.
 
 ```go
-func RobotHandler(w http.ResponseWriter, r *http.Request) {
-  vars := mux.Vars(r)
-  fmt.Println(vars["name"])
+func RetrieverobotHandler (ctx echo.Context) error {
+  robot := &Robot{}
+
+  if err := db.Where("name = ?", ctx.Param("name")).Find(robot).Error; err != nil {
+    return echo.NewHTTPError(http.StatusNotFound, err)
+  }
+
+  return ctx.JSON(http.StatusOK, users)
 }
 ```
 
@@ -33,21 +34,40 @@ func RobotHandler(w http.ResponseWriter, r *http.Request) {
 
 Logging is crucial for debugging applications in production. Go provides a default `log` package.
 However, sometimes you'd want more. `logrus` provides colorful logging and additional log fields to
-identify the source of errors. More importantly, `logrus` provides integration with [Sentry](https://sentry.io/welcome/).
+identify the source of errors. More importantly, `logrus` provides integration with
+[Sentry](https://sentry.io/welcome/).
 
 ## [Command-line Interface](https://github.com/spf13/cobra) (CLI)
 
 So far we've been building applications that runs a single command, i.e. whatever you put in your
 main function. What if we want to have more command like the following.
 
-    go install
-    myapp runmigration
-    myapp runserver
-    myapp reset
-    ...
+```bash
+go install
+myapp runmigration
+myapp runserver
+myapp reset
+...
+```
 
 We can accomplish that using the `cobra` package. We define a list of commands and each command is
 mapping to an execution function, much like `main()`.
+
+```go
+var runMigrationsCmd = &cobra.Command{
+  Use:   "runmigrations",
+  Short: "run migrations on database",
+  RunE:  runMigrations,
+}
+
+var runServerCmd = &cobra.Command{
+  Use:   "runserver",
+  Short: "run user authentication server",
+  RunE:  runServer,
+}
+```
+
+In our main function, we just need to run the `Execute` function on the root command.
 
 ```go
 var root = &cobra.Command{
@@ -55,33 +75,11 @@ var root = &cobra.Command{
   Short: "my toy application"
 }
 
-var runmigrationCmd = &cobra.Command{
-  Use:   "runmigration",
-  Short: "run migration on database",
-  RunE:  runmigration,
-}
-
-var runserverCmd = &cobra.Command{
-  Use:   "runserver",
-  Short: "run user authentication server",
-  RunE:  runserver,
-}
-
-// Execute configures command and executes them.
-func Execute() {
-  // Run it!
-  rootCmd.AddCommand(runserverCmd, runmigrationCmd)
-  if err := rootCmd.Execute(); err != nil {
-    os.Exit(1)
-  }
-}
-```
-
-In our main function, we just need to run the `Execute` function.
-
-```go
 func main() {
-  Execute()
+  rootCmd.AddCommand(runServerCmd, runMigrationsCmd)
+  if err := rootCmd.Execute(); err != nil {
+    log.Fatal(err)
+  }
 }
 ```
 
