@@ -1,0 +1,27 @@
+
+syntax = "proto3";
+
+option go_package = "protobuf";
+
+message BidRequest {
+  int64 customer_id = 1;
+  int64 listing_id = 2;
+  float bid_price = 3;
+}
+
+message BidResponse {
+  BidStatus status = 1;
+}
+
+message BidStatus {
+    enum Code {
+        FAILURE = 0;
+        SUCCESS = 1;
+    }
+    Code code = 1;
+    string description = 2; 
+}
+
+service Auction {
+  rpc Bid(BidRequest) returns (BidResponse);
+}

@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS listings;
+DROP TABLE IF EXISTS biddings;
