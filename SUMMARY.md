@@ -1,47 +1,39 @@
 # Table of contents
 
 * [Introduction](README.md)
+* [Hello World](hello-world/README.md)
+  * [Getting Started With Go](hello-world/01_01_getting_started_with_go.md)
+  * [Go Packages](hello-world/01_02_go_packages.md)
+  * [Hello World](hello-world/helloworld.md)
+* [Tic Tac Toe](tic-tac-toe/README.md)
+  * [Go Interfaces](tic-tac-toe/02_01_go_interfaces.md)
+  * [Go Error Handling](tic-tac-toe/02_02_go_error_handling.md)
+  * [Tic Tac Toe](tic-tac-toe/tictactoe.md)
+* [HTTP Server](http-server/README.md)
+  * [HTTP Handler](http-server/03_01_go_http_handlers.md)
+  * [Build a Calculator](http-server/calculator.md)
+  * [HTTP Unit Test](http-server/03_02_go_http_unit_tests.md)
+* [Concurrency](concurrency/README.md)
+  * [Goroutines](concurrency/04_01_go_routines.md)
+  * [Go Concurrency Part 1](concurrency/04_02_go_concurrency_part_1.md)
+  * [Go Concurrency Part 2](concurrency/04_03_go_concurrency_part_2.md)
+* [WebSocket Server](websocket-server/README.md)
+  * [WebSocket Handler](websocket-server/05_01_go_websocket_handlers.md)
+  * [Build a Chatroom](websocket-server/chatroom.md)
+* [User Authentication](user-authentication/README.md)
+  * [Popular Web Libraries](user-authentication/06_01_popular_web_libraries.md)
+  * [Build User Authentication](user-authentication/userauth.md)
+* [gRPC](grpc.md)
+* [Idioms](idioms/README.md)
+  * [Custom JSON Marshaling](idioms/custom_json_marshaling.md)
+  * [Functional Options](idioms/functional_options.md)
+  * [Type Embedding](idioms/type_embedding.md)
+  * [Laws of Reflection](idioms/laws_of_reflection.md)
+* [Design Patterns](design-patterns/README.md)
+  * [Builder](design-patterns/builder.md)
+  * [Factory Method](design-patterns/factory_method.md)
+  * [Object Pool](design-patterns/object_pool.md)
+  * [Singleton](design-patterns/singleton.md)
+  * [Observer](design-patterns/observer.md)
+  * [Strategy](design-patterns/strategy.md)
 
-* Hello World
-  * [Getting Started With Go](./markdowns/01_01_getting_started_with_go.md)
-  * [Go Packages](./markdowns/01_02_go_packages.md)
-  * [Hello World](./helloworld/README.md)
-
-* Tic Tac Toe
-  * [Go Interfaces](./markdowns/02_01_go_interfaces.md)
-  * [Go Error Handling](./markdowns/02_02_go_error_handling.md)
-  * [Tic Tac Toe](./tictactoe/README.md)
-
-* HTTP Server
-  * [HTTP Handler](./markdowns/03_01_go_http_handlers.md)
-  * [Build a Calculator](./calculator/README.md)
-  * [HTTP Unit Test](./markdowns/03_02_go_http_unit_tests.md)
-
-* Concurrency
-  * [Goroutines](./markdowns/04_01_go_routines.md)
-  * [Go Concurrency Part 1](./markdowns/04_02_go_concurrency_part_1.md)
-  * [Go Concurrency Part 2](./markdowns/04_03_go_concurrency_part_2.md)
-
-* WebSocket Server
-  * [WebSocket Handler](./markdowns/05_01_go_websocket_handlers.md)
-  * [Build a Chatroom](./chatroom/README.md)
-
-* User Authentication
-  * [Popular Web Libraries](./markdowns/06_01_popular_web_libraries.md)
-  * [Build User Authentication](./userauth/README.md)
-
-* [gRPC](./grpc/README.md)
-
-* Idioms
-  * [Custom JSON Marshaling](./gopatterns/custom_json_marshaling.md)
-  * [Functional Options](./gopatterns/functional_options.md)
-  * [Type Embedding](./gopatterns/type_embedding.md)
-  * [Laws of Reflection](./gopatterns/laws_of_reflection.md)
-
-* Design Patterns
-  * [Builder](./gopatterns/builder.md)
-  * [Factory Method](./gopatterns/factory_method.md)
-  * [Object Pool](./gopatterns/object_pool.md)
-  * [Singleton](./gopatterns/singleton.md)
-  * [Observer](./gopatterns/observer.md)
-  * [Strategy](./gopatterns/strategy.md)

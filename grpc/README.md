@@ -1,3 +1,0 @@
-# gRPC
-
-To be written...
