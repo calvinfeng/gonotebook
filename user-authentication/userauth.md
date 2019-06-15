@@ -2,6 +2,8 @@
 
 ## Postgres Setup
 
+### Create role & database
+
 I am going to use PostgreSQL for this project, so let's create a database. The superuser on my computer is `cfeng`. If you don't have a role or wish to create a separate role for this project, then just do the following
 
 ```text
@@ -44,7 +46,7 @@ postgres=# alter user cfeng with password 'cfeng';
 
 ## Project Dependencies
 
-I am going to introduce couple new open source libraries to you for this project:
+I am going to introduce couple new open source libraries for this project:
 
 * `spf13/cobra`
 * `sirupsen/logrus`
@@ -53,9 +55,13 @@ I am going to introduce couple new open source libraries to you for this project
 
 ## Project User Authentication
 
-This project is going to use JWT based authentication instead of the traditional session based authentication. For the detailed comparison of the two, take a look at this [article](https://medium.com/@sherryhsu/session-vs-token-based-authentication-11a6c5ac45e4). However, for simplicity sake, I am not going to use real JWT token. I will mock the token because the purpose of this project is learning Go. 
+This project is going to use JWT based authentication instead of the traditional session based authentication. For the detailed comparison of the two, take a look at this [article](https://medium.com/@sherryhsu/session-vs-token-based-authentication-11a6c5ac45e4). 
 
-JWT authentication works as follows.
+{% hint style="info" %}
+This project is not going to use real JWT for simplicity sake, instead it uses a mock token. A real token can be generated using verified open source libraries, for more information go to [JWT.io](https://jwt.io/).
+{% endhint %}
+
+Nevertheless, it is important to show how JWT authentication works.
 
 ![](../.gitbook/assets/jwt.png)
 
@@ -409,6 +415,258 @@ token to authenticate with server
 {% endapi-method-response %}
 {% endapi-method-spec %}
 {% endapi-method %}
+
+### Models
+
+There are two primary resources on our server, i.e. users and messages.
+
+```go
+// User is a user model.
+type User struct {
+	// Both
+	ID       uint   `gorm:"column:id"          json:"id"`
+	Name     string `gorm:"column:name"        json:"name" `
+	Email    string `gorm:"column:email"       json:"email"`
+	JWTToken string `gorm:"column:jwt_token"   json:"jwt_token,omitempty"`
+
+	// JSON only
+	Password string `sql:"-" json:"password,omitempty"`
+
+	// Database only
+	CreatedAt      time.Time `gorm:"column:created_at"      json:"-"`
+	UpdatedAt      time.Time `gorm:"column:updated_at"      json:"-"`
+	PasswordDigest []byte    `gorm:"column:password_digest" json:"-"`
+}
+```
+
+```go
+// Message is a model for messages.
+type Message struct {
+	ID        uint      `gorm:"column:id"          json:"id"`
+	CreatedAt time.Time `gorm:"column:created_at"  json:"created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at"  json:"-"`
+	Body      string    `gorm:"column:body"        json:"body"`
+
+	// Foreign keys
+	SenderID   uint  `gorm:"column:sender_id"       json:"sender_id"`
+	Sender     *User `gorm:"foreignkey:sender_id"   json:"sender,omitempty"`
+	ReceiverID uint  `gorm:"column:receiver_id"     json:"receiver_id"`
+	Receiver   *User `gorm:"foreignkey:receiver_id" json:"receiver,omitempty"`
+}
+```
+
+### Migrations
+
+Instead of using auto migration feature of GORM, I prefer to write our own SQL because it gives us greater flexibility and better organization.
+
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE,
+    updated_at TIMESTAMP WITH TIME ZONE,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    jwt_token VARCHAR(255),
+    password_digest BYTEA
+);
+
+CREATE UNIQUE INDEX ON users(name);
+CREATE UNIQUE INDEX on users(email);
+CREATE UNIQUE INDEX ON users(jwt_token);
+
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE,
+    updated_at TIMESTAMP WITH TIME ZONE,
+    sender_id INTEGER REFERENCES users(id),
+    receiver_id INTEGER REFERENCES users(id),
+    body TEXT
+);
+
+CREATE INDEX ON messages(sender_id);
+CREATE INDEX ON messages(receiver_id);
+```
+
+### Put everything together
+
+Let's start off with creating a skeleton for the project. Details will be discussed in the video section. Create a project file structure as follows.
+
+```text
+go-academy/
+    userauth/
+        cmd/
+            run_migrations.go
+            run_server.go
+        handler/
+        migrations/
+        model/
+        public/
+        main.go
+```
+
+Inside the `main.go`, set up logging and cobra commands.
+
+{% code-tabs %}
+{% code-tabs-item title="main.go" %}
+```go
+package main
+
+import (
+	"os"
+
+	"github.com/calvinfeng/go-academy/userauth/cmd"
+
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
+)
+
+func main() {
+	logrus.SetFormatter(&logrus.TextFormatter{
+		FullTimestamp: true,
+	})
+
+	logrus.SetOutput(os.Stdout)
+
+	logrus.SetLevel(logrus.DebugLevel)
+
+	root := &cobra.Command{
+		Use:   "userauth",
+		Short: "user authentication service",
+	}
+
+	root.AddCommand(cmd.RunMigrationsCmd, cmd.RunServerCmd)
+	if err := root.Execute(); err != nil {
+		logrus.Fatal(err)
+	}
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+Create two commands inside `cmd` package, one for migration and one for running server.
+
+{% code-tabs %}
+{% code-tabs-item title="run\_server.go" %}
+```go
+package cmd
+
+import (
+	"io"
+	"net/http"
+	"os"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/jinzhu/gorm"
+	"github.com/spf13/cobra"
+
+	// Driver for Postgres
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+)
+
+// RunServerCmd is a command to run server from terminal.
+var RunServerCmd = &cobra.Command{
+	Use:   "runserver",
+	Short: "run user authentication server",
+	RunE:  runServer,
+}
+
+func runServer(cmd *cobra.Command, args []string) error {
+	conn, err := gorm.Open("postgres", pgAddr)
+	if err != nil {
+		return err
+	}
+
+	srv := echo.New()
+
+	srv.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "HTTP[${time_rfc3339}] ${method} ${path} status=${status} latency=${latency_human}\n",
+		Output: io.MultiWriter(os.Stdout),
+	}))
+
+	srv.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
+
+	srv.File("/", "public/index.html")
+	srv.Static("/assets", "public/assets")
+	if err := srv.Start(":8080"); err != nil {
+		return err
+	}
+
+	return nil
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+```go
+package cmd
+
+import (
+	"fmt"
+
+	"github.com/golang-migrate/migrate"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
+	
+	_ "github.com/lib/pq" // Driver
+	_ "github.com/golang-migrate/migrate/database/postgres" // Driver
+	_ "github.com/golang-migrate/migrate/source/file"       // Driver
+)
+
+const (
+	host         = "localhost"
+	port         = "5432"
+	user         = "cfeng"
+	password     = "cfeng"
+	database     = "go_academy_userauth"
+	ssl          = "sslmode=disable"
+	migrationDir = "file://./migrations/"
+)
+
+var log = logrus.WithFields(logrus.Fields{
+	"pkg": "cmd",
+})
+
+var pgAddr = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?%s", user, password, host, port, database, ssl)
+
+// RunMigrationsCmd is a command to run migration.
+var RunMigrationsCmd = &cobra.Command{
+	Use:   "runmigrations",
+	Short: "run migration on database",
+	RunE:  runMigrations,
+}
+
+func runMigrations(cmd *cobra.Command, args []string) error {
+	migration, err := migrate.New(migrationDir, pgAddr)
+	if err != nil {
+		return err
+	}
+
+	log.Info("performing reset on database")
+	if err = migration.Drop(); err != nil {
+		return err
+	}
+
+	if err := migration.Up(); err != nil {
+		return err
+	}
+
+	log.Info("migration has been performed successfully")
+}
+```
+
+### Video
+
+Now your project should be able to compile and you should be able to run migration on the database.
+
+```text
+go install && userauth runmigrations
+```
+
+In the video, I will discuss how to write each endpoint.
 
 ## Bonus & Additional Resource
 
