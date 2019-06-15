@@ -46,13 +46,13 @@ myapp reset
 We can accomplish that using the `cobra` package. We define a list of commands and each command is mapping to an execution function, much like `main()`.
 
 ```go
-var runMigrationsCmd = &cobra.Command{
+var RunMigrationsCmd = &cobra.Command{
   Use:   "runmigrations",
   Short: "run migrations on database",
   RunE:  runMigrations,
 }
 
-var runServerCmd = &cobra.Command{
+var RunServerCmd = &cobra.Command{
   Use:   "runserver",
   Short: "run user authentication server",
   RunE:  runServer,
@@ -68,8 +68,8 @@ var root = &cobra.Command{
 }
 
 func main() {
-  rootCmd.AddCommand(runServerCmd, runMigrationsCmd)
-  if err := rootCmd.Execute(); err != nil {
+  root.AddCommand(RunServerCmd, RunMigrationsCmd)
+  if err := root.Execute(); err != nil {
     log.Fatal(err)
   }
 }
@@ -93,15 +93,23 @@ Here's a simple example on how to use `gorm`. More detailed usage will be discus
 ```go
 type Dog struct {
   gorm.Model
-  Name string `gorm:"type:varchar(255); column:name"`
-  Age  int    `gorm:"type:integer;      column:age"`
+  Name string `gorm:"column:name"`
+  Age  int    `gorm:"column:age"`
 }
 
-func main() {
-  db, err := gorm.Open("postgres",
-    fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?%s", user, password, host, port, database, sslMode),
-  )
+var databaseAddr = fmt.Sprintf(
+  "postgresql://%s:%s@%s:%s/%s?%s", 
+  user,
+  password,
+  host,
+  port,
+  database,
+  sslMode,
+)
 
+func main() {
+  db, err := gorm.Open("postgres", databaseAddr)
+  
   db.AutoMigrate(&Dog{})
 
   d := Dog{
@@ -110,14 +118,14 @@ func main() {
   }
 
   if err := db.Create(&d).Error; err != nil {
-    fmt.Println(err)
+    log.Fatal(err)
   }
 }
 ```
 
 ## [Migration](https://github.com/golang-migrate/migrate)
 
-Although `gorm` provides auto migration, I still prefer writing the migrations manually so that I can up or down migrate to any version I want. Also, writing raw SQL isn't so bad after all. SQL itself is a pretty high level language and extremely human readable.
+Although `gorm` provides auto migration, I still prefer writing the migrations manually so that I can up or down migrate to any version I want. Sometimes you gotta appreciate raw SQL a bit. SQL itself is a domain specific language and fairly human readable.
 
 Running migration is pretty easy with `golang-migrate/migrate`. First, you need to create your SQL files, e.g.
 
