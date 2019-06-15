@@ -150,7 +150,7 @@ password of the new user
 
 Once front end receives the token, it should put it into local storage. Next time when user opens his/her browser, the client application should use the same token to verify that user is indeed signed in.
 
-### Resource Endpoints
+### User Resource Endpoints
 
 Since we are not using real JWT token, front end needs to make requests to server to ask for user information. We need to expose some user endpoints for that.
 
@@ -160,7 +160,7 @@ Users
 {% endapi-method-summary %}
 
 {% api-method-description %}
-fetch the list of all users
+Fetch the list of all users
 {% endapi-method-description %}
 
 {% api-method-spec %}
@@ -208,7 +208,7 @@ Current User
 {% endapi-method-summary %}
 
 {% api-method-description %}
-fetch current user that is signed in
+Fetch current user
 {% endapi-method-description %}
 
 {% api-method-spec %}
@@ -233,6 +233,177 @@ token to authenticate with server
     "email": "cfeng@goacademy.com",
     "jwt_token": "qcubXgJQRIHCon0b25HnuSOgaaw="
 }
+```
+{% endapi-method-response-example %}
+{% endapi-method-response %}
+{% endapi-method-spec %}
+{% endapi-method %}
+
+### Message Resource Endpoints
+
+Users can send messages to each other. When a user signs in to the system, he/she should be able to view all the sent and received messages. 
+
+{% api-method method="post" host="http://localhost:8000" path="/api/messages/" %}
+{% api-method-summary %}
+Send Message
+{% endapi-method-summary %}
+
+{% api-method-description %}
+Send a message to another user
+{% endapi-method-description %}
+
+{% api-method-spec %}
+{% api-method-request %}
+{% api-method-headers %}
+{% api-method-parameter name="Token" type="string" required=true %}
+token to authenticate with server
+{% endapi-method-parameter %}
+{% endapi-method-headers %}
+
+{% api-method-body-parameters %}
+{% api-method-parameter name="receiver\_id" type="integer" required=true %}
+integer ID of the message receiver
+{% endapi-method-parameter %}
+
+{% api-method-parameter name="body" type="string" required=true %}
+message body
+{% endapi-method-parameter %}
+{% endapi-method-body-parameters %}
+{% endapi-method-request %}
+
+{% api-method-response %}
+{% api-method-response-example httpCode=201 %}
+{% api-method-response-example-description %}
+
+{% endapi-method-response-example-description %}
+
+```javascript
+{
+    "id": 3,
+    "created_at": "2019-06-15T01:03:21.460369322-07:00",
+    "body": "Hello there",
+    "sender_id": 4,
+    "receiver_id": 1
+}
+```
+{% endapi-method-response-example %}
+{% endapi-method-response %}
+{% endapi-method-spec %}
+{% endapi-method %}
+
+Users can see their own list of received and sent messages.
+
+{% api-method method="get" host="http:localhost:8000" path="/api/messages/sent/" %}
+{% api-method-summary %}
+Sent Messages
+{% endapi-method-summary %}
+
+{% api-method-description %}
+Fetch the list of current user's sent messages
+{% endapi-method-description %}
+
+{% api-method-spec %}
+{% api-method-request %}
+{% api-method-headers %}
+{% api-method-parameter name="Token" type="string" required=true %}
+token to authenticate with server
+{% endapi-method-parameter %}
+{% endapi-method-headers %}
+{% endapi-method-request %}
+
+{% api-method-response %}
+{% api-method-response-example httpCode=200 %}
+{% api-method-response-example-description %}
+
+{% endapi-method-response-example-description %}
+
+```javascript
+[
+    {
+        "id": 3,
+        "created_at": "2019-06-15T01:03:21.460369-07:00",
+        "body": "Hello World",
+        "sender_id": 4,
+        "sender": {
+            "id": 4,
+            "name": "Calvin",
+            "email": "cfeng@goacademy.com"
+        },
+        "receiver_id": 1,
+        "receiver": {
+            "id": 1,
+            "name": "Alice",
+            "email": "alice@goacademy.com"
+        }
+    }
+]
+```
+{% endapi-method-response-example %}
+{% endapi-method-response %}
+{% endapi-method-spec %}
+{% endapi-method %}
+
+{% api-method method="get" host="http://localhost:8000" path="/api/messages/received/" %}
+{% api-method-summary %}
+Received Messages
+{% endapi-method-summary %}
+
+{% api-method-description %}
+Fetch the list of current user's received messages
+{% endapi-method-description %}
+
+{% api-method-spec %}
+{% api-method-request %}
+{% api-method-headers %}
+{% api-method-parameter name="Token" type="string" required=true %}
+token to authenticate with server
+{% endapi-method-parameter %}
+{% endapi-method-headers %}
+{% endapi-method-request %}
+
+{% api-method-response %}
+{% api-method-response-example httpCode=200 %}
+{% api-method-response-example-description %}
+
+{% endapi-method-response-example-description %}
+
+```javascript
+[
+    {
+        "id": 1,
+        "created_at": "2019-05-30T00:00:25.335622-07:00",
+        "body": "Hello Alice",
+        "sender_id": 3,
+        "sender": {
+            "id": 3,
+            "name": "Calvin",
+            "email": "cfeng@goacademy.com"
+        },
+        "receiver_id": 1,
+        "receiver": {
+            "id": 1,
+            "name": "Alice",
+            "email": "alice@goacademy.com"
+        }
+    },
+    {
+        "id": 2F,
+        "created_at": "2019-06-15T01:03:21.460369-07:00",
+        "body": "Hello World",
+        "sender_id": 3,
+        "sender": {
+            "id": 3,
+            "name": "Calvin",
+            "email": "cfeng@goacademy.com"
+        },
+        "receiver_id": 1,
+        "receiver": {
+            "id": 1,
+            "name": "Alice",
+            "email": "alice@goacademy.com"
+        }
+    }
+]
 ```
 {% endapi-method-response-example %}
 {% endapi-method-response %}
