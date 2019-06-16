@@ -655,6 +655,7 @@ func runMigrations(cmd *cobra.Command, args []string) error {
 	}
 
 	log.Info("migration has been performed successfully")
+	return nil
 }
 ```
 
