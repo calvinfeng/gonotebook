@@ -40,10 +40,11 @@ Functions or variables with upper-cased name are exported from a package. If the
 
 ## Project Tic Tac Toe
 
-* Video - [Lesson 2 Tic Tac Toe Introduction](https://youtu.be/CqsfJw4HJyA)
-* Video - [Lesson 2 Tic Tac Toe Implementation](https://youtu.be/EgpXNBqmhP8)
+{% embed url="https://www.youtube.com/watch?v=CqsfJw4HJyA&feature=youtu.be" %}
 
-## Bonus
+{% embed url="https://www.youtube.com/watch?v=EgpXNBqmhP8&feature=youtu.be" %}
+
+### **Bonus**
 
 Here are some recommendations for projects you can work on if you want more practice.
 

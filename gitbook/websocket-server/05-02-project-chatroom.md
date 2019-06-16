@@ -6,8 +6,6 @@ We are going to build a full stack application using React/TypeScript frontend a
 
 Part 3 of [Go Tour](https://tour.golang.org/concurrency/1).
 
-## Project Requirement
-
 ## Dependency Management - `dep`
 
 Dep is an awesome dependency management tool for Go, it's equivalent to `npm` for JavaScript. You can learn more about [Dep](https://github.com/golang/dep).
@@ -87,10 +85,11 @@ npm run build
 
 ## Project Chatroom
 
-* Video - [Lesson 4 Chatroom Naive Implementation](https://youtu.be/6vS6wYLbyjg)
-* Video - [Lesson 4 Chatroom Smart Implementation](https://youtu.be/Q29wM5sYKiw)
+{% embed url="https://www.youtube.com/watch?v=6vS6wYLbyjg&feature=youtu.be" %}
 
-## Source
+{% embed url="https://www.youtube.com/watch?v=Q29wM5sYKiw&feature=youtu.be" %}
+
+## **Source**
 
 [GitHub](https://github.com/calvinfeng/go-academy/tree/master/chatroom)
 

@@ -572,7 +572,7 @@ var RunServerCmd = &cobra.Command{
 }
 
 func runServer(cmd *cobra.Command, args []string) error {
-	conn, err := gorm.Open("postgres", pgAddr)
+	_, err := gorm.Open("postgres", pgAddr)
 	if err != nil {
 		return err
 	}

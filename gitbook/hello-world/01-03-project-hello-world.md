@@ -16,7 +16,7 @@ WORKSPACE/
 
 ## Project Hello World
 
-Video - [Lesson 1 Hello World](https://youtu.be/idVlTUy0xHc)
+{% embed url="https://www.youtube.com/watch?v=idVlTUy0xHc&feature=youtu.be" %}
 
 ## Source
 
