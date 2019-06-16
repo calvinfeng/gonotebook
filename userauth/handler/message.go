@@ -8,8 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// NewSentMessageListByHandler returns a handler function that retrieves sent messages.
-func NewSentMessageListByHandler(db *gorm.DB) echo.HandlerFunc {
+// NewSentMessageListHandler returns a handler function that retrieves sent messages.
+func NewSentMessageListHandler(db *gorm.DB) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		val := ctx.Get("current_user")
 		if val == nil {

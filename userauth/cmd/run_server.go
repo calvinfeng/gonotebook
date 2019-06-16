@@ -44,7 +44,7 @@ func runServer(cmd *cobra.Command, args []string) error {
 
 	srv.File("/", "public/index.html")
 	srv.Static("/assets", "public/assets")
-	srv.POST("api/registe/r", handler.NewUserCreateHandler(conn))
+	srv.POST("api/register/", handler.NewUserCreateHandler(conn))
 	srv.POST("api/authenticate/", handler.NewUserAuthenticateHandler(conn))
 
 	users := srv.Group("api/users")
@@ -55,7 +55,7 @@ func runServer(cmd *cobra.Command, args []string) error {
 	messages := srv.Group("api/messages")
 	messages.Use(handler.NewTokenAuthMiddleware(conn))
 	messages.POST("/", handler.NewMessageCreateHandler(conn))
-	messages.GET("/sent/", handler.NewSentMessageListByHandler(conn))
+	messages.GET("/sent/", handler.NewSentMessageListHandler(conn))
 	messages.GET("/received/", handler.NewReceivedMessageListHandler(conn))
 	if err := srv.Start(":8080"); err != nil {
 		return err
