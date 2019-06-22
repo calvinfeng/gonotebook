@@ -1,6 +1,6 @@
 # Go Interfaces
 
-Interface is a very powerful tool for acheiving duck typings in Go. It enables us to create strong API contract across packages, and create mock for unit testing. Since Go is strongly typed, every function expects a concrete type. For example,
+Interface is a very powerful tool for achieving duck typings in Go. It enables us to create strong API contract across packages, and create mock for unit testing. Since Go is strongly typed, every function expects a concrete type. For example,
 
 ```go
 func Feed(d *Dog) bool {

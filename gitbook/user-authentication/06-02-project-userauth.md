@@ -1,4 +1,4 @@
-# Build User Authentication
+# Build an Authentication Server
 
 ## Postgres Setup
 
@@ -11,7 +11,7 @@ $ psql postgres
 postgres=# create role <name> superuser login;
 ```
 
-Create a database named `go_academy_userauth` with owner pointing to whichever role you like. I am using cfeng on my computer.
+Create a database named `go_academy_userauth` with owner pointing to whichever role you like. I am using `cfeng` on my computer.
 
 ```text
 $ psql postgres
@@ -669,7 +669,11 @@ go install && userauth runmigrations
 
 In the video, I will discuss how to write each endpoint.
 
-## Bonus & Additional Resource
+{% embed url="https://www.youtube.com/watch?v=aExyxQmeaOQ&t=24s" %}
+
+{% embed url="https://www.youtube.com/watch?v=VoDOWlu204g" %}
+
+## Additional Resource
 
 If you want to learn more about session storage, security, encryption, and many other topics relating to web applications, take a look at this [GitBook](https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/).
 

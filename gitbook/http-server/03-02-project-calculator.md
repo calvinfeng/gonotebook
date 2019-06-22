@@ -21,10 +21,6 @@ Each endpoint takes in 2 query parameters, left operand and right operand, denot
 
 {% embed url="https://www.youtube.com/watch?v=\_baFDzyZxPg&feature=youtu.be" %}
 
-## Bonus
-
-Add more mathematical operation endpoints for practice!
-
 ## Source
 
 [GitHub](https://github.com/calvinfeng/go-academy/tree/master/calculator)

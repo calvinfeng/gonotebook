@@ -44,14 +44,6 @@ Functions or variables with upper-cased name are exported from a package. If the
 
 {% embed url="https://www.youtube.com/watch?v=EgpXNBqmhP8&feature=youtu.be" %}
 
-### **Bonus**
-
-Here are some recommendations for projects you can work on if you want more practice.
-
-* Connect 4
-* Minesweeper
-* Sudoku
-
 ## Source
 
 [GitHub](https://github.com/calvinfeng/go-academy/tree/master/tictactoe)

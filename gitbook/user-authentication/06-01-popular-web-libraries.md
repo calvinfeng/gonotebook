@@ -31,6 +31,50 @@ func RetrieverobotHandler (ctx echo.Context) error {
 
 Logging is crucial for debugging applications in production. Go provides a default `log` package. However, sometimes you'd want more. `logrus` provides colorful logging and additional log fields to identify the source of errors. More importantly, `logrus` provides integration with [Sentry](https://sentry.io/welcome/).
 
+```go
+package main
+
+import (
+	"io"
+	"os"
+
+	"github.com/sirupsen/logrus"
+)
+
+func init() {
+	logrus.SetFormatter(&logrus.TextFormatter{
+		FullTimestamp: true,
+		ForceColors:   true,
+	})
+
+	setLogOutput()
+}
+
+func main() {
+	logrus.Info("some information")
+	logrus.Warn("some warning")
+	logrus.Error("some errors")
+	logrus.Fatal("big problem")
+}
+
+var logToFile = true
+
+func setLogOutput() {
+	if !logToFile {
+		logrus.SetOutput(os.Stdout)
+		return
+	}
+
+	f, err := os.OpenFile("example.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		panic(err)
+	}
+
+	logrus.SetOutput(io.MultiWriter(f, os.Stdout))
+}
+
+```
+
 ## [Command-line Interface](https://github.com/spf13/cobra) \(CLI\)
 
 So far we've been building applications that runs a single command, i.e. whatever you put in your main function. What if we want to have more command like the following.
@@ -79,7 +123,7 @@ func main() {
 
 Every modern day application needs an ORM. Every major framework provides it, e.g. Django & Rails. However, I personally advise against using ORM, unless time is a limiting resource to you, which is the case here. Currently `gorm` is the most popular ORM for Golang, at least according to GitHub stars.
 
-`gorm` is still lacking in features compared to **ActiveRecord**, but for most cases it is good enough. If performance is an issue, try to write your own raw SQL query. `gorm` provides the following key beneifts.
+`gorm` is still lacking in features compared to **ActiveRecord**, but for most cases it is good enough. If performance is an issue, try to write your own raw SQL query. `gorm` provides the following key benefits.
 
 * Associations
 * Eager Loading

@@ -94,7 +94,140 @@ $$
 
 ### Nonlinear Transformation
 
-The power of neural network lies in the fact that it can model any function, linear or nonlinear. So far we have only applied affine transformation, we are missing an ingredient to allow our network to model nonlinear functions. The key ingredient we need here is a nonlinear transformation, also commonly known as nonlinear activation.
+The power of neural network is flexibility; it can model any function, linear or nonlinear. Affine transformation only allows us to model linear function, we are missing a nonlinear ingredient in our neural networks to model nonlinear functions. That ingredient is nonlinear transformation, also commonly known as nonlinear activation.
+
+A classical choice is the sigmoid activation. 
+
+$$
+\sigma(\vec{x}) = \frac{1}{1 + e^{-\vec{x}}}
+$$
+
+However, the more popular choice for very deep neural networks is rectified linear unit, also known as **ReLU**.
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
 
 
+def sigmoid(x):
+    return 1.0 / (1.0 + np.exp(-1 * x))
+
+
+x = np.linspace(-10, 10, num=100)
+plt.plot(x, sigmoid(x))
+plt.show()
+```
+
+![sigmoid activation](../.gitbook/assets/sigmoid.png)
+
+When we apply `sigmoid()` to a matrix, the operation is performed element-wise.
+
+## Forward Propagation
+
+### Layer
+
+With affine transformation and sigmoid activation, we can create our first layer of a neural network. It's usually helpful to think each transformation/activation as a computational unit, known as gate. We can simplify the mental model by imagining that inputs pass through different gates.
+
+![](../.gitbook/assets/neural_gates.png)
+
+Mathematically speaking,
+
+$$
+\text{sigmoid}(\vec{x}W_1 + W_0) = \vec{y}
+$$
+
+We generally call the first layer of a neural network an input layer, subsequent layers hidden layers, and the final layer the output layer . Let  `N` denote the number of inputs, `D` denote our input dimension, and `H` denote our hidden dimension, which is the dimension of the subsequent hidden layer. Although my example is a single vector input, i.e. `N = 1` but in practice you can feed in as many inputs at once as you want for maximizing parallel computation.
+
+```python
+import numpy as np
+
+
+def sigmoid(x):
+    return 1.0 / (1.0 + np.exp(-1 * x))
+
+
+N, D, H = 1, 10, 5
+
+x = np.random.randn(N, D)
+W1 = np.random.randn(D, H)
+W0 = np.random.randn(H)
+
+# Layer 1
+sigmoid(x.dot(W1) + W0)
+```
+
+### Many Layers
+
+We can simply stack many layers together to produce an actually useful neural network. Feeding an input to a layer and propagating the output to the next layer as input is known as **forward propagation**. Let `O` denote our output dimension.
+
+```python
+import numpy as np
+
+
+def sigmoid(x):
+    return 1.0 / (1.0 + np.exp(-1 * x))
+
+
+class Layer:
+    def __init__(self, in_dim, out_dim):
+        self.weight = np.random.randn(in_dim, out_dim)
+        self.bias = np.random.randn(out_dim)
+
+    def forward(self, x):
+        y = x.dot(self.weight) + self.bias
+        return sigmoid(y)
+
+
+class Network:
+    def __init__(self, dims, num_hidden_layers=3):
+        D, H, O = dims
+        self.layers = [Layer(D, H)]
+        for i in range(num_hidden_layers):
+            self.layers.append(Layer(H, H))
+        self.layers.append(Layer(H, O))
+
+    def forward(self, x):
+        for i in range(len(self.layers)):
+            x = self.layers[i].forward(x)
+
+        return x
+
+
+N, D, H, O = 1, 10, 5, 1
+x = np.random.randn(N, D)
+network = Network((D, H, O), num_hidden_layers=5)
+network.forward(x)
+```
+
+## Backpropagation
+
+Although our neural network can produce outputs, it does not produce any meaningful output because it is lacking training. We need to give it the ability to learn, hence the term machine learning.
+
+### Linear Regression
+
+Suppose you are given a set of data points, you want to fit a curve that best represents the trend of the data, how would you do it algorithmically?  Here's a simple linear example.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(-10, 10, num=100)
+y = np.linspace(-10, 10, num=100) + np.random.randn(100,) * 2
+plt.plot(x, y, 'o')
+plt.show()
+```
+
+![](../.gitbook/assets/linear_data_points.png)
+
+Since we know the data points were generated linearly, we can simply fit a straight line to them. Recall that equation of a line is $$y = mx + b$$. We need a way to figure out the values of $$m$$ and $$b$$. A naive approach is to guess.
+
+```python
+def linear_model(m, b, x):
+    return m * x + b
+    
+plt.plot(x, y, 'o', x, linear_model(1, 0, x), 'o')
+plt.show()
+```
+
+![](../.gitbook/assets/fit_line.png)
 
