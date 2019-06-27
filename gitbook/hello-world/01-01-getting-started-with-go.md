@@ -80,7 +80,7 @@ cd helloworld/
 Initialize a go module
 
 ```bash
-go mod init github.com/calvinfeng/hellworld
+go mod init github.com/calvinfeng/helloworld
 ```
 
 It is indicating to Go that my project will be publicly available on `github.com/calvinfeng`, but if you don't intend to share your code, the path is optional. You can initialize it with whatever name you like. Suppose another person who would like to use my packages from my `helloworld` repository, he/she simply needs to perform a import in his/her source code.

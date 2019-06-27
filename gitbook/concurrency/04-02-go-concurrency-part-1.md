@@ -335,7 +335,7 @@ func main() {
   initVal := 1
   go func(ch chan int, val int) {
     fmt.Println("Give left most channel the initial value")
-    ch <- 1
+    ch <- val
   }(left, initVal)
 
   fmt.Printf("Final value is %d\n", <-end)

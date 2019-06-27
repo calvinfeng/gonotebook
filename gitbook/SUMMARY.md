@@ -23,6 +23,7 @@
 * [User Authentication](user-authentication/README.md)
   * [Go Module](user-authentication/go-module.md)
   * [Popular Web Libraries](user-authentication/06-01-popular-web-libraries.md)
+  * [React Tools](user-authentication/react.md)
   * [Build an Authentication Server](user-authentication/06-02-project-userauth.md)
   * [Assignment](user-authentication/assignment.md)
 * [gRPC](grpc.md)
