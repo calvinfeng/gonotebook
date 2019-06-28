@@ -11,7 +11,9 @@ JavaScript development touches a lot of diverse environments: Node, Chrome, Safa
 Webpack can be configured to transpile your JSX and ES7 source code into browser-compatible JavaScript when creating the bundle.
 
 ```text
-npm install @babel/core @babel/preset-env @babel/preset-react babel-loader --save
+npm install --save @babel/core @babel/polyfill
+npm install --save @babel/preset-env @babel/preset-react
+npm install --save babel-loader
 ```
 
 Create a `webpack.config.js`
@@ -46,6 +48,12 @@ module.exports = {
         ]
     }
 };
+```
+
+Here's a little tricky thing about using the latest ES7 feature, which is `async` and `await`. You will need `@babel/polyfill` to convert those new syntax into appropriate JavaScript to run on a browser. Within your source code, make sure to do the following if you happen to use `async/await` in your code.
+
+```javascript
+import '@babel/polyfill'
 ```
 
 ### TS Loader
@@ -117,6 +125,7 @@ In general, your `package.json` should look like the following with everything i
   "license": "ISC",
   "dependencies": {
     "@babel/core": "^7.4.5",
+    "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "axios": "^0.19.0",
