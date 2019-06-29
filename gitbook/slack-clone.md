@@ -1,8 +1,6 @@
-# Assignment
+# Slack Clone
 
-## Slack Clone
-
-Now it is time to put everything you've learned together to create one final capstone project to test your understanding. Exercise your creativity and combine the two projects together into one, make a Slack clone!
+Now it is time to put everything you've learned together to create one final capstone project to test your understanding. Exercise your creativity and combine Chatroom and User Authentication projects together into one; create a Slack clone!
 
 ## Server-side Requirements
 
@@ -24,7 +22,8 @@ It is your job to architect the following items.
 
 * User can enter email and password to login or sign up.
 * User can see and join any channel.
-* User can send messages to each other via direct message or channel, and receive live message updates from other users
+* User can read historical messages of a channel and historical messages of directed message.
+* User can send messages to each other via direct message or channel, and receive live message updates from other users.
 * Browser should **not** need to refresh to receive any updates, all updates should be shown immediately without the user intervention. 
 * Channel should indicate unread messages if there is any.
 

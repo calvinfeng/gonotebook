@@ -25,7 +25,7 @@
   * [Popular Web Libraries](user-authentication/06-01-popular-web-libraries.md)
   * [React Tools](user-authentication/react.md)
   * [Build an Authentication Server](user-authentication/06-02-project-userauth.md)
-  * [Assignment](user-authentication/assignment.md)
+* [Slack Clone](slack-clone.md)
 * [gRPC](grpc.md)
 * [Numerical Computing](numerical-computing/README.md)
   * [Gonum](numerical-computing/07-01-gonum.md)
