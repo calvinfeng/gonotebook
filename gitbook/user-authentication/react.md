@@ -1,6 +1,6 @@
 # React Tools
 
-React is popular enough that I don't really need to explain what it is. Let me quickly go over couple tools we need to get React working. I assume that you have `npm` installed.  The choice of modern JS syntax is ES7 and TypeScript for this article.
+React is popular enough that I don't really need to explain what it is. Let me quickly go over a couple of tools we need to get React working. I assume that you have `npm` installed.  The choice of modern JS syntax is ES7 and TypeScript for this article.
 
 ### Babel Loader
 

@@ -77,7 +77,7 @@ func main() {
 }
 ```
 
-Build and run the server, witness the magic of go module.
+Build and run the server,and witness the magic of go module.
 
 ```bash
 go install && sillyserver

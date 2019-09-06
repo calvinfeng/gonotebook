@@ -69,7 +69,7 @@ Client-side socket connection typically accepts 4 callbacks:
 
 ### Node Modules
 
-I am using babel and webpack for compiling the latest ES6/ES7 syntax into browser compatible version. I am also using `node-sass` for compiling `.scss` into `.css`. I make promise-based requests to server using `axios`. For the complete list of node modules, please look at the `package.json`.
+I am using babel and webpack for compiling the latest ES6/ES7 syntax into a browser compatible version. I am also using `node-sass` for compiling `.scss` into `.css`. I make promise-based requests to server using `axios`. For the complete list of node modules, please look at the `package.json`.
 
 ### Build `index.js`
 

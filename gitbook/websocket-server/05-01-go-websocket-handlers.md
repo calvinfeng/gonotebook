@@ -12,7 +12,7 @@ For websocket, we want to hijack this TCP connection and use it like we are talk
 
 ## Gorilla WebSocket
 
-Implementing the WebSocket Protocol from scratch involves quite a bit work, so we should default to use existing open source library to do the work for us. A popular choice is [gorilla](https://github.com/gorilla/websocket).
+Implementing the WebSocket Protocol from scratch involves quite a bit of work, so we should default to use existing open source libraries to do the work for us. A popular choice is [gorilla](https://github.com/gorilla/websocket).
 
 Here's how it works. Each websocket connection begins with a GET request to the server. We will take the request and **upgrade** the connection to a websocket connection.
 
