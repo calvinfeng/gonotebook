@@ -1,3 +1,3 @@
-# Go Academy
+# Go Notebook
 
-[GitBook](https://go-academy.gitbook.io/go-academy/)
+[GitBook](https://calvinfeng.gitbook.io/gonotebook/)

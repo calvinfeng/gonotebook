@@ -1,4 +1,0 @@
-# gRPC
-
-To be written...
-
