@@ -1,6 +1,6 @@
 # Go Concurrency Part 1
 
-Now we know what is a goroutine. Here are some fairly advanced use cases. Majority of the examples come from Rob Pike's talk. I made couple enhancements here and there. Try your best to understand them, but know that concurrency is difficult and it takes time to have a firm grasp.
+Now we know what a goroutine is. Here are some fairly advanced use cases. The majority of the examples come from Rob Pike's talk. I made a couple of enhancements here and there. Try your best to understand them, but know that concurrency is difficult and it takes time to have a firm grasp.
 
 ## Channels
 
@@ -253,7 +253,7 @@ func main() {
 
 ## Receive on Quit
 
-The problem is that how do we know the quit signal has been received and processed? We can wait for the quit channel to tell us that it is done! We make a channel that passes channel which passes string.
+How do we know the quit signal has been received and processed? We can wait for the quit channel to tell us that it is done! We make a channel that passes a channel which passes a string.
 
 ```go
 func pingGen(msg string, quit chan chan string) <-chan message {

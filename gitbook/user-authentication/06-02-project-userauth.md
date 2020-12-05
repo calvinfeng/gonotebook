@@ -154,11 +154,11 @@ password of the new user
 {% endapi-method-spec %}
 {% endapi-method %}
 
-Once front end receives the token, it should put it into local storage. Next time when user opens his/her browser, the client application should use the same token to verify that user is indeed signed in.
+Once the front end receives the token, it should put it into local storage. Next time when a user opens his/her browser, the client application should use the same token to verify that the user is indeed signed in.
 
 ### User Resource Endpoints
 
-Since we are not using real JWT token, front end needs to make requests to server to ask for user information. We need to expose some user endpoints for that.
+Since we are not using real JWT tokens, the front end needs to make requests to server to ask for user information. We need to expose some user endpoints for that.
 
 {% api-method method="get" host="http://localhost:8000" path="/api/users/" %}
 {% api-method-summary %}

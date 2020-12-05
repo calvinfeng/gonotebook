@@ -79,7 +79,7 @@ func main() {
 }
 ```
 
-Here's the _important_ thing, if you limit the maximum number of **P** to 1, it does not mean your Go program will ever spawn one OS thread. If an OS thread is blocked by IO or system calls, a new thread is going to be created and Go runtime will assign the new thread to your the one **P**. Now your **P** can continue to process all the other runnable **G**s. This is also why we need **P** because it holds the execution context. _Blocking thread != stop the world_.
+Here's the _important_ thing, if you limit the maximum number of **P** to 1, it does not mean your Go program will only ever spawn one OS thread. If an OS thread is blocked by IO or system calls, a new thread is going to be created and Go runtime will assign the new thread to your one **P**. Now your **P** can continue to process all the other runnable **G**s. This is also why we need **P** because it holds the execution context. _Blocking thread != stop the world_.
 
 I will use circle to represent **G**, square to represent **P** and triangle to represent **M**.
 
@@ -94,7 +94,7 @@ There are two run queues in the Go scheduler.
 * Global Run Queue \(GRQ\)
 * Local Run Queue \(LRQ\)
 
-Each P is given given a LRQ that manages the goroutines assigned to be executed within the context of P. These goroutines take turn being context-switched on and off the M assigned to that P. GRQ is for goroutines that have not been assigned to a P yet.
+Each P is given given a LRQ that manages the goroutines assigned to be executed within the context of P. These goroutines take turns being context-switched on and off the M assigned to that P. GRQ is for goroutines that have not been assigned to a P yet.
 
 ![local run queue](../.gitbook/assets/local_run_queue.png)
 
@@ -119,7 +119,7 @@ Garbage collection runs its own set of goroutines. If a goroutine makes a system
 
 ### Work Stealing
 
-The last thing you want is an M to move into a waiting state, because once that happens, the OS will context-switch the M off the core. This means that P can't get any work done even if there is a goroutine in a runnable state. When a P finishes its LRQ very quickly, it needs to perform a work stealing to prevent M entering a waiting state.
+The last thing you want is an M to move into a waiting state, because once that happens, the OS will context-switch the M off the core. This means that P can't get any work done even if there is a goroutine in a runnable state. When a P finishes its LRQ very quickly, it needs to perform a work stealing to prevent M from entering a waiting state.
 
 ```text
 var found bool

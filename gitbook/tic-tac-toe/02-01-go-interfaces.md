@@ -67,7 +67,7 @@ func (md *MockDog) Eat(f Food) {
 }
 ```
 
-And then pass it into `Feed` and see if test passes.
+And then pass it into `Feed` and see if the test passes.
 
 ```go
 md := &MockDog
